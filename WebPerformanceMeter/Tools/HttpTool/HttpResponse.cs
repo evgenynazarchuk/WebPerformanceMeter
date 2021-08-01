@@ -9,25 +9,25 @@ using System.Net.Http.Headers;
 
 namespace WebPerformanceMeter.Tools.HttpTool
 {
-    public class Response
+    public sealed class HttpResponse
     {
-        public readonly HttpStatusCode StatusCode;
+        public readonly int StatusCode;
 
         public readonly byte[] ContentAsBytes;
 
+        public readonly string? Filename;
+
         public string ContentAsUtf8String => Encoding.UTF8.GetString(ContentAsBytes);
 
-        public readonly HttpContentHeaders ContentHeaders;
-
-        public Response(
-            HttpStatusCode statusCode, 
+        public HttpResponse(
+            int statusCode, 
             byte[] content,
-            HttpContentHeaders contentHeaders
+            string? filename
             )
         {
             StatusCode = statusCode;
             ContentAsBytes = content;
-            ContentHeaders = contentHeaders;
+            Filename = filename;
         }
     }
 }

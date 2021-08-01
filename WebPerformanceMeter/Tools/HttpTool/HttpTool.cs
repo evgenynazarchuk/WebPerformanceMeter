@@ -70,7 +70,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             HttpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
         }
 
-        public async Task<Response> RequestAsync(HttpRequestMessage httpRequestMessage)
+        public async Task<HttpResponse> RequestAsync(HttpRequestMessage httpRequestMessage)
         {
             DateTime startSendRequest;
             DateTime startWaitResponse;
@@ -92,24 +92,24 @@ namespace WebPerformanceMeter.Tools.HttpTool
             endResponse = DateTime.UtcNow;
 
             var responseSize = content.Length;
-            long? requestSize = 0;
-            if (httpRequestMessage.Content is not null)
+            long requestSize = 0;
+            if (httpRequestMessage.Content is not null && httpRequestMessage.Content.Headers.ContentLength.HasValue)
             {
-                requestSize = httpRequestMessage.Content.Headers.ContentLength;
+                requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
             Watcher.Send($"{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O},{requestSize},{responseSize}");
 
-            Response response = new(
-                httpResponseMessage.StatusCode, 
-                content,
-                httpResponseMessage.Content.Headers
+            HttpResponse response = new(
+                statusCode: (int)httpResponseMessage.StatusCode, 
+                content: content,
+                filename: httpResponseMessage.Content.Headers.ContentDisposition?.FileName
             );
 
             return response;
         }
 
-        public Task<Response> RequestAsync(
+        public Task<HttpResponse> RequestAsync(
             HttpMethod httpMethod,
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,

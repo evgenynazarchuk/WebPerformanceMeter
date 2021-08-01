@@ -40,7 +40,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
         }
 
         // request: send
-        public static async Task<HttpStatusCode> RequestAsJsonAsync<RequestObjectType>(
+        public static async Task<int> RequestAsJsonAsync<RequestObjectType>(
             this HttpTool tool,
             HttpMethod httpMethod,
             string requestUri,

@@ -17,7 +17,9 @@ namespace WebPerformanceMeter.Logger
 
         public override async Task WriteErrorAsync(string message)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
+            Console.ResetColor();
 
             await Task.CompletedTask;
         }

@@ -8,19 +8,19 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
-    public class ConstantUsers : PerformancePlan
+    public sealed class ConstantUsers : PerformancePlan
     {
-        protected readonly User User;
+        private readonly User User;
 
-        protected readonly int UsersCount;
+        private readonly int UsersCount;
 
-        protected readonly int UserLoopCount;
+        private readonly int UserLoopCount;
 
-        protected readonly Task[] InvokedUsers;
+        private readonly Task[] InvokedUsers;
 
-        protected readonly IEntityReader? DataReader;
+        private readonly IEntityReader? DataReader;
 
-        protected readonly bool ReuseDataInLoop;
+        private readonly bool ReuseDataInLoop;
 
         public ConstantUsers(
             User user,
@@ -30,22 +30,22 @@ namespace WebPerformanceMeter.PerformancePlans
             bool reuseDataInLoop = true
             )
         {
-            User = user;
-            UsersCount = usersCount;
-            UserLoopCount = userLoopCount;
-            InvokedUsers = new Task[UsersCount];
-            DataReader = dataReader;
-            ReuseDataInLoop = reuseDataInLoop;
+            this.User = user;
+            this.UsersCount = usersCount;
+            this.UserLoopCount = userLoopCount;
+            this.InvokedUsers = new Task[UsersCount];
+            this.DataReader = dataReader;
+            this.ReuseDataInLoop = reuseDataInLoop;
         }
 
         public override async Task StartAsync()
         {
             for (int i = 0; i < UsersCount; i++)
             {
-                InvokedUsers[i] = User.InvokeAsync(UserLoopCount, DataReader, ReuseDataInLoop);
+                this.InvokedUsers[i] = User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
             }
 
-            Task.WaitAll(InvokedUsers);
+            Task.WaitAll(this.InvokedUsers);
 
             await Task.CompletedTask;
         }

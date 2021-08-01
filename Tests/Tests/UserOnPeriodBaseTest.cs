@@ -11,16 +11,15 @@ using System.Net.Http;
 using WebPerformanceMeter.Tools.HttpTool;
 using TestWebApiServer.Models;
 
-namespace Tests.Tests.ConstantUsersTests
+namespace Tests.Tests.UserOnPeriodBase
 {
-    // Test description
-    public class TestPerformance
+    public class UserOnPeriodBaseTest
     {
         public async Task RunAsync()
         {
             var app = new WebApp();
             var user = new TestUser(app.Client);
-            var plan = new ConstantUsers(user, 10);
+            var plan = new UsersOnPeriod(user, 10, TimeSpan.FromSeconds(5));
             var scenario = new Scenario();
 
             scenario.AddPerformancePlan(plan);
@@ -37,7 +36,7 @@ namespace Tests.Tests.ConstantUsersTests
         public override async Task PerformanceAsync()
         {
             // Arange
-            var content = new TestRequestContent { Timeout = 2000 };
+            var content = new TestRequestContent { Timeout = 200 };
 
             // Act
             await Tool.TestWaitMethod(content);

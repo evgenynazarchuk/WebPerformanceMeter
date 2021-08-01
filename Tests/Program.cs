@@ -1,6 +1,7 @@
 ﻿using System;
-using Tests.Tests.ConstantUsersTests;
+using Tests.Tests;
 using System.Threading.Tasks;
+using Tests.Tests.UserOnPeriodBase;
 
 namespace Tests
 {
@@ -8,7 +9,7 @@ namespace Tests
     {
         static async Task Main(string[] args)
         {
-            TestPerformance test = new();
+            UserOnPeriodBaseTest test = new();
             await test.RunAsync();
         }
     }

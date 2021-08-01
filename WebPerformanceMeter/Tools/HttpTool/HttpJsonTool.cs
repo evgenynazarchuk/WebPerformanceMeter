@@ -17,14 +17,14 @@ namespace WebPerformanceMeter.Tools.HttpTool
         };
 
         // request: send receive
-        public static async Task<TypeResponseObject?> RequestAsJsonAsync<TypeResponseObject, TypeRequestObject>(
+        public static async Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
             this HttpTool tool,
             HttpMethod httpMethod,
             string requestUri,
-            TypeRequestObject? requestObject = null,
+            RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null)
-            where TypeRequestObject : class, new()
-            where TypeResponseObject : class, new()
+            where RequestObjectType : class, new()
+            where ResponseObjectType : class, new()
         {
             string requestContent = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
 
@@ -34,20 +34,20 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestContent: new StringContent(requestContent, Encoding.UTF8, "application/json"),
                 requestHeaders: requestHeaders);
 
-            var responseObject = JsonSerializer.Deserialize<TypeResponseObject>(response.ContentAsBytes, JsonSerializerOptions);
+            var responseObject = JsonSerializer.Deserialize<ResponseObjectType>(response.ContentAsBytes, JsonSerializerOptions);
 
             return responseObject;
         }
 
         // request: send
-        public static async Task<HttpStatusCode> RequestAsJsonAsync<TypeRequestObject>(
+        public static async Task<HttpStatusCode> RequestAsJsonAsync<RequestObjectType>(
             this HttpTool tool,
             HttpMethod httpMethod,
             string requestUri,
-            TypeRequestObject requestObject,
+            RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null
             )
-            where TypeRequestObject : class, new()
+            where RequestObjectType : class, new()
         {
             string requestContentString = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
 
@@ -61,20 +61,20 @@ namespace WebPerformanceMeter.Tools.HttpTool
         }
 
         // request: receive
-        public static async Task<TypeResponseObject?> RequestAsJsonAsync<TypeResponseObject>(
+        public static async Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType>(
             this HttpTool tool,
             HttpMethod httpMethod,
             string requestUri,
             Dictionary<string, string>? requestHeaders = null
             )
-            where TypeResponseObject : class, new()
+            where ResponseObjectType : class, new()
         {
             var response = await tool.RequestAsync(
                 httpMethod: httpMethod,
                 requestUri: requestUri,
                 requestHeaders: requestHeaders);
 
-            TypeResponseObject? responseObject = JsonSerializer.Deserialize<TypeResponseObject>(response.ContentAsUtf8String, JsonSerializerOptions);
+            ResponseObjectType? responseObject = JsonSerializer.Deserialize<ResponseObjectType>(response.ContentAsUtf8String, JsonSerializerOptions);
 
             return responseObject;
         }

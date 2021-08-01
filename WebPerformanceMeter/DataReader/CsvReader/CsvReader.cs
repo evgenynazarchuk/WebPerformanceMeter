@@ -10,20 +10,23 @@ using System.Text.RegularExpressions;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
-    public class CsvReader<TResult> : IEntityReader
+    public sealed class CsvReader<TResult> : IEntityReader
         where TResult : class, new()
     {
-        protected readonly StreamReader StreamReader;
+        private readonly StreamReader StreamReader;
 
-        protected readonly ConcurrentQueue<TResult> Queue;
+        private readonly ConcurrentQueue<TResult> Queue;
 
-        protected readonly Regex Parser;
+        private readonly Regex Parser;
 
-        public CsvReader(string path, bool hasHeader = false)
+        private readonly bool CyclicalData;
+
+        public CsvReader(string path, bool hasHeader = false, bool cyclicalData  = false)
         {
             Parser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
             StreamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
             Queue = new();
+            CyclicalData = cyclicalData;
 
             if (hasHeader)
             {
@@ -41,6 +44,12 @@ namespace WebPerformanceMeter.DataReader.CsvReader
         public object? GetEntity()
         {
             Queue.TryDequeue(out TResult? result);
+
+            if (CyclicalData && result is not null)
+            {
+                Queue.Enqueue(result);
+            }
+
             return result;
         }
 

@@ -91,7 +91,14 @@ namespace WebPerformanceMeter.Tools.HttpTool
             content = await httpResponseMessage.Content.ReadAsByteArrayAsync();
             endResponse = DateTime.UtcNow;
 
-            Watcher.Send($"{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O}");
+            var responseSize = content.Length;
+            long? requestSize = 0;
+            if (httpRequestMessage.Content is not null)
+            {
+                requestSize = httpRequestMessage.Content.Headers.ContentLength;
+            }
+
+            Watcher.Send($"{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O},{requestSize},{responseSize}");
 
             Response response = new(
                 httpResponseMessage.StatusCode, 

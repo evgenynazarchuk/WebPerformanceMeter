@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter.Tools.HttpTool
 {
@@ -83,10 +82,10 @@ namespace WebPerformanceMeter.Tools.HttpTool
 
             startSendRequest = DateTime.UtcNow;
             httpResponseMessageTask = HttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
-            
+
             startWaitResponse = DateTime.UtcNow;
             httpResponseMessage = await httpResponseMessageTask;
-            
+
             startResponse = DateTime.UtcNow;
             content = await httpResponseMessage.Content.ReadAsByteArrayAsync();
             endResponse = DateTime.UtcNow;
@@ -101,7 +100,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             Watcher.Send($"{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O},{requestSize},{responseSize}");
 
             HttpResponse response = new(
-                statusCode: (int)httpResponseMessage.StatusCode, 
+                statusCode: (int)httpResponseMessage.StatusCode,
                 content: content,
                 filename: httpResponseMessage.Content.Headers.ContentDisposition?.FileName
             );

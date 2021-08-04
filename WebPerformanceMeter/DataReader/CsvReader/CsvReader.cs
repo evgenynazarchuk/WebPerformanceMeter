@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Collections.Concurrent;
-using WebPerformanceMeter.Interfaces;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
+using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
@@ -21,7 +18,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 
         private readonly bool CyclicalData;
 
-        public CsvReader(string path, bool hasHeader = false, bool cyclicalData  = false)
+        public CsvReader(string path, bool hasHeader = false, bool cyclicalData = false)
         {
             Parser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
             StreamReader = new StreamReader(path, Encoding.UTF8, true, 65525);

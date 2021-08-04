@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebPerformanceMeter.Users;
+﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
@@ -24,7 +20,7 @@ namespace WebPerformanceMeter.PerformancePlans
 
         public ConstantUsers(
             User user,
-            int usersCount, 
+            int usersCount,
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true

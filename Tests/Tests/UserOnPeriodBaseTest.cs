@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
+using TestWebApiServer.Models;
 using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Scenario;
-using WebPerformanceMeter;
-using WebPerformanceMeter.Users;
-using System.Net.Http;
 using WebPerformanceMeter.Tools.HttpTool;
-using TestWebApiServer.Models;
+using WebPerformanceMeter.Users;
 
 namespace Tests.Tests.UserOnPeriodBase
 {
@@ -19,7 +15,7 @@ namespace Tests.Tests.UserOnPeriodBase
         {
             var app = new WebApp();
             var user = new TestUser(app.Client);
-            var plan = new UsersOnPeriod(user, 10, TimeSpan.FromSeconds(5));
+            var plan = new UsersOnPeriod(user, 180000, TimeSpan.FromMinutes(30));
             var scenario = new Scenario();
 
             scenario.AddPerformancePlan(plan);

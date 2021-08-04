@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
@@ -56,7 +53,7 @@ namespace WebPerformanceMeter.PerformancePlans
                 }
 
                 // TODO: read from configuration
-                await Task.Delay(50);
+                // await Task.Delay(50);
             }
 
             await this.WaitUserTerminationAsync();

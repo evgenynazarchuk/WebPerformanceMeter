@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using WebPerformanceMeter.DataReader.CsvReader;
 using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Scenario;
-using WebPerformanceMeter.DataReader.CsvReader;
 
 namespace Tests.Tests.GetPersonInfo
 {
@@ -19,10 +15,10 @@ namespace Tests.Tests.GetPersonInfo
             var user = new TestUser(app.Client);
 
             var performancePlan = new ConstantUsers(
-                user: user, 
-                usersCount: 5, 
-                userLoopCount: 2, 
-                dataReader: csv, 
+                user: user,
+                usersCount: 5,
+                userLoopCount: 2,
+                dataReader: csv,
                 reuseDataInLoop: false);
 
             var scenario = new Scenario();

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Logger;
+﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.PerformancePlans;
 
 namespace WebPerformanceMeter.Scenario
 {
@@ -42,7 +39,7 @@ namespace WebPerformanceMeter.Scenario
                 await performancePlan.StartAsync();
             }
 
-            source.Cancel();            
+            source.Cancel();
             await watcherTask;
         }
     }

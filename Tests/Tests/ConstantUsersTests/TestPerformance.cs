@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
+using TestWebApiServer.Models;
 using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Scenario;
-using WebPerformanceMeter;
-using WebPerformanceMeter.Users;
-using System.Net.Http;
 using WebPerformanceMeter.Tools.HttpTool;
-using TestWebApiServer.Models;
+using WebPerformanceMeter.Users;
 
 namespace Tests.Tests.ConstantUsersTests
 {

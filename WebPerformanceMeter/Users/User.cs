@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Users
@@ -10,7 +6,7 @@ namespace WebPerformanceMeter.Users
     public abstract class User
     {
         public async Task InvokeAsync(
-            int loopCount = 1, 
+            int loopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true
             )
@@ -37,7 +33,7 @@ namespace WebPerformanceMeter.Users
                 {
                     await PerformanceAsync(entity);
                 }
-                
+
                 if (dataReader is not null && !reuseDataInLoop)
                 {
                     entity = dataReader.GetEntity();

@@ -1,6 +1,4 @@
-﻿using System;
-using Tests.Tests;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Tests.Tests.UserOnPeriodBase;
 
 namespace Tests

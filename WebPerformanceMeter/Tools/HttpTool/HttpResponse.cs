@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Text;
 
 namespace WebPerformanceMeter.Tools.HttpTool
 {
@@ -20,7 +13,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
         public string ContentAsUtf8String => Encoding.UTF8.GetString(ContentAsBytes);
 
         public HttpResponse(
-            int statusCode, 
+            int statusCode,
             byte[] content,
             string? filename
             )

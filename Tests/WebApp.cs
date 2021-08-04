@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using TestWebApiServer;
 using System.Net.Http;
-using Microsoft.AspNetCore.Hosting;
+using TestWebApiServer;
 
 namespace Tests
 {

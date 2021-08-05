@@ -5,6 +5,18 @@ namespace WebPerformanceMeter.Users
 {
     public abstract class User
     {
+        protected string UserName;
+
+        public User()
+        {
+            UserName = this.GetType().Name;
+        }
+
+        public void SetUserName(string userName)
+        {
+            UserName = userName;
+        }
+
         public async Task InvokeAsync(
             int loopCount = 1,
             IEntityReader? dataReader = null,

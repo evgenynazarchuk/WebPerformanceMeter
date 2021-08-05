@@ -69,7 +69,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             HttpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
         }
 
-        public async Task<HttpResponse> RequestAsync(HttpRequestMessage httpRequestMessage)
+        public async Task<HttpResponse> RequestAsync(HttpRequestMessage httpRequestMessage, string user = "")
         {
             DateTime startSendRequest;
             DateTime startWaitResponse;
@@ -97,7 +97,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            Watcher.Send($"{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O},{requestSize},{responseSize}");
+            Watcher.Send($"{user},{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O},{requestSize},{responseSize}");
 
             HttpResponse response = new(
                 statusCode: (int)httpResponseMessage.StatusCode,
@@ -112,7 +112,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
             HttpMethod httpMethod,
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
-            HttpContent? requestContent = null)
+            HttpContent? requestContent = null,
+            string user = "")
         {
             using HttpRequestMessage httpRequestMessage = new()
             {
@@ -129,7 +130,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 }
             }
 
-            return this.RequestAsync(httpRequestMessage);
+            return this.RequestAsync(httpRequestMessage, user);
         }
     }
 }

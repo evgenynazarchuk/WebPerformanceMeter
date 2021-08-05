@@ -4,7 +4,7 @@ using WebPerformanceMeter.Tools.HttpTool;
 
 namespace WebPerformanceMeter.Users
 {
-    public abstract class HttpUser : User
+    public abstract partial class HttpUser : User
     {
         protected readonly HttpClient Client;
 

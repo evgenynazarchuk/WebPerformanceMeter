@@ -35,16 +35,16 @@ namespace Tests.Tests.ActiveUserOnPeriodBase
             var content = new TestRequestContent { Timeout = 200 };
 
             // Act
-            await Tool.TestWaitMethod(content);
+            await this.TestWaitMethod(content);
         }
     }
 
     // Facade extension
     public static class TestUserExt
     {
-        public static async Task<TestResponseContent?> TestWaitMethod(this HttpTool tool, TestRequestContent content)
+        public static async Task<TestResponseContent?> TestWaitMethod(this HttpUser user, TestRequestContent content)
         {
-            return await tool.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(
+            return await user.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(
                 HttpMethod.Post,
                 "/Test/TestWaitMethod",
                 content);

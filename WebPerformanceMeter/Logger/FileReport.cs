@@ -37,13 +37,14 @@ namespace WebPerformanceMeter.Logger
             var splittedMessage = message.Split(',');
             LogMessage log = new(
                 splittedMessage[0],
-                Int32.Parse(splittedMessage[1]),
-                DateTime.Parse(splittedMessage[2]),
+                splittedMessage[1],
+                Int32.Parse(splittedMessage[2]),
                 DateTime.Parse(splittedMessage[3]),
                 DateTime.Parse(splittedMessage[4]),
                 DateTime.Parse(splittedMessage[5]),
-                Int32.Parse(splittedMessage[6]),
-                Int32.Parse(splittedMessage[7])
+                DateTime.Parse(splittedMessage[6]),
+                Int32.Parse(splittedMessage[7]),
+                Int32.Parse(splittedMessage[8])
                 );
 
             return log;

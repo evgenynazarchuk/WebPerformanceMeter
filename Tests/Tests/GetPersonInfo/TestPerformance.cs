@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter.DataReader.CsvReader;
 using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Scenario;
+using WebPerformanceMeter.Support;
 
 namespace Tests.Tests.GetPersonInfo
 {

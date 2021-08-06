@@ -10,13 +10,13 @@ namespace WebPerformanceMeter.Logger
 
         public int StatusCode { get; set; }
 
-        public DateTime StartSendRequest { get; set; }
+        public long StartSendRequest { get; set; }
 
-        public DateTime StartWaitResponse { get; set; }
+        public long StartWaitResponse { get; set; }
 
-        public DateTime StartResponse { get; set; }
+        public long StartResponse { get; set; }
 
-        public DateTime EndResponse { get; set; }
+        public long EndResponse { get; set; }
 
         public int SendBytes { get; set; }
 
@@ -26,10 +26,10 @@ namespace WebPerformanceMeter.Logger
             string user,
             string request,
             int statusCode,
-            DateTime startSendRequest,
-            DateTime startWaitResponse,
-            DateTime startResponse,
-            DateTime endResponse,
+            long startSendRequest,
+            long startWaitResponse,
+            long startResponse,
+            long endResponse,
             int sendBytes,
             int receiveBytes)
         {

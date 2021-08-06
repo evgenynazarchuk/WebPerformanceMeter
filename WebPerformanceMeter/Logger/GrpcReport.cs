@@ -8,10 +8,5 @@ namespace WebPerformanceMeter.Logger
         {
             await Task.CompletedTask;
         }
-
-        public override async Task WriteErrorAsync(string message)
-        {
-            await Task.CompletedTask;
-        }
     }
 }

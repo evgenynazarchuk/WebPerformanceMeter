@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TestWebApiServer.Models;
 using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Scenario;
+using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Tools.HttpTool;
 using WebPerformanceMeter.Users;
 

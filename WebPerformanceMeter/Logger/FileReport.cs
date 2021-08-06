@@ -10,8 +10,6 @@ namespace WebPerformanceMeter.Logger
     {
         private readonly StreamWriter FileStream;
 
-        private readonly StreamWriter ErrorFileStream;
-
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true
@@ -20,7 +18,6 @@ namespace WebPerformanceMeter.Logger
         public FileReport()
         {
             FileStream = new StreamWriter("result.log", false, Encoding.UTF8, 65535);
-            ErrorFileStream = new StreamWriter("error.log", false, Encoding.UTF8, 65535);
         }
 
         public override async Task WriteAsync(string message)
@@ -39,10 +36,10 @@ namespace WebPerformanceMeter.Logger
                 splittedMessage[0],
                 splittedMessage[1],
                 Int32.Parse(splittedMessage[2]),
-                DateTime.Parse(splittedMessage[3]),
-                DateTime.Parse(splittedMessage[4]),
-                DateTime.Parse(splittedMessage[5]),
-                DateTime.Parse(splittedMessage[6]),
+                Int64.Parse(splittedMessage[3]),
+                Int64.Parse(splittedMessage[4]),
+                Int64.Parse(splittedMessage[5]),
+                Int64.Parse(splittedMessage[6]),
                 Int32.Parse(splittedMessage[7]),
                 Int32.Parse(splittedMessage[8])
                 );
@@ -54,14 +51,6 @@ namespace WebPerformanceMeter.Logger
         {
             FileStream.Flush();
             FileStream.Close();
-            ErrorFileStream.Flush();
-            ErrorFileStream.Close();
-        }
-
-        public override async Task WriteErrorAsync(string message)
-        {
-            ErrorFileStream.WriteLine(message);
-            await Task.CompletedTask;
         }
     }
 }

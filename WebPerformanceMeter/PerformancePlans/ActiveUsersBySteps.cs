@@ -86,6 +86,7 @@ namespace WebPerformanceMeter.PerformancePlans
             }
 
             Task.WaitAll(this.ActiveUsers);
+
             await Task.CompletedTask;
         }
 

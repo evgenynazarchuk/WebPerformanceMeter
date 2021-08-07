@@ -64,7 +64,7 @@ namespace WebPerformanceMeter.Logger
         }
 
         public void GenerateHtmlReport()
-        { 
+        {
         }
     }
 }

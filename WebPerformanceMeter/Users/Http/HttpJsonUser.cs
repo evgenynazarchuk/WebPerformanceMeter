@@ -1,10 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using WebPerformanceMeter.Tools.HttpTool;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Text;
+using WebPerformanceMeter.Tools.HttpTool;
 
 namespace WebPerformanceMeter.Users
 {
@@ -20,10 +17,10 @@ namespace WebPerformanceMeter.Users
             where ResponseObjectType : class, new()
         {
             return Tool.RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
-                httpMethod, 
-                requestUri, 
-                requestObject, 
-                requestHeaders, 
+                httpMethod,
+                requestUri,
+                requestObject,
+                requestHeaders,
                 this.UserName,
                 requestLabel);
         }
@@ -38,22 +35,14 @@ namespace WebPerformanceMeter.Users
         {
 
             return Tool.RequestAsJsonAsync<RequestObjectType>(
-                httpMethod, 
-                requestUri, 
-                requestObject, 
-                requestHeaders, 
+                httpMethod,
+                requestUri,
+                requestObject,
+                requestHeaders,
                 this.UserName,
                 requestLabel);
         }
 
-        /// <summary>
-        /// Http Request for receive json object
-        /// </summary>
-        /// <typeparam name="ResponseObjectType"></typeparam>
-        /// <param name="httpMethod"></param>
-        /// <param name="requestUri"></param>
-        /// <param name="requestHeaders"></param>
-        /// <returns></returns>
         public Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType>(
             HttpMethod httpMethod,
             string requestUri,
@@ -63,10 +52,11 @@ namespace WebPerformanceMeter.Users
             where ResponseObjectType : class, new()
         {
             return Tool.RequestAsJsonAsync<ResponseObjectType>(
-                httpMethod, 
-                requestUri, 
-                requestHeaders, 
-                this.UserName);
+                httpMethod,
+                requestUri,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
         }
     }
 }

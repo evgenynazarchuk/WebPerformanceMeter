@@ -12,9 +12,16 @@ namespace WebPerformanceMeter.Users
             UserName = this.GetType().Name;
         }
 
-        public void SetUserName(string userName)
+        public void SetUserName(string userName = "")
         {
-            UserName = userName;
+            if (string.IsNullOrEmpty(userName))
+            {
+                UserName = this.GetType().Name;
+            }
+            else
+            {
+                UserName = userName;
+            }
         }
 
         public async Task InvokeAsync(

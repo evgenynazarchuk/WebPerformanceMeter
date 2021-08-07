@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Text.Json;
 
 namespace WebPerformanceMeter.Logger
@@ -45,14 +43,14 @@ namespace WebPerformanceMeter.Logger
 
         public void GenerateReport()
         {
-			if (_rawLogMessages is null)
-			{
-				return;
-			}
+            if (_rawLogMessages is null)
+            {
+                return;
+            }
 
-			StreamWriter reportWriter = new(_outputHtmlPath, false, Encoding.UTF8, 65355);
+            StreamWriter reportWriter = new(_outputHtmlPath, false, Encoding.UTF8, 65355);
 
-			var groupByRequestStatusCodeEndResponse = _rawLogMessages
+            var groupByRequestStatusCodeEndResponse = _rawLogMessages
                 .GroupBy(x => new { x.User, x.Request, x.RequestLabel, x.StatusCode, EndResponse = (long)(x.EndResponse / 10000000) })
                 .Select(x => new
                 {
@@ -66,19 +64,19 @@ namespace WebPerformanceMeter.Logger
                     ReceivedTime = x.Average(y => y.EndResponse - y.StartResponse)
                 }).ToList();
 
-			var groupByEndResponse = _rawLogMessages
-				.GroupBy(x => new { EndResponse = x.EndResponse / 10000000 })
-				.Select(x => new
-				{
-					EndResponse = x.Key.EndResponse,
-					SentBytes = x.Sum(y => y.SendBytes),
-					ReceivedBytes = x.Sum(y => y.ReceiveBytes)
-				}).ToList();
+            var groupByEndResponse = _rawLogMessages
+                .GroupBy(x => new { EndResponse = x.EndResponse / 10000000 })
+                .Select(x => new
+                {
+                    EndResponse = x.Key.EndResponse,
+                    SentBytes = x.Sum(y => y.SendBytes),
+                    ReceivedBytes = x.Sum(y => y.ReceiveBytes)
+                }).ToList();
 
 
-			StringBuilder groupedStringLog = new();
-			StringBuilder sentStringLog = new();
-			StringBuilder receivedStringLog = new();
+            StringBuilder groupedStringLog = new();
+            StringBuilder sentStringLog = new();
+            StringBuilder receivedStringLog = new();
 
 
             foreach (var item in groupByRequestStatusCodeEndResponse)
@@ -98,14 +96,14 @@ namespace WebPerformanceMeter.Logger
                 groupedStringLog.Append(JsonSerializer.Serialize(totalLog) + ",\n");
             }
 
-			foreach (var item in groupByEndResponse)
-			{
-				sentStringLog.Append(JsonSerializer.Serialize(new BytesCount(item.EndResponse, item.SentBytes)) + ",\n");
-				receivedStringLog.Append(JsonSerializer.Serialize(new BytesCount(item.EndResponse, item.ReceivedBytes)) + ",\n");
-			}
+            foreach (var item in groupByEndResponse)
+            {
+                sentStringLog.Append(JsonSerializer.Serialize(new BytesCount(item.EndResponse, item.SentBytes)) + ",\n");
+                receivedStringLog.Append(JsonSerializer.Serialize(new BytesCount(item.EndResponse, item.ReceivedBytes)) + ",\n");
+            }
 
-			//
-			string sourceData = @$"
+            //
+            string sourceData = @$"
 
 <script>
 const groupedRawLog = [{groupedStringLog}]
@@ -115,8 +113,8 @@ const receivedBytesLog = [{receivedStringLog}]
 
 ";
 
-			//
-			var axisFontLayout = @"
+            //
+            var axisFontLayout = @"
 <script>
 let yaxisFontLayout = {
 	family: 'Arial',
@@ -131,8 +129,8 @@ let xaxisFontLayout = {
 </script>
 ";
 
-			//
-			var titleFontLayout = @"
+            //
+            var titleFontLayout = @"
 <script>
 let titleFontLayout = {
 	family: 'Arial',
@@ -141,8 +139,8 @@ let titleFontLayout = {
 </script>
 ";
 
-			//
-			var responseTimeChart = @"
+            //
+            var responseTimeChart = @"
 <script>
 let responseTimeData = {}
 for(let item of groupedRawLog) {
@@ -191,8 +189,8 @@ Plotly.newPlot('ResponseTimeChart', responseTimeChartDatasets, responseTimeChart
 </script>
 ";
 
-			//
-			var completedRequestsChart = @"
+            //
+            var completedRequestsChart = @"
 <script>
 let completedRequestsData = { };
 for (let item of groupedRawLog)
@@ -238,8 +236,8 @@ Plotly.newPlot('CompletedRequestsChart', completedRequestsChartDatasets, complet
 </script>
 ";
 
-			//
-			var sentTimeChart = @"
+            //
+            var sentTimeChart = @"
 <script>
 let sentTimeData = { };
 for (let item of groupedRawLog)
@@ -286,8 +284,8 @@ Plotly.newPlot('SentTimeChart', sentTimeChartDatasets, sentTimeChartlayout);
 </script>
 ";
 
-			//
-			var waitTimeChart = @"
+            //
+            var waitTimeChart = @"
 <script>
 let waitTimeData = { };
 for (let item of groupedRawLog)
@@ -333,8 +331,8 @@ Plotly.newPlot('WaitTimeChart', waitTimeChartDatasets, waitTimeChartLayout);
 </script>
 ";
 
-			//
-			var receivedTimeChart = @"
+            //
+            var receivedTimeChart = @"
 <script>
 let receivedTimeData = { };
 for (let item of groupedRawLog)
@@ -381,8 +379,8 @@ Plotly.newPlot('ReceivedTimeChart', receivedTimeChartDatasets, receivedTimeChart
 </script>
 ";
 
-			//
-			var sentBytesChart = @"
+            //
+            var sentBytesChart = @"
 <script>
 let sentBytesChartDataset = []
 sentBytesChartDataset.push({
@@ -417,8 +415,8 @@ Plotly.newPlot('SentBytesChart', sentBytesChartDataset, sentBytesChartLayout);
 </script>
 ";
 
-			//
-			var receivedBytesChart = @"
+            //
+            var receivedBytesChart = @"
 <script>
 let receivedBytesChartDataset = []
 receivedBytesChartDataset.push({
@@ -453,8 +451,8 @@ Plotly.newPlot('ReceivedBytesChart', receivedBytesChartDataset, receivedBytesCha
 </script>
 ";
 
-			//
-			string htmlReport = $@"
+            //
+            string htmlReport = $@"
 <html>
 <head>
 <script src='https://cdn.plot.ly/plotly-2.3.0.min.js'></script>
@@ -483,9 +481,9 @@ Plotly.newPlot('ReceivedBytesChart', receivedBytesChartDataset, receivedBytesCha
 
 
 
-			//
-			reportWriter.WriteLine(htmlReport);
-			reportWriter.Close();
-		}
+            //
+            reportWriter.WriteLine(htmlReport);
+            reportWriter.Close();
+        }
     }
 }

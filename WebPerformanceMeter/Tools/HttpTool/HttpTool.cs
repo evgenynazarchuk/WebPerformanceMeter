@@ -71,8 +71,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
         }
 
         public async Task<HttpResponse> RequestAsync(
-            HttpRequestMessage httpRequestMessage, 
-            string userName = "", 
+            HttpRequestMessage httpRequestMessage,
+            string userName = "",
             string requestLabel = "")
         {
             //DateTime startSendRequest;
@@ -92,18 +92,18 @@ namespace WebPerformanceMeter.Tools.HttpTool
             byte[] content;
 
             //startSendRequest = DateTime.UtcNow;
-            startSendRequest = Scenario.WatchTime.Elapsed.Ticks;
+            startSendRequest = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             httpResponseMessageTask = HttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
 
             //startWaitResponse = DateTime.UtcNow;
-            startWaitResponse = Scenario.WatchTime.Elapsed.Ticks;
+            startWaitResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             httpResponseMessage = await httpResponseMessageTask;
 
             //startResponse = DateTime.UtcNow;
-            startResponse = Scenario.WatchTime.Elapsed.Ticks;
+            startResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             content = await httpResponseMessage.Content.ReadAsByteArrayAsync();
             //endResponse = DateTime.UtcNow;
-            endResponse = Scenario.WatchTime.Elapsed.Ticks;
+            endResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
 
             int responseSize = content.Length;
             long requestSize = 0;
@@ -129,7 +129,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
-            string userName = "", 
+            string userName = "",
             string requestLabel = "")
         {
             using HttpRequestMessage httpRequestMessage = new()

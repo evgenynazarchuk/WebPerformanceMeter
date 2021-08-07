@@ -10,10 +10,11 @@ namespace WebPerformanceMeter.Users
 
         protected readonly HttpTool Tool;
 
-        public HttpUser(HttpClient client)
+        public HttpUser(HttpClient client, string userName = "")
         {
             Client = client;
             Tool = new(Client);
+            SetUserName(userName);
         }
 
         public HttpUser(string host)

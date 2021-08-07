@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebPerformanceMeter.Logger
+﻿namespace WebPerformanceMeter.Logger
 {
     public class LogMessage
     {

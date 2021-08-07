@@ -1,33 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.PerformancePlans;
-using System.Diagnostics;
 
 namespace WebPerformanceMeter.Support
 {
-    public class Scenario
+    public sealed class Scenario
     {
-        protected readonly List<PerformancePlan> PerformancePlans;
+        private readonly List<KeyValuePair<PerformancePlanLaunchType, PerformancePlan[]>> Acts;
 
-        protected readonly Watcher Watcher;
+        private readonly Watcher Watcher;
 
-        public static readonly Stopwatch WatchTime = new();
+        public static readonly Stopwatch ScenarioWatchTime = new();
 
         public Scenario()
         {
-            PerformancePlans = new();
+            this.Acts = new();
             Watcher = Watcher.Instance.Value;
             Watcher.AddReport(new ConsoleReport());
             Watcher.AddReport(new FileReport());
             Watcher.AddReport(new GrpcReport());
         }
 
-        public Scenario AddPerformancePlan(PerformancePlan performancePlan)
+        public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
         {
-            PerformancePlans.Add(performancePlan);
+            AddPlans(PerformancePlanLaunchType.Parallel, performancePlan);
+            return this;
+        }
 
+        public Scenario AddSequentialPlans(params PerformancePlan[] performancePlan)
+        {
+            AddPlans(PerformancePlanLaunchType.Sequential, performancePlan);
+            return this;
+        }
+
+        private Scenario AddPlans(PerformancePlanLaunchType launchType, params PerformancePlan[] performancePlan)
+        {
+            this.Acts.Add(new(launchType, performancePlan));
             return this;
         }
 
@@ -35,21 +47,49 @@ namespace WebPerformanceMeter.Support
         {
             CancellationTokenSource tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
-            var watcherTask = Watcher.Processing(token);
+            var watcherWaiter = Watcher.Processing(token);
 
-            WatchTime.Reset();
-            WatchTime.Start();
-
-            foreach (var performancePlan in PerformancePlans)
+            if (this.Acts.Count == 0)
             {
-                await performancePlan.StartAsync();
+                throw new ApplicationException("UserPerformancePlan not added");
+            }
+
+            ScenarioWatchTime.Reset();
+            ScenarioWatchTime.Start();
+
+            foreach (var act in this.Acts)
+            {
+                var launchType = act.Key;
+                var plans = act.Value;
+
+                if (launchType == PerformancePlanLaunchType.Sequential)
+                {
+                    foreach (var plan in plans)
+                    {
+                        await plan.StartAsync();
+                    }
+                }
+                else if (launchType == PerformancePlanLaunchType.Parallel)
+                {
+                    var plansWaiter = new List<Task>();
+
+                    foreach (var plan in plans)
+                    {
+                        plansWaiter.Add(Task.Run(async () =>
+                        {
+                            await plan.StartAsync();
+                        }));
+                    }
+
+                    Task.WaitAll(plansWaiter.ToArray());
+                }
             }
 
             // 
             tokenSource.Cancel();
-            await watcherTask;
+            await watcherWaiter;
 
-            WatchTime.Stop();
+            ScenarioWatchTime.Stop();
         }
     }
 }

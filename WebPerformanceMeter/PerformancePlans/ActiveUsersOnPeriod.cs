@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
@@ -41,22 +41,17 @@ namespace WebPerformanceMeter.PerformancePlans
 
         public override async Task StartAsync()
         {
-            //DateTime plannedPerformancePlanEndTime = DateTime.Now + this.PerformancePlanDuration;
-
-            //while (DateTime.Now.CompareTo(plannedPerformancePlanEndTime) < 0)
-            while (Scenario.WatchTime.ElapsedMilliseconds < this.PerformancePlanDuration.TotalMilliseconds)
+            var endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.PerformancePlanDuration.TotalSeconds;
+            while (Scenario.ScenarioWatchTime.Elapsed.TotalSeconds < endTime)
             {
                 for (int i = 0; i < this.ActiveUsersCount; i++)
                 {
-                    if (this.ActiveUsers[i] is null 
+                    if (this.ActiveUsers[i] is null
                         || this.ActiveUsers[i].IsCompleted)
                     {
                         this.ActiveUsers[i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                     }
                 }
-
-                // TODO: read from configuration
-                //await Task.Delay(50);
             }
 
             await this.WaitUserTerminationAsync();

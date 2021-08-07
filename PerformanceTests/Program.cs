@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
-using PerformanceTests.Tests.Scenarios;
+﻿using System.Reflection;
+using WebPerformanceMeter.Runner;
 
 namespace PerformanceTests
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main()
         {
-            await SampleTest2.Test();
+            Runner.Manual(Assembly.GetExecutingAssembly());
         }
     }
 }

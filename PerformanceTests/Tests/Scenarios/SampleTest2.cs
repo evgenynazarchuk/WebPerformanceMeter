@@ -1,14 +1,17 @@
-﻿using System.Threading.Tasks;
-using PerformanceTests.Tests.Users;
+﻿using PerformanceTests.Tests.Users;
+using System.Threading.Tasks;
 using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.PerformancePlans;
+using WebPerformanceMeter.Runner;
 using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.Scenarios
 {
-    public static class SampleTest2
+    [TestClass]
+    public class SampleTest2
     {
-        public static async Task Test()
+        [Test]
+        public async Task Test()
         {
             var app = new WebApplication();
             var user1 = new TestWaitUser1(app.HttpClient);
@@ -21,7 +24,7 @@ namespace PerformanceTests.Tests.Scenarios
             var scenario = new Scenario();
             scenario.AddSequentialPlans(plan3);
             scenario.AddParallelPlans(plan1, plan2);
-            
+
             await scenario.RunAsync();
         }
     }

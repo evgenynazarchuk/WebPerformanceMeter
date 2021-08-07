@@ -10,7 +10,7 @@ namespace WebPerformanceMeter.Support
 {
     public sealed class Scenario
     {
-        private readonly List<KeyValuePair<PerformancePlanLaunchType, PerformancePlan[]>> Acts;
+        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> Acts;
 
         private readonly Watcher Watcher;
 
@@ -27,17 +27,17 @@ namespace WebPerformanceMeter.Support
 
         public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
         {
-            AddPlans(PerformancePlanLaunchType.Parallel, performancePlan);
+            AddPlans(ActType.Parallel, performancePlan);
             return this;
         }
 
         public Scenario AddSequentialPlans(params PerformancePlan[] performancePlan)
         {
-            AddPlans(PerformancePlanLaunchType.Sequential, performancePlan);
+            AddPlans(ActType.Sequential, performancePlan);
             return this;
         }
 
-        private Scenario AddPlans(PerformancePlanLaunchType launchType, params PerformancePlan[] performancePlan)
+        private Scenario AddPlans(ActType launchType, params PerformancePlan[] performancePlan)
         {
             this.Acts.Add(new(launchType, performancePlan));
             return this;
@@ -62,14 +62,14 @@ namespace WebPerformanceMeter.Support
                 var launchType = act.Key;
                 var plans = act.Value;
 
-                if (launchType == PerformancePlanLaunchType.Sequential)
+                if (launchType == ActType.Sequential)
                 {
                     foreach (var plan in plans)
                     {
                         await plan.StartAsync();
                     }
                 }
-                else if (launchType == PerformancePlanLaunchType.Parallel)
+                else if (launchType == ActType.Parallel)
                 {
                     var plansWaiter = new List<Task>();
 

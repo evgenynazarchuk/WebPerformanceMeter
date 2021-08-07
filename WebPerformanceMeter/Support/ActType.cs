@@ -1,6 +1,6 @@
 ﻿namespace WebPerformanceMeter.Support
 {
-    public enum PerformancePlanLaunchType
+    public enum ActType
     {
         Parallel,
         Sequential

@@ -5,7 +5,7 @@ using WebPerformanceMeter.Tools.HttpTool;
 
 namespace WebPerformanceMeter.Users
 {
-    public partial class HttpUser : User
+    public abstract partial class HttpUser : User
     {
         public Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
             HttpMethod httpMethod,

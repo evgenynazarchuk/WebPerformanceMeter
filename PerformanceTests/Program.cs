@@ -7,7 +7,7 @@ namespace PerformanceTests
     {
         static async Task Main(string[] args)
         {
-            await ReuseTestWaitUser.Test();
+            await FewTestWaitUser.Test();
         }
     }
 }

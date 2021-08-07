@@ -6,7 +6,7 @@ using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.Scenarios
 {
-    public static class ReuseTestWaitUser
+    public static class FewTestWaitUser
     {
         public static async Task Test()
         {

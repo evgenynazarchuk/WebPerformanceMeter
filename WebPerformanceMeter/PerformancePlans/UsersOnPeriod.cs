@@ -7,7 +7,7 @@ using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
-    public class UsersOnPeriod : PerformancePlan
+    public sealed class UsersOnPeriod : PerformancePlan
     {
         private readonly int TotalUsers;
 

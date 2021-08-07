@@ -10,6 +10,10 @@ namespace WebPerformanceMeter.Logger
     {
         private readonly StreamWriter FileStream;
 
+        private const string _rawLogFileName = "RawLogMessage.log";
+
+        private const string _htmlReportFileName = "Report.html";
+
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true
@@ -17,7 +21,7 @@ namespace WebPerformanceMeter.Logger
 
         public FileReport()
         {
-            FileStream = new StreamWriter("result.log", false, Encoding.UTF8, 65535);
+            FileStream = new StreamWriter(_rawLogFileName, false, Encoding.UTF8, 65535);
         }
 
         public override async Task WriteAsync(string message)
@@ -35,13 +39,15 @@ namespace WebPerformanceMeter.Logger
             LogMessage log = new(
                 splittedMessage[0],
                 splittedMessage[1],
-                Int32.Parse(splittedMessage[2]),
-                Int64.Parse(splittedMessage[3]),
-                Int64.Parse(splittedMessage[4]),
+                splittedMessage[2],
+                splittedMessage[3],
+                Int32.Parse(splittedMessage[4]),
                 Int64.Parse(splittedMessage[5]),
                 Int64.Parse(splittedMessage[6]),
-                Int32.Parse(splittedMessage[7]),
-                Int32.Parse(splittedMessage[8])
+                Int64.Parse(splittedMessage[7]),
+                Int64.Parse(splittedMessage[8]),
+                Int32.Parse(splittedMessage[9]),
+                Int32.Parse(splittedMessage[10])
                 );
 
             return log;
@@ -51,6 +57,14 @@ namespace WebPerformanceMeter.Logger
         {
             FileStream.Flush();
             FileStream.Close();
+
+            var htmlGenerate = new HtmlGenerator(_rawLogFileName, _htmlReportFileName);
+            htmlGenerate.ReadRawLogMessages();
+            htmlGenerate.GenerateReport();
+        }
+
+        public void GenerateHtmlReport()
+        { 
         }
     }
 }

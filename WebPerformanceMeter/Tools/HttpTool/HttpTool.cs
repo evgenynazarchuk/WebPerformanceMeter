@@ -70,7 +70,10 @@ namespace WebPerformanceMeter.Tools.HttpTool
             HttpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
         }
 
-        public async Task<HttpResponse> RequestAsync(HttpRequestMessage httpRequestMessage, string user = "")
+        public async Task<HttpResponse> RequestAsync(
+            HttpRequestMessage httpRequestMessage, 
+            string userName = "", 
+            string requestLabel = "")
         {
             //DateTime startSendRequest;
             //DateTime startWaitResponse;
@@ -110,7 +113,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             }
 
             //Console.WriteLine($"123 {user},{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
-            Watcher.Send($"{user},{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
+            Watcher.Send($"{userName},http,{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
 
             HttpResponse response = new(
                 statusCode: (int)httpResponseMessage.StatusCode,
@@ -126,7 +129,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
-            string user = "")
+            string userName = "", 
+            string requestLabel = "")
         {
             using HttpRequestMessage httpRequestMessage = new()
             {
@@ -143,7 +147,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 }
             }
 
-            return this.RequestAsync(httpRequestMessage, user);
+            return this.RequestAsync(httpRequestMessage, userName, requestLabel);
         }
     }
 }

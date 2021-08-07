@@ -3,7 +3,7 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Users
 {
-    public abstract class User
+    public class User
     {
         protected string UserName;
 

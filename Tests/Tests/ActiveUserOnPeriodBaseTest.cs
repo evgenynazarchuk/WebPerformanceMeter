@@ -6,6 +6,7 @@ using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Tools.HttpTool;
 using WebPerformanceMeter.Users;
+using WebPerformanceMeter.Extensions;
 
 namespace Tests.Tests.ActiveUserOnPeriodBase
 {
@@ -15,7 +16,7 @@ namespace Tests.Tests.ActiveUserOnPeriodBase
         {
             var app = new WebApp();
             var user = new TestUser(app.Client);
-            var plan = new ActiveUsersOnPeriod(user, 200, TimeSpan.FromMinutes(30));
+            var plan = new ActiveUsersOnPeriod(user, 200, 1.Minutes());
             var scenario = new Scenario();
 
             scenario.AddPerformancePlan(plan);
@@ -32,22 +33,28 @@ namespace Tests.Tests.ActiveUserOnPeriodBase
         public override async Task PerformanceAsync()
         {
             // Arange
-            var content = new TestRequestContent { Timeout = 200 };
+            var content1 = new TestRequestContent { Timeout = 50 };
+            var content2 = new TestRequestContent { Timeout = 150 };
 
             // Act
-            await this.TestWaitMethod(content);
+            await this.TestWaitMethod(content1, "50ms");
+            await this.TestWaitMethod(content2, "150ms");
         }
     }
 
     // Facade extension
     public static class TestUserExt
     {
-        public static async Task<TestResponseContent?> TestWaitMethod(this HttpUser user, TestRequestContent content)
+        public static async Task<TestResponseContent?> TestWaitMethod(
+            this HttpUser user, 
+            TestRequestContent content,
+            string requestLabel = "")
         {
             return await user.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(
                 HttpMethod.Post,
                 "/Test/TestWaitMethod",
-                content);
+                content,
+                requestLabel);
         }
     }
 }

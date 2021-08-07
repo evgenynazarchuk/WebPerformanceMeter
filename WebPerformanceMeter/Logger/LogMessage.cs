@@ -6,7 +6,11 @@ namespace WebPerformanceMeter.Logger
     {
         public string User { get; set; }
 
+        public string ProtocolType { get; set; }
+
         public string Request { get; set; }
+
+        public string RequestLabel { get; set; }
 
         public int StatusCode { get; set; }
 
@@ -24,7 +28,9 @@ namespace WebPerformanceMeter.Logger
 
         public LogMessage(
             string user,
+            string protocolType,
             string request,
+            string requestLabel,
             int statusCode,
             long startSendRequest,
             long startWaitResponse,
@@ -34,7 +40,9 @@ namespace WebPerformanceMeter.Logger
             int receiveBytes)
         {
             User = user;
+            ProtocolType = protocolType;
             Request = request;
+            RequestLabel = requestLabel;
             StatusCode = statusCode;
             StartSendRequest = startSendRequest;
             StartWaitResponse = startWaitResponse;

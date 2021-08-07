@@ -15,10 +15,4 @@
     <ProjectReference Include="..\WebPerformanceMeter\WebPerformanceMeter.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Tests\GetPersonInfo\Person.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http;
 using TestWebApiServer;
 
-namespace Tests
+namespace PerformanceTests
 {
-    public class WebApp : WebApplicationFactory<Startup>
+    public class WebApplication : WebApplicationFactory<Startup>
     {
         public HttpClient Client { get; set; }
 
-        public WebApp()
+        public WebApplication()
         {
             Client = CreateClient();
         }

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPerformanceMeter", "WebP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApiServer", "TestWebApiServer\TestWebApiServer.csproj", "{07EEE44A-EA30-43F6-B785-C27D3D005B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{FB78B3A6-803E-4A99-A311-2CC77C083194}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{FB78B3A6-803E-4A99-A311-2CC77C083194}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

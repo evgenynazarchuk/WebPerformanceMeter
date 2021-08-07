@@ -1,22 +1,24 @@
-﻿using System;
-
-namespace WebPerformanceMeter.Logger
+﻿namespace WebPerformanceMeter.Logger
 {
     public class LogMessage
     {
         public string User { get; set; }
 
+        public string ProtocolType { get; set; }
+
         public string Request { get; set; }
+
+        public string RequestLabel { get; set; }
 
         public int StatusCode { get; set; }
 
-        public DateTime StartSendRequest { get; set; }
+        public long StartSendRequest { get; set; }
 
-        public DateTime StartWaitResponse { get; set; }
+        public long StartWaitResponse { get; set; }
 
-        public DateTime StartResponse { get; set; }
+        public long StartResponse { get; set; }
 
-        public DateTime EndResponse { get; set; }
+        public long EndResponse { get; set; }
 
         public int SendBytes { get; set; }
 
@@ -24,17 +26,21 @@ namespace WebPerformanceMeter.Logger
 
         public LogMessage(
             string user,
+            string protocolType,
             string request,
+            string requestLabel,
             int statusCode,
-            DateTime startSendRequest,
-            DateTime startWaitResponse,
-            DateTime startResponse,
-            DateTime endResponse,
+            long startSendRequest,
+            long startWaitResponse,
+            long startResponse,
+            long endResponse,
             int sendBytes,
             int receiveBytes)
         {
             User = user;
+            ProtocolType = protocolType;
             Request = request;
+            RequestLabel = requestLabel;
             StatusCode = statusCode;
             StartSendRequest = startSendRequest;
             StartWaitResponse = startWaitResponse;

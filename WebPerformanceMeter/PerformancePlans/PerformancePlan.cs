@@ -2,8 +2,8 @@
 
 namespace WebPerformanceMeter.PerformancePlans
 {
-    public abstract class PerformancePlan
+    public class PerformancePlan
     {
-        public abstract Task StartAsync();
+        public virtual Task StartAsync() { return Task.CompletedTask; }
     }
 }

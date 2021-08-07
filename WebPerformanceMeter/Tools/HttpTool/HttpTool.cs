@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools.HttpTool
 {
@@ -69,35 +70,50 @@ namespace WebPerformanceMeter.Tools.HttpTool
             HttpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
         }
 
-        public async Task<HttpResponse> RequestAsync(HttpRequestMessage httpRequestMessage, string user = "")
+        public async Task<HttpResponse> RequestAsync(
+            HttpRequestMessage httpRequestMessage,
+            string userName = "",
+            string requestLabel = "")
         {
-            DateTime startSendRequest;
-            DateTime startWaitResponse;
-            DateTime startResponse;
-            DateTime endResponse;
+            //DateTime startSendRequest;
+            //DateTime startWaitResponse;
+            //DateTime startResponse;
+            //DateTime endResponse;
+
+            long startSendRequest;
+            long startWaitResponse;
+            long startResponse;
+            long endResponse;
+
+            //Console.WriteLine($"3333333 {Scenario.WatchTime.ElapsedMilliseconds}");
 
             Task<HttpResponseMessage>? httpResponseMessageTask = null;
             HttpResponseMessage httpResponseMessage;
             byte[] content;
 
-            startSendRequest = DateTime.UtcNow;
+            //startSendRequest = DateTime.UtcNow;
+            startSendRequest = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             httpResponseMessageTask = HttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
 
-            startWaitResponse = DateTime.UtcNow;
+            //startWaitResponse = DateTime.UtcNow;
+            startWaitResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             httpResponseMessage = await httpResponseMessageTask;
 
-            startResponse = DateTime.UtcNow;
+            //startResponse = DateTime.UtcNow;
+            startResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             content = await httpResponseMessage.Content.ReadAsByteArrayAsync();
-            endResponse = DateTime.UtcNow;
+            //endResponse = DateTime.UtcNow;
+            endResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
 
-            var responseSize = content.Length;
+            int responseSize = content.Length;
             long requestSize = 0;
             if (httpRequestMessage.Content is not null && httpRequestMessage.Content.Headers.ContentLength.HasValue)
             {
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            Watcher.Send($"{user},{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest:O},{startWaitResponse:O},{startResponse:O},{endResponse:O},{requestSize},{responseSize}");
+            //Console.WriteLine($"123 {user},{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
+            Watcher.Send($"{userName},http,{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
 
             HttpResponse response = new(
                 statusCode: (int)httpResponseMessage.StatusCode,
@@ -113,7 +129,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
-            string user = "")
+            string userName = "",
+            string requestLabel = "")
         {
             using HttpRequestMessage httpRequestMessage = new()
             {
@@ -130,7 +147,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 }
             }
 
-            return this.RequestAsync(httpRequestMessage, user);
+            return this.RequestAsync(httpRequestMessage, userName, requestLabel);
         }
     }
 }

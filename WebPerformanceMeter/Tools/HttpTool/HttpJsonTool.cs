@@ -20,7 +20,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestUri,
             RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null,
-            string user = "")
+            string userName = "",
+            string requestLabel = "")
             where RequestObjectType : class, new()
             where ResponseObjectType : class, new()
         {
@@ -31,7 +32,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestUri: requestUri,
                 requestContent: new StringContent(requestContent, Encoding.UTF8, "application/json"),
                 requestHeaders: requestHeaders,
-                user: user);
+                userName: userName,
+                requestLabel: requestLabel);
 
             var responseObject = JsonSerializer.Deserialize<ResponseObjectType>(response.ContentAsBytes, JsonSerializerOptions);
 
@@ -45,18 +47,20 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestUri,
             RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null,
-            string user = ""
+            string userName = "",
+            string requestLabel = ""
             )
             where RequestObjectType : class, new()
         {
             string requestContentString = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
 
-            var response = await tool.RequestAsync(
+            HttpResponse response = await tool.RequestAsync(
                 httpMethod: httpMethod,
                 requestUri: requestUri,
                 requestContent: new StringContent(requestContentString, Encoding.UTF8, "application/json"),
                 requestHeaders: requestHeaders,
-                user: user);
+                userName: userName,
+                requestLabel: requestLabel);
 
             return response.StatusCode;
         }
@@ -67,15 +71,17 @@ namespace WebPerformanceMeter.Tools.HttpTool
             HttpMethod httpMethod,
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
-            string user = ""
+            string user = "",
+            string requestLabel = ""
             )
             where ResponseObjectType : class, new()
         {
-            var response = await tool.RequestAsync(
+            HttpResponse response = await tool.RequestAsync(
                 httpMethod: httpMethod,
                 requestUri: requestUri,
                 requestHeaders: requestHeaders,
-                user: user);
+                userName: user,
+                requestLabel: requestLabel);
 
             ResponseObjectType? responseObject = JsonSerializer.Deserialize<ResponseObjectType>(response.ContentAsUtf8String, JsonSerializerOptions);
 

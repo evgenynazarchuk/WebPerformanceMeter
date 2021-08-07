@@ -9,22 +9,17 @@ namespace TestWebApiServer.Controllers
     public class TestController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> TestWaitMethod([FromBody] TestRequestContent requestContent)
+        public async Task<IActionResult> TestWaitMethod1([FromBody] TestRequestContent requestContent)
         {
             await Task.Delay(requestContent.Timeout);
             return Ok(new TestResponseContent { Text = $"Wait {requestContent.Timeout} ms" });
         }
 
         [HttpPost]
-        public IActionResult TestPersonMethod([FromBody] PersonInfo personInfo)
+        public async Task<IActionResult> TestWaitMethod2([FromBody] TestRequestContent requestContent)
         {
-            return Ok(personInfo);
-        }
-
-        [HttpGet]
-        public IActionResult TestGetMethod()
-        {
-            return Ok("Hello world");
+            await Task.Delay(requestContent.Timeout);
+            return Ok(new TestResponseContent { Text = $"Wait {requestContent.Timeout} ms" });
         }
     }
 }

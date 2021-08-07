@@ -11,8 +11,8 @@ namespace PerformanceTests.Tests.Scenarios
         public static async Task Test()
         {
             var app = new WebApplication();
-            var user1 = new TestWaitUser1(app.Client);
-            var user2 = new TestWaitUser2(app.Client);
+            var user1 = new TestWaitUser1(app.HttpClient);
+            var user2 = new TestWaitUser2(app.HttpClient);
             var plan1 = new ActiveUsersOnPeriod(user1, 200, 1.Minutes());
             var plan2 = new ActiveUsersOnPeriod(user2, 200, 1.Minutes());
 

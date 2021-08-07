@@ -7,11 +7,11 @@ namespace PerformanceTests
 {
     public class WebApplication : WebApplicationFactory<Startup>
     {
-        public HttpClient Client { get; set; }
+        public HttpClient HttpClient { get; set; }
 
         public WebApplication()
         {
-            Client = CreateClient();
+            HttpClient = CreateClient();
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)

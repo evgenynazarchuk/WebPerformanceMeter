@@ -13,7 +13,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             PropertyNameCaseInsensitive = true
         };
 
-        // request: send receive
+        // request: send, receive
         public static async Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
             this HttpTool tool,
             HttpMethod httpMethod,

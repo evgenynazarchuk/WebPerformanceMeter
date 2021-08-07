@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebPerformanceMeter.Runner
+namespace WebPerformanceMeter.Attributes
 {
     public class TestAttribute : Attribute
     {

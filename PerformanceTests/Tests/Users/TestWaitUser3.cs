@@ -4,7 +4,7 @@ using TestWebApiServer.Models;
 
 namespace PerformanceTests.Tests.Users
 {
-    public class TestWaitUser3 : TestFacade
+    public class TestWaitUser3 : TestUserFacade
     {
         // Arange
         public readonly TestRequestContent content = new TestRequestContent { Timeout = 500 };

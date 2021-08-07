@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using WebPerformanceMeter.Attributes;
 
-namespace WebPerformanceMeter.Runner
+namespace WebPerformanceMeter.Support
 {
-    public class Runner
+    public class WebPerformanceRunner
     {
         public static void Manual(Assembly assembly)
         {

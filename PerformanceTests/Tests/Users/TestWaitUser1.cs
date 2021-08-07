@@ -4,7 +4,7 @@ using TestWebApiServer.Models;
 
 namespace PerformanceTests.Tests.Users
 {
-    public class TestWaitUser1 : TestFacade
+    public class TestWaitUser1 : TestUserFacade
     {
         // Arange
         public readonly TestRequestContent content = new TestRequestContent { Timeout = 50 };
@@ -15,7 +15,7 @@ namespace PerformanceTests.Tests.Users
         public override async Task PerformanceAsync()
         {
             // Act
-            await TestWaitMethod1(content);
+            await TestWaitMethod1(content, "50ms");
         }
     }
 }

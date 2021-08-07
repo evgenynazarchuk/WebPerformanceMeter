@@ -12,13 +12,13 @@
 
         public int StatusCode { get; set; }
 
-        public long StartSendRequest { get; set; }
+        public long StartSendRequestTime { get; set; }
 
-        public long StartWaitResponse { get; set; }
+        public long StartWaitResponseTime { get; set; }
 
-        public long StartResponse { get; set; }
+        public long StartResponseTime { get; set; }
 
-        public long EndResponse { get; set; }
+        public long EndResponseTime { get; set; }
 
         public int SendBytes { get; set; }
 
@@ -30,24 +30,24 @@
             string request,
             string requestLabel,
             int statusCode,
-            long startSendRequest,
-            long startWaitResponse,
-            long startResponse,
-            long endResponse,
+            long startSendRequestTime,
+            long startWaitResponseTime,
+            long startResponseTime,
+            long endResponseTime,
             int sendBytes,
             int receiveBytes)
         {
-            User = user;
-            ProtocolType = protocolType;
-            Request = request;
-            RequestLabel = requestLabel;
-            StatusCode = statusCode;
-            StartSendRequest = startSendRequest;
-            StartWaitResponse = startWaitResponse;
-            StartResponse = startResponse;
-            EndResponse = endResponse;
-            SendBytes = sendBytes;
-            ReceiveBytes = receiveBytes;
+            this.User = user;
+            this.ProtocolType = protocolType;
+            this.Request = request;
+            this.RequestLabel = requestLabel;
+            this.StatusCode = statusCode;
+            this.StartSendRequestTime = startSendRequestTime;
+            this.StartWaitResponseTime = startWaitResponseTime;
+            this.StartResponseTime = startResponseTime;
+            this.EndResponseTime = endResponseTime;
+            this.SendBytes = sendBytes;
+            this.ReceiveBytes = receiveBytes;
         }
     }
 }

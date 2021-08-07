@@ -10,9 +10,9 @@ namespace WebPerformanceMeter.Logger
     {
         private readonly StreamWriter FileStream;
 
-        private const string _rawLogFileName = "RawLogMessage.log";
+        private readonly string _rawLogFileName;
 
-        private const string _htmlReportFileName = "Report.html";
+        private readonly string _htmlReportFileName;
 
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
@@ -21,6 +21,21 @@ namespace WebPerformanceMeter.Logger
 
         public FileReport()
         {
+            long reportNumber = DateTime.UtcNow.Ticks;
+
+            if (!Directory.Exists("Logs"))
+            {
+                Directory.CreateDirectory("Logs");
+            }
+            
+            if (!Directory.Exists($"Logs//{reportNumber}"))
+            {
+                Directory.CreateDirectory($"Logs//{reportNumber}");
+            }
+
+            _rawLogFileName = $"Logs/{reportNumber}/RawLogMessage.log";
+            _htmlReportFileName = $"Logs/{reportNumber}/Report.html";
+
             FileStream = new StreamWriter(_rawLogFileName, false, Encoding.UTF8, 65535);
         }
 

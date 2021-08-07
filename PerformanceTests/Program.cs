@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using WebPerformanceMeter.Runner;
+using WebPerformanceMeter.Support;
 
 namespace PerformanceTests
 {
@@ -7,7 +7,7 @@ namespace PerformanceTests
     {
         static void Main()
         {
-            Runner.Manual(Assembly.GetExecutingAssembly());
+            WebPerformanceRunner.Manual(Assembly.GetExecutingAssembly());
         }
     }
 }

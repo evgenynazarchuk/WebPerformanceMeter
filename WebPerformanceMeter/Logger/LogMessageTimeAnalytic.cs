@@ -1,6 +1,6 @@
 ﻿namespace WebPerformanceMeter.Logger
 {
-    public class GroupedLogMessage
+    public class LogMessageTimeAnalytic
     {
         public string User { get; set; }
 
@@ -10,9 +10,9 @@
 
         public int StatusCode { get; set; }
 
-        public long EndResponse { get; set; }
+        public long EndResponseTime { get; set; }
 
-        public long CompletedRequest { get; set; }
+        public long CompletedRequests { get; set; }
 
         public double ResponseTime { get; set; }
 
@@ -22,28 +22,28 @@
 
         public double ReceivedTime { get; set; }
 
-        public GroupedLogMessage(
+        public LogMessageTimeAnalytic(
             string user,
             string request,
             string requestLabel,
             int statusCode,
-            long endResponse,
-            long completedRequest,
+            long endResponseTime,
+            long completedRequests,
             double responseTime,
             double sentTime,
             double waitTime,
             double receiveTime)
         {
-            User = user;
-            Request = request;
-            RequestLabel = requestLabel;
-            StatusCode = statusCode;
-            EndResponse = endResponse;
-            CompletedRequest = completedRequest;
-            ResponseTime = responseTime;
-            SentTime = sentTime;
-            WaitTime = waitTime;
-            ReceivedTime = receiveTime;
+            this.User = user;
+            this.Request = request;
+            this.RequestLabel = requestLabel;
+            this.StatusCode = statusCode;
+            this.EndResponseTime = endResponseTime;
+            this.CompletedRequests = completedRequests;
+            this.ResponseTime = responseTime;
+            this.SentTime = sentTime;
+            this.WaitTime = waitTime;
+            this.ReceivedTime = receiveTime;
         }
     }
 }

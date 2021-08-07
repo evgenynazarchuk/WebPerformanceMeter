@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System;
 
 namespace WebPerformanceMeter.Logger
 {
@@ -26,7 +27,7 @@ namespace WebPerformanceMeter.Logger
 
         public void ReadRawLogMessages()
         {
-            _rawLogReader = new(_rawLogPath, Encoding.UTF8, false, 65535);
+			_rawLogReader = new(_rawLogPath, Encoding.UTF8, false, 65535);
             _rawLogMessages = new();
 
             string? rawLogAsString;
@@ -51,24 +52,24 @@ namespace WebPerformanceMeter.Logger
             StreamWriter reportWriter = new(_outputHtmlPath, false, Encoding.UTF8, 65355);
 
             var groupByRequestStatusCodeEndResponse = _rawLogMessages
-                .GroupBy(x => new { x.User, x.Request, x.RequestLabel, x.StatusCode, EndResponse = (long)(x.EndResponse / 10000000) })
+                .GroupBy(x => new { x.User, x.Request, x.RequestLabel, x.StatusCode, EndResponseTime = (long)(x.EndResponseTime / 10000000) })
                 .Select(x => new
                 {
                     x.Key,
                     CompletedRequest = x.LongCount(),
                     SentBytes = x.Sum(y => y.SendBytes),
                     ReceivedBytes = x.Sum(y => y.ReceiveBytes),
-                    ResponseTime = x.Average(y => y.EndResponse - y.StartSendRequest),
-                    SentTime = x.Average(y => y.StartWaitResponse - y.StartSendRequest),
-                    WaitTime = x.Average(y => y.StartResponse - y.StartWaitResponse),
-                    ReceivedTime = x.Average(y => y.EndResponse - y.StartResponse)
+                    ResponseTime = x.Average(y => y.EndResponseTime - y.StartSendRequestTime),
+                    SentTime = x.Average(y => y.StartWaitResponseTime - y.StartSendRequestTime),
+                    WaitTime = x.Average(y => y.StartResponseTime - y.StartWaitResponseTime),
+                    ReceivedTime = x.Average(y => y.EndResponseTime - y.StartResponseTime)
                 }).ToList();
 
             var groupByEndResponse = _rawLogMessages
-                .GroupBy(x => new { EndResponse = x.EndResponse / 10000000 })
+                .GroupBy(x => new { EndResponseTime = x.EndResponseTime / 10000000 })
                 .Select(x => new
                 {
-                    EndResponse = x.Key.EndResponse,
+                    EndResponseTime = x.Key.EndResponseTime,
                     SentBytes = x.Sum(y => y.SendBytes),
                     ReceivedBytes = x.Sum(y => y.ReceiveBytes)
                 }).ToList();
@@ -81,12 +82,12 @@ namespace WebPerformanceMeter.Logger
 
             foreach (var item in groupByRequestStatusCodeEndResponse)
             {
-                GroupedLogMessage totalLog = new(
+                LogMessageTimeAnalytic totalLog = new(
                     item.Key.User,
                     item.Key.Request,
                     item.Key.RequestLabel,
                     item.Key.StatusCode,
-                    item.Key.EndResponse,
+                    item.Key.EndResponseTime,
                     item.CompletedRequest,
                     item.ResponseTime,
                     item.SentTime,
@@ -98,8 +99,8 @@ namespace WebPerformanceMeter.Logger
 
             foreach (var item in groupByEndResponse)
             {
-                sentStringLog.Append(JsonSerializer.Serialize(new BytesCount(item.EndResponse, item.SentBytes)) + ",\n");
-                receivedStringLog.Append(JsonSerializer.Serialize(new BytesCount(item.EndResponse, item.ReceivedBytes)) + ",\n");
+                sentStringLog.Append(JsonSerializer.Serialize(new LogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
+                receivedStringLog.Append(JsonSerializer.Serialize(new LogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
             }
 
             //
@@ -114,32 +115,6 @@ const receivedBytesLog = [{receivedStringLog}]
 ";
 
             //
-            var axisFontLayout = @"
-<script>
-let yaxisFontLayout = {
-	family: 'Arial',
-	size: 16,
-	color: '#7f7f7f'
-}		
-let xaxisFontLayout = {
-	family: 'Arial',
-	size: 16,
-	color: '#7f7f7f'
-}
-</script>
-";
-
-            //
-            var titleFontLayout = @"
-<script>
-let titleFontLayout = {
-	family: 'Arial',
-	size: 32
-}
-</script>
-";
-
-            //
             var responseTimeChart = @"
 <script>
 let responseTimeData = {}
@@ -150,7 +125,7 @@ for(let item of groupedRawLog) {
     }
 
 	let date = new Date(0);
-	date.setSeconds(item.EndResponse);
+	date.setSeconds(item.EndResponseTime);
 	let timeString = date.toISOString().substr(11, 8);
 
     responseTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ResponseTime / 10000 })
@@ -199,10 +174,12 @@ for (let item of groupedRawLog)
     {
         completedRequestsData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
     }
+
 	let date = new Date(0);
-	date.setSeconds(item.EndResponse);
+	date.setSeconds(item.EndResponseTime);
 	let timeString = date.toISOString().substr(11, 8);
-    completedRequestsData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CompletedRequest })
+
+    completedRequestsData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CompletedRequests })
 }
 
 let completedRequestsChartDatasets = []
@@ -247,7 +224,7 @@ for (let item of groupedRawLog)
         sentTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
     }
 	let date = new Date(0);
-	date.setSeconds(item.EndResponse);
+	date.setSeconds(item.EndResponseTime);
 	let timeString = date.toISOString().substr(11, 8);
     sentTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.SentTime / 10000 })
 }
@@ -295,7 +272,7 @@ for (let item of groupedRawLog)
         waitTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
     }
 	let date = new Date(0);
-	date.setSeconds(item.EndResponse);
+	date.setSeconds(item.EndResponseTime);
 	let timeString = date.toISOString().substr(11, 8);
     waitTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.WaitTime / 10000 })
 }
@@ -342,7 +319,7 @@ for (let item of groupedRawLog)
         receivedTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
     }
 	let date = new Date(0);
-	date.setSeconds(item.EndResponse);
+	date.setSeconds(item.EndResponseTime);
 	let timeString = date.toISOString().substr(11, 8);
     receivedTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ReceivedTime / 10000 })
 }
@@ -386,7 +363,7 @@ let sentBytesChartDataset = []
 sentBytesChartDataset.push({
 	x: sentBytesLog.map(item => {
 		let date = new Date(0);
-		date.setSeconds(item.EndResponse);
+		date.setSeconds(item.EndResponseTime);
 		return date.toISOString().substr(11, 8);
 	}),
 	y: sentBytesLog.map(item => item.Count),
@@ -422,7 +399,7 @@ let receivedBytesChartDataset = []
 receivedBytesChartDataset.push({
 	x: receivedBytesLog.map(item => {
 		let date = new Date(0);
-		date.setSeconds(item.EndResponse);
+		date.setSeconds(item.EndResponseTime);
 		return date.toISOString().substr(11, 8);
 	}),
 	y: receivedBytesLog.map(item => item.Count),
@@ -466,8 +443,6 @@ Plotly.newPlot('ReceivedBytesChart', receivedBytesChartDataset, receivedBytesCha
 <div id='SentBytesChart' style='width:99%;height:400px;'></div>
 <div id='ReceivedBytesChart' style='width:99%;height:400px;'></div>
 {sourceData}
-{axisFontLayout}
-{titleFontLayout}
 {responseTimeChart}
 {completedRequestsChart}
 {sentTimeChart}

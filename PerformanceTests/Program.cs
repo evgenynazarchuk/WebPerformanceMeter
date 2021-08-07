@@ -7,7 +7,7 @@ namespace PerformanceTests
     {
         static async Task Main(string[] args)
         {
-            await FewTestWaitUser.Test();
+            await SampleTest2.Test();
         }
     }
 }

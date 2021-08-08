@@ -46,14 +46,12 @@ namespace WebPerformanceMeter.PerformancePlans
             {
                 for (int i = 0; i < this.ActiveUsersCount; i++)
                 {
-                    if (this.ActiveUsers[i] is null
-                        || this.ActiveUsers[i].IsCompleted)
+                    if (this.ActiveUsers[i] is null || this.ActiveUsers[i].IsCompleted)
                     {
                         this.ActiveUsers[i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                     }
                 }
             }
-
             await this.WaitUserTerminationAsync();
         }
 

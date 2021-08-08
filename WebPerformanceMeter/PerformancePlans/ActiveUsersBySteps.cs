@@ -82,7 +82,6 @@ namespace WebPerformanceMeter.PerformancePlans
                     currentMaximumActiveUsersCountPerPeriod += this.Step;
                 else
                     currentMaximumActiveUsersCountPerPeriod -= this.Step;
-
             }
 
             Task.WaitAll(this.ActiveUsers);

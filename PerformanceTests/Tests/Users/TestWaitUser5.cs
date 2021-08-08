@@ -12,7 +12,7 @@ namespace PerformanceTests.Tests.Users
         public TestWaitUser5(HttpClient client)
             : base(client) { }
 
-        public override async Task PerformanceAsync()
+        protected override async Task PerformanceAsync()
         {
             // Action
             await TestWaitMethod1(content, "500ms");

@@ -5,14 +5,14 @@ namespace WebPerformanceMeter.Users
 {
     public abstract class User
     {
-        protected string UserName;
+        private string UserName;
 
         public User()
         {
             UserName = this.GetType().Name;
         }
 
-        public void SetUserName(string userName = "")
+        protected void SetUserName(string userName = "")
         {
             if (string.IsNullOrEmpty(userName))
             {
@@ -65,12 +65,12 @@ namespace WebPerformanceMeter.Users
             }
         }
 
-        public virtual Task PerformanceAsync(object entity)
+        protected virtual Task PerformanceAsync(object entity)
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task PerformanceAsync()
+        protected virtual Task PerformanceAsync()
         {
             return Task.CompletedTask;
         }

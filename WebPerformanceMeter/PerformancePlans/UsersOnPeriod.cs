@@ -44,12 +44,14 @@ namespace WebPerformanceMeter.PerformancePlans
             this.User = user;
             this.TotalUsers = totalUsers;
             this.UserPerformancePlanDuration = performancePlanDuration;
-            this.InvokedUsers = new Task[totalUsers];
+            this.InvokedUsers = new Task[this.TotalUsers];
             this.CurrentInvoke = 0;
-            this.MinimalInvokePeriod = minimalInvokePeriod ?? 500.Milliseconds();
+            this.MinimalInvokePeriod = minimalInvokePeriod ?? 1000.Milliseconds();
             this.CalculateUserCountOnInterval(ref this.UsersCount, ref this.Interval);
+
             this.Runner = new Timer(this.Interval);
             this.Runner.Elapsed += (sender, e) => this.InvokeUsers();
+
             this.UserLoopCount = userLoopCount;
             this.DataReader = dataReader;
             this.ReuseDataInLoop = reuseDataInLoop;

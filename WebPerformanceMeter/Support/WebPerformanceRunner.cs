@@ -86,10 +86,6 @@ namespace WebPerformanceMeter.Support
             {
                 await (Task)testTask;
             }
-            else
-            {
-                throw new ApplicationException("Error run test");
-            }
         }
     }
 }

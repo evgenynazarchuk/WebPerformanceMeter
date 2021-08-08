@@ -29,7 +29,7 @@ namespace WebPerformanceMeter.PerformancePlans
             this.User = user;
             this.UsersCount = usersCount;
             this.UserLoopCount = userLoopCount;
-            this.InvokedUsers = new Task[UsersCount];
+            this.InvokedUsers = new Task[this.UsersCount];
             this.DataReader = dataReader;
             this.ReuseDataInLoop = reuseDataInLoop;
         }

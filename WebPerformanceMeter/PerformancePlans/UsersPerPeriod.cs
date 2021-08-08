@@ -48,8 +48,10 @@ namespace WebPerformanceMeter.PerformancePlans
             this.CurrentPeriod = 0;
             this.InvokedUsers = new Task[sizePeriodBuffer, usersCountPerPeriod];
             this.PerPeriod = perPeriod is null ? 1.Seconds() : perPeriod.Value;
+
             this.Runner = new Timer(this.PerPeriod.TotalMilliseconds);
             this.Runner.Elapsed += (sender, e) => InvokeUsers();
+
             this.UserLoopCount = userLoopCount;
             this.DataReader = dataReader;
             this.ReuseDataInLoop = reuseDataInLoop;
@@ -68,7 +70,7 @@ namespace WebPerformanceMeter.PerformancePlans
         {
             for (var i = 0; i < this.TotalUsersPerPeriod; i++)
             {
-                this.InvokedUsers[this.CurrentPeriod, i] = this.User.InvokeAsync();
+                this.InvokedUsers[this.CurrentPeriod, i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
             }
 
             this.IncrementPeriod();

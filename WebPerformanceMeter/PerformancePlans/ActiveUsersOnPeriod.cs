@@ -41,7 +41,7 @@ namespace WebPerformanceMeter.PerformancePlans
 
         public override async Task StartAsync()
         {
-            var endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.PerformancePlanDuration.TotalSeconds;
+            double endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.PerformancePlanDuration.TotalSeconds;
             while (Scenario.ScenarioWatchTime.Elapsed.TotalSeconds < endTime)
             {
                 for (int i = 0; i < this.ActiveUsersCount; i++)

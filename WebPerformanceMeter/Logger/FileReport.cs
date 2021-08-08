@@ -77,9 +77,5 @@ namespace WebPerformanceMeter.Logger
             htmlGenerate.ReadRawLogMessages();
             htmlGenerate.GenerateReport();
         }
-
-        public void GenerateHtmlReport()
-        {
-        }
     }
 }

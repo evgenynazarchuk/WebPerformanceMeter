@@ -27,23 +27,23 @@ namespace WebPerformanceMeter.Support
 
         public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
         {
-            AddPlans(ActType.Parallel, performancePlan);
+            AddActs(ActType.Parallel, performancePlan);
             return this;
         }
 
         public Scenario AddSequentialPlans(params PerformancePlan[] performancePlan)
         {
-            AddPlans(ActType.Sequential, performancePlan);
+            AddActs(ActType.Sequential, performancePlan);
             return this;
         }
 
-        private Scenario AddPlans(ActType launchType, params PerformancePlan[] performancePlan)
+        private Scenario AddActs(ActType launchType, params PerformancePlan[] performancePlan)
         {
             this.Acts.Add(new(launchType, performancePlan));
             return this;
         }
 
-        public async Task RunAsync()
+        public async Task StartAsync()
         {
             CancellationTokenSource tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;

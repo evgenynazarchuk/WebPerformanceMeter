@@ -14,7 +14,7 @@ namespace PerformanceTests.Tests.Users
 
         public override async Task PerformanceAsync()
         {
-            // Act
+            // Action
             await TestWaitMethod1(content, "50ms");
         }
     }

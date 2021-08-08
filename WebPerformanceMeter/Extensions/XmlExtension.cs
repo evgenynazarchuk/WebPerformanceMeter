@@ -21,7 +21,7 @@ namespace WebPerformanceMeter.Extensions
             return stringWriter.ToString();
         }
 
-        public static T? FromXmlToObject<T>(this string value)
+        public static T? FromXmlStringToObject<T>(this string value)
             where T : class
         {
             using var reader = new StringReader(value);

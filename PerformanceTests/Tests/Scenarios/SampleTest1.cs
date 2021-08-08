@@ -22,7 +22,7 @@ namespace PerformanceTests.Tests.Scenarios
             // Run test
             await new Scenario()
                 .AddParallelPlans(plan1, plan2)
-                .RunAsync();
+                .StartAsync();
         }
     }
 }

@@ -10,28 +10,30 @@ namespace WebPerformanceMeter.Support
     {
         public static async Task ManualAsync(Assembly assembly)
         {
+            // get test method
             Type[] assemblyTypes = assembly.GetTypes();
-            Dictionary<int, (Type, MethodInfo)> tests = new();
+            Dictionary<int, (Type, MethodInfo)> testsList = new();
 
             int testNumber = 1;
-            foreach (var type in assemblyTypes)
+            foreach (var assemblyType in assemblyTypes)
             {
-                var methodsInfo = type.GetMethods();
-                foreach (var methodInfo in methodsInfo)
+                var assemblyTypeMethodsInfo = assemblyType.GetMethods();
+                foreach (var methodInfo in assemblyTypeMethodsInfo)
                 {
                     foreach (var attribute in methodInfo.CustomAttributes)
                     {
                         if (attribute.AttributeType == typeof(PerformanceTestAttribute))
                         {
-                            tests.Add(testNumber++, (type, methodInfo));
+                            testsList.Add(testNumber++, (assemblyType, methodInfo));
                         }
                     }
                 }
             }
 
-            foreach (var item in tests)
+            // print welcome
+            foreach (var testInfo in testsList)
             {
-                Console.WriteLine($"{item.Key} {item.Value.Item1.Name} {item.Value.Item2.Name}");
+                Console.WriteLine($"{testInfo.Key} - {testInfo.Value.Item1.Name}.{testInfo.Value.Item2.Name}");
             }
 
             Console.Write($"Enter test number: ");
@@ -40,24 +42,21 @@ namespace WebPerformanceMeter.Support
                 throw new ApplicationException("Test number is incorrect");
             }
 
-            var test = Activator.CreateInstance(tests[selectedTestNumber].Item1);
-            if (test is null)
+            // start performance test
+            var testClass = Activator.CreateInstance(testsList[selectedTestNumber].Item1);
+            if (testClass is null)
             {
-                throw new ApplicationException("Error test create");
+                throw new ApplicationException("Error create test");
             }
 
-            var testMethodsInfo = test.GetType().GetMethods();
-            foreach (var methodInfo in testMethodsInfo)
+            var testTask = testsList[selectedTestNumber].Item2.Invoke(testClass, null);
+            if (testTask is not null)
             {
-                if (methodInfo == tests[selectedTestNumber].Item2)
-                {
-                    var task = methodInfo.Invoke(test, null);
-
-                    if (task is not null)
-                    {
-                        await (Task)task;
-                    }
-                }
+                await (Task)testTask;
+            }
+            else
+            {
+                throw new ApplicationException("Error run test");
             }
         }
     }

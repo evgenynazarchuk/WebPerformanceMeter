@@ -143,6 +143,12 @@ for(let key in responseTimeData) {
 
 let responseTimeChartLayout ={
 	showlegend: true,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Response Time',
 	},
@@ -194,6 +200,12 @@ for(let key in completedRequestsData) {
 
 let completedRequestsChartLayout = {
 	showlegend: true,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Completed Requests',
 	},
@@ -242,6 +254,12 @@ for(let key in sentTimeData) {
 
 let sentTimeChartlayout ={
 	showlegend: true,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Data Timed Sending',
 	},
@@ -283,12 +301,18 @@ for(let key in waitTimeData) {
 		x: waitTimeData[key].map(item => item.x),
 		y: waitTimeData[key].map(item => item.y),
 		type: 'scatter',
-		name: key
+		name: key,
 	})
 }
 
 let waitTimeChartLayout ={
 	showlegend: true,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Data Wait Times',
 	},
@@ -336,6 +360,12 @@ for(let key in receivedTimeData) {
 
 let receivedTimeChartLayout ={
 	showlegend: true,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Data Timed Receiving',
 	},
@@ -372,6 +402,12 @@ sentBytesChartDataset.push({
 
 let sentBytesChartLayout = {
 	showlegend: false,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Sent Bytes',
 	},
@@ -408,6 +444,12 @@ receivedBytesChartDataset.push({
 
 let receivedBytesChartLayout = {
 	showlegend: false,
+	legend: {
+		xanchor: 'left', y: -0.5, orientation: 'h'
+	},
+	hoverlabel: {
+		namelength: -1
+	},
 	title: {
 		text:'Received Bytes',
 	},

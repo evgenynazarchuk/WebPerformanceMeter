@@ -4,18 +4,18 @@ using TestWebApiServer.Models;
 
 namespace PerformanceTests.Tests.Users
 {
-    public class TestWaitUser1 : TestUserFacade
+    public class TestWaitUser7 : TestUserFacade
     {
         // Arange
-        public readonly TestRequestContent content = new() { Timeout = 100 };
+        public readonly TestRequestContent content = new() { Timeout = 700 };
 
-        public TestWaitUser1(HttpClient client)
+        public TestWaitUser7(HttpClient client)
             : base(client) { }
 
         public override async Task PerformanceAsync()
         {
             // Action
-            await TestWaitMethod1(content, "100ms");
+            await TestWaitMethod1(content, "700ms");
         }
     }
 }

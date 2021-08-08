@@ -17,8 +17,10 @@ namespace PerformanceTests.Tests.Scenarios
         public async Task FewActs(int minutes, int usersCount)
         {
             var app = new WebApplication();
+
             var user1 = new TestWaitUser1(app.HttpClient);
             var user2 = new TestWaitUser2(app.HttpClient);
+
             var plan1 = new ActiveUsersOnPeriod(user1, usersCount, minutes.Minutes());
             var plan2 = new ActiveUsersOnPeriod(user2, usersCount, minutes.Minutes());
             var plan3 = new ActiveUsersOnPeriod(user1, usersCount, minutes.Minutes());

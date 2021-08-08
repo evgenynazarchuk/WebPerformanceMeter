@@ -15,9 +15,9 @@ namespace PerformanceTests.Tests.Scenarios
             var app = new WebApplication();
             var user1 = new TestWaitUser1(app.HttpClient);
             var user2 = new TestWaitUser2(app.HttpClient);
-            var plan1 = new ActiveUsersOnPeriod(user1, 200, 10.Minutes());
-            var plan2 = new ActiveUsersOnPeriod(user2, 200, 10.Minutes());
-            var plan3 = new ActiveUsersOnPeriod(user1, 200, 10.Minutes());
+            var plan1 = new ActiveUsersOnPeriod(user1, 200, 2.Minutes());
+            var plan2 = new ActiveUsersOnPeriod(user2, 200, 2.Minutes());
+            var plan3 = new ActiveUsersOnPeriod(user1, 200, 2.Minutes());
 
             await new Scenario()
                 .AddSequentialPlans(plan1)

@@ -45,9 +45,9 @@ namespace WebPerformanceMeter.Support
 
         public async Task StartAsync()
         {
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            CancellationTokenSource tokenSource = new();
             CancellationToken token = tokenSource.Token;
-            var watcherWaiter = Watcher.Processing(token);
+            Task watcherWaiter = Watcher.Processing(token);
 
             if (this.Acts.Count == 0)
             {
@@ -79,6 +79,8 @@ namespace WebPerformanceMeter.Support
                         {
                             await plan.StartAsync();
                         }));
+
+                        //plansWaiter.Add(plan.StartAsync()); // do not work!?
                     }
 
                     Task.WaitAll(plansWaiter.ToArray());

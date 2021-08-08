@@ -7,7 +7,7 @@ namespace PerformanceTests.Tests.Users
     public class TestWaitUser1 : TestUserFacade
     {
         // Arange
-        public readonly TestRequestContent content = new TestRequestContent { Timeout = 50 };
+        public readonly TestRequestContent content = new() { Timeout = 50 };
 
         public TestWaitUser1(HttpClient client)
             : base(client) { }

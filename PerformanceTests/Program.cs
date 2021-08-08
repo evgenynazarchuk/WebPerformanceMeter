@@ -1,13 +1,14 @@
 ﻿using System.Reflection;
 using WebPerformanceMeter.Support;
+using System.Threading.Tasks;
 
 namespace PerformanceTests
 {
     class Program
     {
-        static void Main()
+        static async Task Main()
         {
-            WebPerformanceRunner.Manual(Assembly.GetExecutingAssembly());
+            await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());
         }
     }
 }

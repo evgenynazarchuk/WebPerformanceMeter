@@ -2,7 +2,7 @@
 
 namespace WebPerformanceMeter.Attributes
 {
-    public class TestClassAttribute : Attribute
+    public class PerformanceTestAttribute : Attribute
     {
     }
 }

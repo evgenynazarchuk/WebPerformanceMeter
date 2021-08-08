@@ -2,39 +2,28 @@
 using System.Collections.Generic;
 using System.Reflection;
 using WebPerformanceMeter.Attributes;
+using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Support
 {
     public class WebPerformanceRunner
     {
-        public static void Manual(Assembly assembly)
+        public static async Task ManualAsync(Assembly assembly)
         {
             Type[] assemblyTypes = assembly.GetTypes();
-            List<Type> testClassTypes = new();
             Dictionary<int, (Type, MethodInfo)> tests = new();
 
+            int testNumber = 1;
             foreach (var type in assemblyTypes)
             {
-                foreach (var attr in type.CustomAttributes)
+                var methodsInfo = type.GetMethods();
+                foreach (var methodInfo in methodsInfo)
                 {
-                    if (attr.AttributeType == typeof(TestClassAttribute))
+                    foreach (var attribute in methodInfo.CustomAttributes)
                     {
-                        testClassTypes.Add(type);
-                    }
-                }
-            }
-
-            int testNumber = 1;
-            foreach (var testClassType in testClassTypes)
-            {
-                var methods = testClassType.GetMethods();
-                foreach (var method in methods)
-                {
-                    foreach (var attr in method.CustomAttributes)
-                    {
-                        if (attr.AttributeType == typeof(TestAttribute))
+                        if (attribute.AttributeType == typeof(PerformanceTestAttribute))
                         {
-                            tests.Add(testNumber++, (testClassType, method));
+                            tests.Add(testNumber++, (type, methodInfo));
                         }
                     }
                 }
@@ -57,12 +46,17 @@ namespace WebPerformanceMeter.Support
                 throw new ApplicationException("Error test create");
             }
 
-            var testMethod = test.GetType().GetMethods();
-            foreach (var method in testMethod)
+            var testMethodsInfo = test.GetType().GetMethods();
+            foreach (var methodInfo in testMethodsInfo)
             {
-                if (method == tests[selectedTestNumber].Item2)
+                if (methodInfo == tests[selectedTestNumber].Item2)
                 {
-                    method.Invoke(test, null);
+                    var task = methodInfo.Invoke(test, null);
+
+                    if (task is not null)
+                    {
+                        await (Task)task;
+                    }
                 }
             }
         }

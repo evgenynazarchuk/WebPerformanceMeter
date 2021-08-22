@@ -32,6 +32,8 @@ namespace WebPerformanceMeter.Users
         {
             IBrowserContext ctx = await Browser.NewContextAsync();
             IPage page = await ctx.NewPageAsync();
+            PageContext pageCtx = new(page);
+
             object? entity = null;
 
             if (dataReader is not null)
@@ -48,11 +50,11 @@ namespace WebPerformanceMeter.Users
             {
                 if (entity is null)
                 {
-                    await PerformanceAsync(page);
+                    await PerformanceAsync(pageCtx);
                 }
                 else
                 {
-                    await PerformanceAsync(page, entity);
+                    await PerformanceAsync(pageCtx, entity);
                 }
 
                 if (dataReader is not null && !reuseDataInLoop)
@@ -69,12 +71,12 @@ namespace WebPerformanceMeter.Users
             await page.CloseAsync();
         }
 
-        protected virtual Task PerformanceAsync(IPage page, object entity)
+        protected virtual Task PerformanceAsync(PageContext page, object entity)
         {
             return Task.CompletedTask;
         }
 
-        protected virtual Task PerformanceAsync(IPage page)
+        protected virtual Task PerformanceAsync(PageContext page)
         {
             return Task.CompletedTask;
         }

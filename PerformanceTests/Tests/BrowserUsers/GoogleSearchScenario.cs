@@ -16,7 +16,7 @@ namespace PerformanceTests.Tests.BrowserUsers
         {
             // Arrange
             var user = new GoogleSearchUser();
-            var plan = new ActiveUsersOnPeriod(user, usersCount, minutes.Minutes());
+            var plan = new ActiveUsersOnPeriod(user, usersCount, minutes.Minutes(), 3);
 
             // Act
             await new Scenario()

@@ -12,7 +12,7 @@ namespace PerformanceTests.Tests.BrowserUsers
 {
     public class GoogleSearchUser : BrowserUser
     {
-        protected override async Task PerformanceAsync(IPage page)
+        protected override async Task PerformanceAsync(PageContext page)
         {
             await page.GotoAsync("https://google.com");
             await page.TypeAsync("//input[@name='q']", "Google");

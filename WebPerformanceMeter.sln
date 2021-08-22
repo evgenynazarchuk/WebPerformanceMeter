@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPerformanceMeter", "WebPerformanceMeter\WebPerformanceMeter.csproj", "{02D466D7-2175-49F4-9343-A3A3F27B9FBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebPerformanceMeter", "WebPerformanceMeter\WebPerformanceMeter.csproj", "{02D466D7-2175-49F4-9343-A3A3F27B9FBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApiServer", "TestWebApiServer\TestWebApiServer.csproj", "{07EEE44A-EA30-43F6-B785-C27D3D005B80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApiServer", "TestWebApiServer\TestWebApiServer.csproj", "{07EEE44A-EA30-43F6-B785-C27D3D005B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{FB78B3A6-803E-4A99-A311-2CC77C083194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{FB78B3A6-803E-4A99-A311-2CC77C083194}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

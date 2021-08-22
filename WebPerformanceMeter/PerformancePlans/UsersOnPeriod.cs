@@ -21,7 +21,7 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly Timer Runner;
 
-        private readonly User User;
+        private readonly PerformanceUser PerformanceUser;
 
         private readonly TimeSpan MinimalInvokePeriod;
 
@@ -33,7 +33,8 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly bool ReuseDataInLoop;
 
-        public UsersOnPeriod(User user,
+        public UsersOnPeriod(
+            PerformanceUser user,
             int totalUsers,
             TimeSpan performancePlanDuration,
             TimeSpan? minimalInvokePeriod = null,
@@ -41,7 +42,7 @@ namespace WebPerformanceMeter.PerformancePlans
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
         {
-            this.User = user;
+            this.PerformanceUser = user;
             this.TotalUsers = totalUsers;
             this.UserPerformancePlanDuration = performancePlanDuration;
             this.InvokedUsers = new Task[this.TotalUsers];
@@ -73,7 +74,7 @@ namespace WebPerformanceMeter.PerformancePlans
 
             for (int i = 0; i < this.UsersCount; i++)
             {
-                this.InvokedUsers[this.CurrentInvoke] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                this.InvokedUsers[this.CurrentInvoke] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                 this.CurrentInvoke++;
             }
         }

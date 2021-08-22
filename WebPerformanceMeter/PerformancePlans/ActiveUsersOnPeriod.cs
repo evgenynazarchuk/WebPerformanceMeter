@@ -8,7 +8,7 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public sealed class ActiveUsersOnPeriod : PerformancePlan
     {
-        private readonly User User;
+        private readonly PerformanceUser PerformanceUser;
 
         private readonly int ActiveUsersCount;
 
@@ -23,14 +23,14 @@ namespace WebPerformanceMeter.PerformancePlans
         private readonly bool ReuseDataInLoop;
 
         public ActiveUsersOnPeriod(
-            User user,
+            PerformanceUser user,
             int activeUsersCount,
             TimeSpan performancePlanDuration,
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
         {
-            this.User = user;
+            this.PerformanceUser = user;
             this.ActiveUsersCount = activeUsersCount;
             this.ActiveUsers = new Task[this.ActiveUsersCount];
             this.PerformancePlanDuration = performancePlanDuration;
@@ -48,7 +48,7 @@ namespace WebPerformanceMeter.PerformancePlans
                 {
                     if (this.ActiveUsers[i] is null || this.ActiveUsers[i].IsCompleted)
                     {
-                        this.ActiveUsers[i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                        this.ActiveUsers[i] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                     }
                 }
             }

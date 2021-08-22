@@ -1,14 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Users;
+using Microsoft.Playwright;
 
 namespace WebPerformanceMeter.Users
 {
-    public abstract class User : PerformanceUser
+    public abstract class BrowserUser : PerformanceUser
     {
-        public User()
+        protected readonly IPlaywright Playwright;
+
+        protected readonly IBrowser Browser;
+
+        public BrowserUser()
         {
             SetUserName(this.GetType().Name);
+            Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
+            Browser = Playwright.Chromium.LaunchAsync(new()
+            {
+                Headless = false
+            }).GetAwaiter().GetResult();
         }
 
         public override async Task InvokeAsync(
@@ -17,6 +30,8 @@ namespace WebPerformanceMeter.Users
             bool reuseDataInLoop = true
             )
         {
+            IBrowserContext ctx = await Browser.NewContextAsync();
+            IPage page = await ctx.NewPageAsync();
             object? entity = null;
 
             if (dataReader is not null)
@@ -33,11 +48,11 @@ namespace WebPerformanceMeter.Users
             {
                 if (entity is null)
                 {
-                    await PerformanceAsync();
+                    await PerformanceAsync(page);
                 }
                 else
                 {
-                    await PerformanceAsync(entity);
+                    await PerformanceAsync(page, entity);
                 }
 
                 if (dataReader is not null && !reuseDataInLoop)
@@ -50,14 +65,16 @@ namespace WebPerformanceMeter.Users
                     }
                 }
             }
+
+            await page.CloseAsync();
         }
 
-        protected virtual Task PerformanceAsync(object entity)
+        protected virtual Task PerformanceAsync(IPage page, object entity)
         {
             return Task.CompletedTask;
         }
 
-        protected virtual Task PerformanceAsync()
+        protected virtual Task PerformanceAsync(IPage page)
         {
             return Task.CompletedTask;
         }

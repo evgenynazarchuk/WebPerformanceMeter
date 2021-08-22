@@ -6,7 +6,7 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public sealed class ConstantUsers : PerformancePlan
     {
-        private readonly User User;
+        private readonly PerformanceUser PerformanceUser;
 
         private readonly int UsersCount;
 
@@ -19,14 +19,14 @@ namespace WebPerformanceMeter.PerformancePlans
         private readonly bool ReuseDataInLoop;
 
         public ConstantUsers(
-            User user,
+            PerformanceUser user,
             int usersCount,
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true
             )
         {
-            this.User = user;
+            this.PerformanceUser = user;
             this.UsersCount = usersCount;
             this.UserLoopCount = userLoopCount;
             this.InvokedUsers = new Task[this.UsersCount];
@@ -38,7 +38,7 @@ namespace WebPerformanceMeter.PerformancePlans
         {
             for (int i = 0; i < UsersCount; i++)
             {
-                this.InvokedUsers[i] = User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                this.InvokedUsers[i] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
             }
 
             Task.WaitAll(this.InvokedUsers);

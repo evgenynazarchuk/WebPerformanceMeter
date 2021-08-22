@@ -9,7 +9,7 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public sealed class UsersPerPeriod : PerformancePlan
     {
-        private readonly User User;
+        private readonly PerformanceUser PerformanceUser;
 
         private readonly int TotalUsersPerPeriod;
 
@@ -32,7 +32,7 @@ namespace WebPerformanceMeter.PerformancePlans
         private readonly bool ReuseDataInLoop;
 
         public UsersPerPeriod(
-            User user,
+            PerformanceUser user,
             int usersCountPerPeriod,
             TimeSpan performancePlanDuration,
             TimeSpan? perPeriod = null,
@@ -41,7 +41,7 @@ namespace WebPerformanceMeter.PerformancePlans
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
         {
-            this.User = user;
+            this.PerformanceUser = user;
             this.TotalUsersPerPeriod = usersCountPerPeriod;
             this.PerformancePlanDuration = performancePlanDuration;
             this.SizePeriodBuffer = sizePeriodBuffer;
@@ -70,7 +70,7 @@ namespace WebPerformanceMeter.PerformancePlans
         {
             for (var i = 0; i < this.TotalUsersPerPeriod; i++)
             {
-                this.InvokedUsers[this.CurrentPeriod, i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                this.InvokedUsers[this.CurrentPeriod, i] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
             }
 
             this.IncrementPeriod();

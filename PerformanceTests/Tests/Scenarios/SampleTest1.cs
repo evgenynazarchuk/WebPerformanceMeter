@@ -8,7 +8,7 @@ using System;
 
 namespace PerformanceTests.Tests.Scenarios
 {
-    public class SampleTest1
+    public class GoogleSearchScenatio
     {
         [PerformanceTest(1, 200)]
         [PerformanceTest(10, 200)]
@@ -17,7 +17,7 @@ namespace PerformanceTests.Tests.Scenarios
         [PerformanceTest(90, 200)]
         public async Task TwoParallelUsers(int minutes, int usersCount)
         {
-            // Arange
+            // Arrange
             var app = new WebApplication();
 
             var user1 = new TestWaitUser1(app.HttpClient);

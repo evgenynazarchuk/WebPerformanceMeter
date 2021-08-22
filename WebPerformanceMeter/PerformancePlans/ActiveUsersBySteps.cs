@@ -8,7 +8,7 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public sealed class ActiveUsersBySteps : PerformancePlan
     {
-        private readonly User User;
+        private readonly PerformanceUser PerformanceUser;
 
         private readonly int FromActiveUsersCount;
 
@@ -29,7 +29,7 @@ namespace WebPerformanceMeter.PerformancePlans
         private readonly bool ReuseDataInLoop;
 
         public ActiveUsersBySteps(
-            User user,
+            PerformanceUser user,
             int fromActiveUsersCount,
             int toActiveUsersCount,
             int step,
@@ -46,7 +46,7 @@ namespace WebPerformanceMeter.PerformancePlans
             int maximumActiveUsersCount = Math.Max(fromActiveUsersCount, toActiveUsersCount);
             int minimumActiveUsersCount = Math.Min(fromActiveUsersCount, toActiveUsersCount);
 
-            this.User = user;
+            this.PerformanceUser = user;
             this.FromActiveUsersCount = fromActiveUsersCount;
             this.ToActiveUsersCount = toActiveUsersCount;
             this.Step = step;
@@ -73,7 +73,7 @@ namespace WebPerformanceMeter.PerformancePlans
                     {
                         if (this.ActiveUsers[currentUser] is null || this.ActiveUsers[currentUser].IsCompleted)
                         {
-                            this.ActiveUsers[currentUser] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                            this.ActiveUsers[currentUser] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                         }
                     }
                 }

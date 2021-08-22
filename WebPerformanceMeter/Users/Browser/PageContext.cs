@@ -23,31 +23,31 @@ namespace WebPerformanceMeter.Users
 
         public async Task ReloadAsync()
         {
-            await this.WaitAsync();
+            //await this.WaitAsync();
             await this.Page.ReloadAsync();
         }
 
         public async Task ClickAsync(string selector)
         {
-            await this.WaitAsync();
+            //await this.WaitAsync();
             await this.Page.ClickAsync(selector);
         }
 
         public async Task TypeAsync(string selector, string text)
         {
-            await this.WaitAsync();
+            //await this.WaitAsync();
             await this.Page.TypeAsync(selector, text);
         }
 
         public async Task PageAction(Action<IPage> action)
         {
-            await this.WaitAsync();
+            //await this.WaitAsync();
             action(this.Page);
         }
 
-        public virtual async Task WaitAsync()
-        {
-            await Task.CompletedTask;
-        }
+        //public virtual async Task WaitAsync()
+        //{
+        //    await Task.CompletedTask;
+        //}
     }
 }

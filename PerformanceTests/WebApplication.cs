@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net.Http;
-using TestWebApiServer;
-
-namespace PerformanceTests
+﻿namespace PerformanceTests
 {
+    using System.Net.Http;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.Testing;
+    using TestWebApiServer;
+
     public class WebApplication : WebApplicationFactory<Startup>
     {
-        public HttpClient HttpClient { get; set; }
-
         public WebApplication()
         {
-            HttpClient = CreateClient();
+            this.HttpClient = this.CreateClient();
         }
+
+        public HttpClient HttpClient { get; set; }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace WebPerformanceMeter.Tools.HttpTool
+﻿namespace WebPerformanceMeter.Tools.HttpTool
 {
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Text;
+    using System.Text.Json;
+    using System.Threading.Tasks;
+
     public static class HttpJsonTool
     {
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new()
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new ()
         {
             PropertyNameCaseInsensitive = true
         };
@@ -48,8 +48,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null,
             string userName = "",
-            string requestLabel = ""
-            )
+            string requestLabel = "")
             where RequestObjectType : class, new()
         {
             string requestContentString = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
@@ -72,8 +71,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
             string user = "",
-            string requestLabel = ""
-            )
+            string requestLabel = "")
             where ResponseObjectType : class, new()
         {
             HttpResponse response = await tool.RequestAsync(

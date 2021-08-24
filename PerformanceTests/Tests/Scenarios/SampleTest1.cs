@@ -1,13 +1,12 @@
-﻿using PerformanceTests.Tests.Users;
-using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Attributes;
-using WebPerformanceMeter.Support;
-using System.Threading.Tasks;
-using System;
-
-namespace PerformanceTests.Tests.Scenarios
+﻿namespace PerformanceTests.Tests.Scenarios
 {
+    using System.Threading.Tasks;
+    using PerformanceTests.Tests.Users;
+    using WebPerformanceMeter.Attributes;
+    using WebPerformanceMeter.Extensions;
+    using WebPerformanceMeter.PerformancePlans;
+    using WebPerformanceMeter.Support;
+
     public class GoogleSearchScenatio
     {
         [PerformanceTest(1, 200)]

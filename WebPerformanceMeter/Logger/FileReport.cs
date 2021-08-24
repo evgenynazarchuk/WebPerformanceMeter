@@ -27,7 +27,7 @@ namespace WebPerformanceMeter.Logger
             {
                 Directory.CreateDirectory("Logs");
             }
-            
+
             if (!Directory.Exists($"Logs//{reportNumber}"))
             {
                 Directory.CreateDirectory($"Logs//{reportNumber}");
@@ -51,8 +51,7 @@ namespace WebPerformanceMeter.Logger
         private LogMessage GetLogEntity(string message)
         {
             var splittedMessage = message.Split(',');
-            LogMessage log = new(
-                splittedMessage[0],
+            LogMessage log = new(splittedMessage[0],
                 splittedMessage[1],
                 splittedMessage[2],
                 splittedMessage[3],
@@ -62,8 +61,7 @@ namespace WebPerformanceMeter.Logger
                 Int64.Parse(splittedMessage[7]),
                 Int64.Parse(splittedMessage[8]),
                 Int32.Parse(splittedMessage[9]),
-                Int32.Parse(splittedMessage[10])
-                );
+                Int32.Parse(splittedMessage[10]));
 
             return log;
         }

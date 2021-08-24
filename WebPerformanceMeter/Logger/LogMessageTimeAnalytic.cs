@@ -2,26 +2,6 @@
 {
     public class LogMessageTimeAnalytic
     {
-        public string User { get; set; }
-
-        public string Request { get; set; }
-
-        public string RequestLabel { get; set; }
-
-        public int StatusCode { get; set; }
-
-        public long EndResponseTime { get; set; }
-
-        public long CompletedRequests { get; set; }
-
-        public double ResponseTime { get; set; }
-
-        public double SentTime { get; set; }
-
-        public double WaitTime { get; set; }
-
-        public double ReceivedTime { get; set; }
-
         public LogMessageTimeAnalytic(
             string user,
             string request,
@@ -45,5 +25,25 @@
             this.WaitTime = waitTime;
             this.ReceivedTime = receiveTime;
         }
+
+        public string User { get; set; }
+
+        public string Request { get; set; }
+
+        public string RequestLabel { get; set; }
+
+        public int StatusCode { get; set; }
+
+        public long EndResponseTime { get; set; }
+
+        public long CompletedRequests { get; set; }
+
+        public double ResponseTime { get; set; }
+
+        public double SentTime { get; set; }
+
+        public double WaitTime { get; set; }
+
+        public double ReceivedTime { get; set; }
     }
 }

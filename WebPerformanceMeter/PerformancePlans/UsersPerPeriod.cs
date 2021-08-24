@@ -1,36 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Timers;
-using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Users;
-
-namespace WebPerformanceMeter.PerformancePlans
+﻿namespace WebPerformanceMeter.PerformancePlans
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Timers;
+    using WebPerformanceMeter.Extensions;
+    using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Users;
+
     public sealed class UsersPerPeriod : PerformancePlan
     {
-        private readonly PerformanceUser PerformanceUser;
-
-        private readonly int TotalUsersPerPeriod;
-
-        private readonly TimeSpan PerPeriod;
-
-        private readonly TimeSpan PerformancePlanDuration;
-
-        private readonly Task[,] InvokedUsers;
-
-        private readonly int SizePeriodBuffer;
-
-        private readonly Timer Runner;
-
-        private int CurrentPeriod;
-
-        private readonly int UserLoopCount;
-
-        private readonly IEntityReader? DataReader;
-
-        private readonly bool ReuseDataInLoop;
-
         public UsersPerPeriod(
             PerformanceUser user,
             int usersCountPerPeriod,
@@ -41,36 +19,58 @@ namespace WebPerformanceMeter.PerformancePlans
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
         {
-            this.PerformanceUser = user;
-            this.TotalUsersPerPeriod = usersCountPerPeriod;
-            this.PerformancePlanDuration = performancePlanDuration;
-            this.SizePeriodBuffer = sizePeriodBuffer;
-            this.CurrentPeriod = 0;
-            this.InvokedUsers = new Task[sizePeriodBuffer, usersCountPerPeriod];
-            this.PerPeriod = perPeriod is null ? 1.Seconds() : perPeriod.Value;
+            this.performanceUser = user;
+            this.totalUsersPerPeriod = usersCountPerPeriod;
+            this.performancePlanDuration = performancePlanDuration;
+            this.sizePeriodBuffer = sizePeriodBuffer;
+            this.currentPeriod = 0;
+            this.invokedUsers = new Task[sizePeriodBuffer, usersCountPerPeriod];
+            this.perPeriod = perPeriod is null ? 1.Seconds() : perPeriod.Value;
 
-            this.Runner = new Timer(this.PerPeriod.TotalMilliseconds);
-            this.Runner.Elapsed += (sender, e) => InvokeUsers();
+            this.runner = new Timer(this.perPeriod.TotalMilliseconds);
+            this.runner.Elapsed += (sender, e) => this.InvokeUsers();
 
-            this.UserLoopCount = userLoopCount;
-            this.DataReader = dataReader;
-            this.ReuseDataInLoop = reuseDataInLoop;
+            this.userLoopCount = userLoopCount;
+            this.dataReader = dataReader;
+            this.reuseDataInLoop = reuseDataInLoop;
         }
+
+        private readonly PerformanceUser performanceUser;
+
+        private readonly int totalUsersPerPeriod;
+
+        private readonly TimeSpan perPeriod;
+
+        private readonly TimeSpan performancePlanDuration;
+
+        private readonly Task[,] invokedUsers;
+
+        private readonly int sizePeriodBuffer;
+
+        private readonly Timer runner;
+
+        private int currentPeriod;
+
+        private readonly int userLoopCount;
+
+        private readonly IEntityReader? dataReader;
+
+        private readonly bool reuseDataInLoop;
 
         public override async Task StartAsync()
         {
-            this.Runner.Start();
+            this.runner.Start();
             await this.WaitTerminationPerformancePlanAsync();
-            this.Runner.Stop();
-            this.Runner.Close();
+            this.runner.Stop();
+            this.runner.Close();
             await this.WaitUserTerminationAsync();
         }
 
         private void InvokeUsers()
         {
-            for (var i = 0; i < this.TotalUsersPerPeriod; i++)
+            for (var i = 0; i < this.totalUsersPerPeriod; i++)
             {
-                this.InvokedUsers[this.CurrentPeriod, i] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                this.invokedUsers[this.currentPeriod, i] = this.performanceUser.InvokeAsync(this.userLoopCount, this.dataReader, this.reuseDataInLoop);
             }
 
             this.IncrementPeriod();
@@ -78,21 +78,21 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private async Task WaitUserTerminationAsync()
         {
-            await this.InvokedUsers.Wait(this.SizePeriodBuffer, this.TotalUsersPerPeriod);
+            await this.invokedUsers.Wait(this.sizePeriodBuffer, this.totalUsersPerPeriod);
         }
 
         private async Task WaitTerminationPerformancePlanAsync()
         {
-            await Task.Delay(this.PerformancePlanDuration + 900.Milliseconds());
+            await Task.Delay(this.performancePlanDuration + 900.Milliseconds());
         }
 
         private void IncrementPeriod()
         {
-            this.CurrentPeriod++;
+            this.currentPeriod++;
 
-            if (this.CurrentPeriod == this.SizePeriodBuffer)
+            if (this.currentPeriod == this.sizePeriodBuffer)
             {
-                this.CurrentPeriod = 0;
+                this.currentPeriod = 0;
             }
         }
     }

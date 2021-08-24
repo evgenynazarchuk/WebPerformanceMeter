@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using WebPerformanceMeter.Tools.HttpTool;
-
-namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users
 {
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Tools.HttpTool;
+
     public abstract partial class HttpUser : User
     {
         public Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
@@ -16,7 +16,7 @@ namespace WebPerformanceMeter.Users
             where RequestObjectType : class, new()
             where ResponseObjectType : class, new()
         {
-            return Tool.RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
+            return this.Tool.RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
                 httpMethod,
                 requestUri,
                 requestObject,
@@ -34,7 +34,7 @@ namespace WebPerformanceMeter.Users
             where RequestObjectType : class, new()
         {
 
-            return Tool.RequestAsJsonAsync<RequestObjectType>(
+            return this.Tool.RequestAsJsonAsync<RequestObjectType>(
                 httpMethod,
                 requestUri,
                 requestObject,
@@ -47,11 +47,10 @@ namespace WebPerformanceMeter.Users
             HttpMethod httpMethod,
             string requestUri,
             string requestLabel = "",
-            Dictionary<string, string>? requestHeaders = null
-            )
+            Dictionary<string, string>? requestHeaders = null)
             where ResponseObjectType : class, new()
         {
-            return Tool.RequestAsJsonAsync<ResponseObjectType>(
+            return this.Tool.RequestAsJsonAsync<ResponseObjectType>(
                 httpMethod,
                 requestUri,
                 requestHeaders,

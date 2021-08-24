@@ -1,12 +1,19 @@
-﻿using System.Reflection;
-using WebPerformanceMeter.Support;
-using System.Threading.Tasks;
-
+﻿/// <summary>
+/// 
+/// </summary>
 namespace PerformanceTests
 {
-    class Program
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Support;
+
+    public class Program
     {
-        static async Task Main()
+        /// <summary>
+        /// doc
+        /// </summary>
+        /// <returns>Task</returns>
+        public static async Task Main()
         {
             await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());
         }

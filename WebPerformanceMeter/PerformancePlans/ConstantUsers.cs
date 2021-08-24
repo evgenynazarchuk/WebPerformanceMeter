@@ -1,47 +1,46 @@
-﻿using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Users;
-
-namespace WebPerformanceMeter.PerformancePlans
+﻿namespace WebPerformanceMeter.PerformancePlans
 {
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Users;
+
     public sealed class ConstantUsers : PerformancePlan
     {
-        private readonly PerformanceUser PerformanceUser;
+        private readonly PerformanceUser performanceUser;
 
-        private readonly int UsersCount;
+        private readonly int usersCount;
 
-        private readonly int UserLoopCount;
+        private readonly int userLoopCount;
 
-        private readonly Task[] InvokedUsers;
+        private readonly Task[] invokedUsers;
 
-        private readonly IEntityReader? DataReader;
+        private readonly IEntityReader? dataReader;
 
-        private readonly bool ReuseDataInLoop;
+        private readonly bool reuseDataInLoop;
 
         public ConstantUsers(
             PerformanceUser user,
             int usersCount,
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
-            bool reuseDataInLoop = true
-            )
+            bool reuseDataInLoop = true) 
         {
-            this.PerformanceUser = user;
-            this.UsersCount = usersCount;
-            this.UserLoopCount = userLoopCount;
-            this.InvokedUsers = new Task[this.UsersCount];
-            this.DataReader = dataReader;
-            this.ReuseDataInLoop = reuseDataInLoop;
+            this.performanceUser = user;
+            this.usersCount = usersCount;
+            this.userLoopCount = userLoopCount;
+            this.invokedUsers = new Task[this.usersCount];
+            this.dataReader = dataReader;
+            this.reuseDataInLoop = reuseDataInLoop;
         }
 
         public override async Task StartAsync()
         {
-            for (int i = 0; i < UsersCount; i++)
+            for (int i = 0; i < this.usersCount; i++)
             {
-                this.InvokedUsers[i] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                this.invokedUsers[i] = this.performanceUser.InvokeAsync(this.userLoopCount, this.dataReader, this.reuseDataInLoop);
             }
 
-            Task.WaitAll(this.InvokedUsers);
+            Task.WaitAll(this.invokedUsers);
 
             await Task.CompletedTask;
         }

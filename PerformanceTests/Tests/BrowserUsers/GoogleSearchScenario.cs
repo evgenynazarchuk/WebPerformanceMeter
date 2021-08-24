@@ -1,13 +1,11 @@
-﻿using PerformanceTests.Tests.Users;
-using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Attributes;
-using WebPerformanceMeter.Support;
-using System.Threading.Tasks;
-using System;
-
-namespace PerformanceTests.Tests.BrowserUsers
+﻿namespace PerformanceTests.Tests.BrowserUsers
 {
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Attributes;
+    using WebPerformanceMeter.Extensions;
+    using WebPerformanceMeter.PerformancePlans;
+    using WebPerformanceMeter.Support;
+
     public class GoogleSearchScenario
     {
         [PerformanceTest(1, 5)]

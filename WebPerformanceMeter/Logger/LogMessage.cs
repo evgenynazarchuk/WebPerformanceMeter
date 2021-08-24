@@ -2,28 +2,6 @@
 {
     public class LogMessage
     {
-        public string User { get; set; }
-
-        public string ProtocolType { get; set; }
-
-        public string Request { get; set; }
-
-        public string RequestLabel { get; set; }
-
-        public int StatusCode { get; set; }
-
-        public long StartSendRequestTime { get; set; }
-
-        public long StartWaitResponseTime { get; set; }
-
-        public long StartResponseTime { get; set; }
-
-        public long EndResponseTime { get; set; }
-
-        public int SendBytes { get; set; }
-
-        public int ReceiveBytes { get; set; }
-
         public LogMessage(
             string user,
             string protocolType,
@@ -49,5 +27,27 @@
             this.SendBytes = sendBytes;
             this.ReceiveBytes = receiveBytes;
         }
+
+        public string User { get; set; }
+
+        public string ProtocolType { get; set; }
+
+        public string Request { get; set; }
+
+        public string RequestLabel { get; set; }
+
+        public int StatusCode { get; set; }
+
+        public long StartSendRequestTime { get; set; }
+
+        public long StartWaitResponseTime { get; set; }
+
+        public long StartResponseTime { get; set; }
+
+        public long EndResponseTime { get; set; }
+
+        public int SendBytes { get; set; }
+
+        public int ReceiveBytes { get; set; }
     }
 }

@@ -40,11 +40,11 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 
         public object? GetEntity()
         {
-            Queue.TryDequeue(out TResult? result);
+            this.Queue.TryDequeue(out TResult? result);
 
-            if (CyclicalData && result is not null)
+            if (this.CyclicalData && result is not null)
             {
-                Queue.Enqueue(result);
+                this.Queue.Enqueue(result);
             }
 
             return result;

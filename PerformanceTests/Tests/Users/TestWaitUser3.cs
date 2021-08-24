@@ -1,21 +1,23 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using TestWebApiServer.Models;
-
-namespace PerformanceTests.Tests.Users
+﻿namespace PerformanceTests.Tests.Users
 {
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using TestWebApiServer.Models;
+
     public class TestWaitUser3 : TestUserFacade
     {
         // Arange
-        public readonly TestRequestContent content = new() { Timeout = 300 };
+        public readonly TestRequestContent Content = new () { Timeout = 300 };
 
         public TestWaitUser3(HttpClient client)
-            : base(client) { }
+            : base(client) 
+        {
+        }
 
         protected override async Task PerformanceAsync()
         {
             // Action
-            await TestWaitMethod1(content, "300ms");
+            await this.TestWaitMethod1(this.Content, "300ms");
         }
     }
 }

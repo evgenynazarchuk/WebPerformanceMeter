@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace WebPerformanceMeter.Logger
+﻿namespace WebPerformanceMeter.Logger
 {
+    using System;
+    using System.Threading.Tasks;
+
     public class ConsoleReport : AsyncReport
     {
-        private long _counter = 0;
+        private long counter = 0;
 
         public ConsoleReport()
         {
@@ -14,7 +14,7 @@ namespace WebPerformanceMeter.Logger
 
         public override async Task WriteAsync(string message)
         {
-            Console.Write($"Completed Requests: {++this._counter}\r");
+            Console.Write($"Completed Requests: {++this.counter}\r");
 
             await Task.CompletedTask;
         }

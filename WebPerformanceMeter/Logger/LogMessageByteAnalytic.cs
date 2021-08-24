@@ -7,7 +7,7 @@
         public int Count { get; set; }
 
         public LogMessageByteAnalytic(
-            long endResponseTime, 
+            long endResponseTime,
             int count)
         {
             this.EndResponseTime = endResponseTime;

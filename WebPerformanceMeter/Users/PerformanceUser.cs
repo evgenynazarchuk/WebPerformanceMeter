@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-using Microsoft.Playwright;
-
-namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users
 {
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Interfaces;
+
     public abstract class PerformanceUser
     {
-        public string UserName { get; private set; }
-
         public PerformanceUser()
         {
-            this.UserName = "";
+            this.UserName = string.Empty;
         }
 
         protected void SetUserName(string userName)
         {
             this.UserName = userName;
         }
+
+        public string UserName { get; private set; }
 
         public abstract Task InvokeAsync(int loopCount, IEntityReader? dataReader, bool reuseDataInLoop);
     }

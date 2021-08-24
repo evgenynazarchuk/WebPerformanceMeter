@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Playwright;
-using System.Net.Http;
-using TestWebApiServer.Models;
-using WebPerformanceMeter.Users;
-
-namespace PerformanceTests.Tests.BrowserUsers
+﻿namespace PerformanceTests.Tests.BrowserUsers
 {
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Users;
+
     public class GoogleSearchUser : BrowserUser
     {
         protected override async Task PerformanceAsync(PageContext page)

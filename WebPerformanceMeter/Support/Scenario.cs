@@ -1,55 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using WebPerformanceMeter.Logger;
-using WebPerformanceMeter.PerformancePlans;
-
-namespace WebPerformanceMeter.Support
+﻿namespace WebPerformanceMeter.Support
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Logger;
+    using WebPerformanceMeter.PerformancePlans;
+
     public sealed class Scenario
     {
-        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> Acts;
-
-        private readonly Watcher Watcher;
-
-        public static readonly Stopwatch ScenarioWatchTime = new();
+        public static readonly Stopwatch ScenarioWatchTime = new ();
 
         public Scenario()
         {
-            this.Acts = new();
-            Watcher = Watcher.Instance.Value;
-            Watcher.AddReport(new ConsoleReport());
-            Watcher.AddReport(new FileReport());
-            Watcher.AddReport(new GrpcReport());
+            this.acts = new();
+            this.watcher = Watcher.Instance.Value;
+            this.watcher.AddReport(new ConsoleReport());
+            this.watcher.AddReport(new FileReport());
+            this.watcher.AddReport(new GrpcReport());
         }
+
+        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> acts;
+
+        private readonly Watcher watcher;
 
         public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
         {
-            AddActs(ActType.Parallel, performancePlan);
+            this.AddActs(ActType.Parallel, performancePlan);
             return this;
         }
 
         public Scenario AddSequentialPlans(params PerformancePlan[] performancePlan)
         {
-            AddActs(ActType.Sequential, performancePlan);
+            this.AddActs(ActType.Sequential, performancePlan);
             return this;
         }
 
         private Scenario AddActs(ActType launchType, params PerformancePlan[] performancePlan)
         {
-            this.Acts.Add(new(launchType, performancePlan));
+            this.acts.Add(new (launchType, performancePlan));
             return this;
         }
 
         public async Task StartAsync()
         {
-            CancellationTokenSource tokenSource = new();
+            CancellationTokenSource tokenSource = new ();
             CancellationToken token = tokenSource.Token;
-            Task watcherWaiter = Watcher.Processing(token);
+            Task watcherWaiter = this.watcher.Processing(token);
 
-            if (this.Acts.Count == 0)
+            if (this.acts.Count == 0)
             {
                 throw new ApplicationException("UserPerformancePlan not added");
             }
@@ -57,7 +57,7 @@ namespace WebPerformanceMeter.Support
             ScenarioWatchTime.Reset();
             ScenarioWatchTime.Start();
 
-            foreach (var act in this.Acts)
+            foreach (var act in this.acts)
             {
                 var launchType = act.Key;
                 var plans = act.Value;
@@ -80,14 +80,13 @@ namespace WebPerformanceMeter.Support
                             await plan.StartAsync();
                         }));
 
-                        //plansWaiter.Add(plan.StartAsync()); // do not work!?
+                        ////plansWaiter.Add(plan.StartAsync()); // do not work!?
                     }
 
                     Task.WaitAll(plansWaiter.ToArray());
                 }
             }
-
-            // 
+            
             tokenSource.Cancel();
             await watcherWaiter;
 

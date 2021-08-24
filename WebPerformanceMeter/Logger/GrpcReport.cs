@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-
-namespace WebPerformanceMeter.Logger
+﻿namespace WebPerformanceMeter.Logger
 {
+    using System.Threading.Tasks;
+
     public class GrpcReport : AsyncReport
     {
         public override async Task WriteAsync(string message)

@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System;
 
 namespace WebPerformanceMeter.Logger
 {
@@ -27,7 +26,7 @@ namespace WebPerformanceMeter.Logger
 
         public void ReadRawLogMessages()
         {
-			_rawLogReader = new(_rawLogPath, Encoding.UTF8, false, 65535);
+            _rawLogReader = new(_rawLogPath, Encoding.UTF8, false, 65535);
             _rawLogMessages = new();
 
             string? rawLogAsString;

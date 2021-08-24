@@ -1,26 +1,25 @@
-﻿using System.Text;
-
-namespace WebPerformanceMeter.Tools.HttpTool
+﻿namespace WebPerformanceMeter.Tools.HttpTool
 {
+    using System.Text;
+
     public sealed class HttpResponse
     {
+        public HttpResponse(
+            int statusCode,
+            byte[] content,
+            string? filename)
+        {
+            this.StatusCode = statusCode;
+            this.ContentAsBytes = content;
+            this.Filename = filename;
+        }
+
         public readonly int StatusCode;
 
         public readonly byte[] ContentAsBytes;
 
         public readonly string? Filename;
 
-        public string ContentAsUtf8String => Encoding.UTF8.GetString(ContentAsBytes);
-
-        public HttpResponse(
-            int statusCode,
-            byte[] content,
-            string? filename
-            )
-        {
-            StatusCode = statusCode;
-            ContentAsBytes = content;
-            Filename = filename;
-        }
+        public string ContentAsUtf8String => Encoding.UTF8.GetString(this.ContentAsBytes);
     }
 }

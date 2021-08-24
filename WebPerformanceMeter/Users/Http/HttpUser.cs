@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net.Http;
-using WebPerformanceMeter.Tools.HttpTool;
-
-namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users
 {
+    using System;
+    using System.Net.Http;
+    using WebPerformanceMeter.Tools.HttpTool;
+
     public abstract partial class HttpUser : User
     {
         protected readonly HttpClient Client;
@@ -12,19 +12,19 @@ namespace WebPerformanceMeter.Users
 
         public HttpUser(HttpClient client, string userName = "")
         {
-            Client = client;
-            Tool = new(Client);
-            SetUserName(userName);
+            this.Client = client;
+            this.Tool = new(Client);
+            this.SetUserName(userName);
         }
 
         public HttpUser(string host)
         {
-            Client = new HttpClient()
+            this.Client = new HttpClient()
             {
                 BaseAddress = new Uri(host)
             };
 
-            Tool = new(Client);
+            this.Tool = new (this.Client);
         }
     }
 }

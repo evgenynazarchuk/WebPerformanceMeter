@@ -111,12 +111,87 @@ const groupedRawLog = [{groupedStringLog}]
 const sentBytesLog = [{sentStringLog}]
 const receivedBytesLog = [{receivedStringLog}]
 </script>
-
 ";
 
-            //
-            var responseTimeChart = @"
+            var plotlyJsLineDraw = @"
 <script>
+function PlotlyJsLineDraw(chartName, plotlyIdent, plotlyData, rawData=true) {
+    let chartPlotData = []
+	if(rawData)
+	{
+		for(let key in plotlyData) {
+		chartPlotData.push({
+			x: plotlyData[key].map(item => item.x),
+			y: plotlyData[key].map(item => item.y),
+			type: 'scatter',
+			name: key,
+			})
+		}
+	}
+	else {
+		chartPlotData = plotlyData
+	}
+	
+
+	let chartLayout ={
+		showlegend: true,
+		legend: {
+			bgcolor: '#1A1A1A',
+			font: {
+				color: '#7C7C7C',
+				family: 'Open Sans',
+				size: 14
+			},
+			orientation: 'h',
+			y: -0.4
+		},
+		title: {
+			text: chartName,
+			font: {
+				color: '#828282',
+				family: 'Open Sans',
+				size: 21
+			},
+		},
+		xaxis: {
+			title: {
+				text: '',
+			},
+			gridcolor: '#3C3C3C',
+			gridwidth: 1,
+			tickfont : {
+				size : 11,
+				color : '#7C7C7C'
+			}
+		},
+		
+		yaxis: {
+			title: {
+				text: 'Milliseconds',
+				font: {
+					color: '#7C7C7C',
+					family: 'Open Sans',
+					size: 14
+				},
+			},
+			gridcolor: '#3C3C3C',
+			gridwidth: 1,
+		},
+		plot_bgcolor:'#1A1A1A',
+		paper_bgcolor:'#1A1A1A',
+	}
+	
+	
+	Plotly.newPlot(plotlyIdent, chartPlotData, chartLayout);
+}
+</script>
+";
+
+            var charts = @"
+<script>
+/*
+**
+*/
 let responseTimeData = {}
 for(let item of groupedRawLog) {
 	if (responseTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
@@ -131,48 +206,11 @@ for(let item of groupedRawLog) {
     responseTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ResponseTime / 10000 })
 }
 
-let responseTimeChartDatasets = []
-for(let key in responseTimeData) {
-	responseTimeChartDatasets.push({
-		x: responseTimeData[key].map(item => item.x),
-		y: responseTimeData[key].map(item => item.y),
-		type: 'scatter',
-		name: key,
-	})
-}
+PlotlyJsLineDraw('Response Time', 'ResponseTimeChart', responseTimeData)
 
-let responseTimeChartLayout ={
-	showlegend: true,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Response Time',
-	},
-	xaxis: {
-		title: {
-		text: '',
-		}
-	},
-	
-	yaxis: {
-		title: {
-		text: 'Milliseconds',
-		}
-	}
-}
-
-
-Plotly.newPlot('ResponseTimeChart', responseTimeChartDatasets, responseTimeChartLayout);
-</script>
-";
-
-            //
-            var completedRequestsChart = @"
-<script>
+/*
+**
+*/
 let completedRequestsData = { };
 for (let item of groupedRawLog)
 {
@@ -188,46 +226,11 @@ for (let item of groupedRawLog)
     completedRequestsData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CompletedRequests })
 }
 
-let completedRequestsChartDatasets = []
-for(let key in completedRequestsData) {
-	completedRequestsChartDatasets.push({
-		x: completedRequestsData[key].map(item => item.x),
-		y: completedRequestsData[key].map(item => item.y),
-		type: 'scatter',
-		name: key
-	})
-}
+PlotlyJsLineDraw('Completed Requests','CompletedRequestsChart', completedRequestsData)
 
-let completedRequestsChartLayout = {
-	showlegend: true,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Completed Requests',
-	},
-	xaxis: {
-		title: {
-			text: '',
-		}
-	},
-	yaxis: {
-		title: {
-			text: 'Requests',
-		}
-	}
-}
-
-Plotly.newPlot('CompletedRequestsChart', completedRequestsChartDatasets, completedRequestsChartLayout);
-</script>
-";
-
-            //
-            var sentTimeChart = @"
-<script>
+/*
+**
+*/
 let sentTimeData = { };
 for (let item of groupedRawLog)
 {
@@ -241,47 +244,11 @@ for (let item of groupedRawLog)
     sentTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.SentTime / 10000 })
 }
 
-let sentTimeChartDatasets = []
-for(let key in sentTimeData) {
-	sentTimeChartDatasets.push({
-		x: sentTimeData[key].map(item => item.x),
-		y: sentTimeData[key].map(item => item.y),
-		type: 'scatter',
-		name: key
-	})
-}
+PlotlyJsLineDraw('Data Timed Sending','SentTimeChart', sentTimeData)
 
-
-let sentTimeChartlayout ={
-	showlegend: true,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Data Timed Sending',
-	},
-	xaxis: {
-		title: {
-			text: '',
-		}
-	},
-	yaxis: {
-		title: {
-			text: 'Milliseconds',
-		}
-	}
-}
-
-Plotly.newPlot('SentTimeChart', sentTimeChartDatasets, sentTimeChartlayout);
-</script>
-";
-
-            //
-            var waitTimeChart = @"
-<script>
+/*
+**
+*/
 let waitTimeData = { };
 for (let item of groupedRawLog)
 {
@@ -295,46 +262,11 @@ for (let item of groupedRawLog)
     waitTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.WaitTime / 10000 })
 }
 
-let waitTimeChartDatasets = []
-for(let key in waitTimeData) {
-	waitTimeChartDatasets.push({
-		x: waitTimeData[key].map(item => item.x),
-		y: waitTimeData[key].map(item => item.y),
-		type: 'scatter',
-		name: key,
-	})
-}
+PlotlyJsLineDraw('Data Wait Times','WaitTimeChart', waitTimeData)
 
-let waitTimeChartLayout ={
-	showlegend: true,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Data Wait Times',
-	},
-	xaxis: {
-		title: {
-			text: '',
-		}
-	},
-	yaxis: {
-		title: {
-			text: 'Milliseconds',
-		}
-	}
-}
-
-Plotly.newPlot('WaitTimeChart', waitTimeChartDatasets, waitTimeChartLayout);
-</script>
-";
-
-            //
-            var receivedTimeChart = @"
-<script>
+/*
+**
+*/
 let receivedTimeData = { };
 for (let item of groupedRawLog)
 {
@@ -348,47 +280,11 @@ for (let item of groupedRawLog)
     receivedTimeData[item.User + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ReceivedTime / 10000 })
 }
 
-let receivedTimeChartDatasets = []
-for(let key in receivedTimeData) {
-	receivedTimeChartDatasets.push({
-		x: receivedTimeData[key].map(item => item.x),
-		y: receivedTimeData[key].map(item => item.y),
-		type: 'scatter',
-		name: key
-	})
-}
+PlotlyJsLineDraw('Data Timed Receiving','ReceivedTimeChart', receivedTimeData)
 
-let receivedTimeChartLayout ={
-	showlegend: true,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Data Timed Receiving',
-	},
-	xaxis: {
-		title: {
-		text: '',
-		}
-	},
-	
-	yaxis: {
-		title: {
-		text: 'Milliseconds',
-		}
-	}
-}
-
-Plotly.newPlot('ReceivedTimeChart', receivedTimeChartDatasets, receivedTimeChartLayout);
-</script>
-";
-
-            //
-            var sentBytesChart = @"
-<script>
+/*
+**
+*/
 let sentBytesChartDataset = []
 sentBytesChartDataset.push({
 	x: sentBytesLog.map(item => {
@@ -400,37 +296,11 @@ sentBytesChartDataset.push({
 	type: 'scatter'
 })
 
-let sentBytesChartLayout = {
-	showlegend: false,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Sent Bytes',
-	},
-	xaxis: {
-		title: {
-		text: '',
-		}
-	},
-	
-	yaxis: {
-		title: {
-		text: 'Bytes',
-		}
-	}
-}
+PlotlyJsLineDraw('Sent Bytes','SentBytesChart', sentBytesChartDataset, false)
 
-Plotly.newPlot('SentBytesChart', sentBytesChartDataset, sentBytesChartLayout);
-</script>
-";
-
-            //
-            var receivedBytesChart = @"
-<script>
+/*
+**
+*/
 let receivedBytesChartDataset = []
 receivedBytesChartDataset.push({
 	x: receivedBytesLog.map(item => {
@@ -442,32 +312,16 @@ receivedBytesChartDataset.push({
 	type: 'scatter'
 })
 
-let receivedBytesChartLayout = {
-	showlegend: false,
-	legend: {
-		xanchor: 'left', y: -0.5, orientation: 'h'
-	},
-	hoverlabel: {
-		namelength: -1
-	},
-	title: {
-		text:'Received Bytes',
-	},
-	xaxis: {
-		title: {
-		text: '',
-		}
-	},
-	
-	yaxis: {
-		title: {
-		text: 'Bytes',
-		}
-	}
-}
-
-Plotly.newPlot('ReceivedBytesChart', receivedBytesChartDataset, receivedBytesChartLayout);
+PlotlyJsLineDraw('Received Bytes','ReceivedBytesChart', receivedBytesChartDataset, false)
 </script>
+";
+
+            var bodyStyle = @"
+<style>
+body {
+    background-color: #1A1A1A;
+}
+</style>
 ";
 
             //
@@ -475,6 +329,7 @@ Plotly.newPlot('ReceivedBytesChart', receivedBytesChartDataset, receivedBytesCha
 <html>
 <head>
 <script src='https://cdn.plot.ly/plotly-2.3.0.min.js'></script>
+{bodyStyle}
 </head>
 <body>
 <div id='ResponseTimeChart' style='width:99%;height:400px;'></div>
@@ -485,13 +340,8 @@ Plotly.newPlot('ReceivedBytesChart', receivedBytesChartDataset, receivedBytesCha
 <div id='SentBytesChart' style='width:99%;height:400px;'></div>
 <div id='ReceivedBytesChart' style='width:99%;height:400px;'></div>
 {sourceData}
-{responseTimeChart}
-{completedRequestsChart}
-{sentTimeChart}
-{waitTimeChart}
-{receivedTimeChart}
-{sentBytesChart}
-{receivedBytesChart}
+{plotlyJsLineDraw}
+{charts}
 </body>
 </html>
 ";

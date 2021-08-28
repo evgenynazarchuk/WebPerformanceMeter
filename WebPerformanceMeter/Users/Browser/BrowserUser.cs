@@ -11,9 +11,9 @@
 
         protected readonly IBrowser Browser;
 
-        public BrowserUser()
+        public BrowserUser(string userName = "")
         {
-            this.SetUserName(this.GetType().Name);
+            this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Chromium.LaunchAsync(new ()
             {

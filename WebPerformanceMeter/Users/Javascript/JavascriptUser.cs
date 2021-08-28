@@ -44,17 +44,15 @@
             bool reuseDataInLoop = true
             )
         {
-            this.Page.Response += async (_, response) =>
+            this.Page.RequestFinished += (_, request) =>
             {
-                await response.FinishedAsync();
-
-                Console.WriteLine($"{TimeSpan.FromMilliseconds(response.Request.Timing.ConnectStart)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.ConnectEnd)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.RequestStart)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.ResponseStart)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.ResponseEnd)} " +
-                    $"{response.Request.Method} " +
-                    $"{response.Url}");
+                Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
+                    $"{request.Method} " +
+                    $"{request.Url}");
             };
 
             object? entity = null;

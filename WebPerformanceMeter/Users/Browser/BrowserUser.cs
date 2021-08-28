@@ -35,20 +35,18 @@
             IBrowserContext browserContext = await Browser.NewContextAsync();
             IPage page = await browserContext.NewPageAsync();
 
-            page.Response += async (_, response) =>
+            page.RequestFinished += (_, request) =>
             {
-                await response.FinishedAsync();
-
-                Console.WriteLine($"{TimeSpan.FromMilliseconds(response.Request.Timing.ConnectStart)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.ConnectEnd)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.RequestStart)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.ResponseStart)} " +
-                    $"{TimeSpan.FromMilliseconds(response.Request.Timing.ResponseEnd)} " +
-                    $"{response.Request.Method} " +
-                    $"{response.Url}");
+                Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
+                    $"{request.Method} " +
+                    $"{request.Url}");
             };
 
-            PageContext pageCtx = new(page);
+            PageContext pageContext = new(page);
 
             object? entity = null;
 
@@ -66,11 +64,11 @@
             {
                 if (entity is null)
                 {
-                    await PerformanceAsync(pageCtx);
+                    await PerformanceAsync(pageContext);
                 }
                 else
                 {
-                    await PerformanceAsync(pageCtx, entity);
+                    await PerformanceAsync(pageContext, entity);
                 }
 
                 if (dataReader is not null && !reuseDataInLoop)
@@ -88,12 +86,12 @@
             await browserContext.CloseAsync();
         }
 
-        protected virtual Task PerformanceAsync(PageContext page, object entity)
+        protected virtual Task PerformanceAsync(PageContext pageContext, object entity)
         {
             return Task.CompletedTask;
         }
 
-        protected virtual Task PerformanceAsync(PageContext page)
+        protected virtual Task PerformanceAsync(PageContext pageContext)
         {
             return Task.CompletedTask;
         }

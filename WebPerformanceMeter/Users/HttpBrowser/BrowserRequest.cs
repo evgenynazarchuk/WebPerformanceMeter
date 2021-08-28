@@ -35,6 +35,7 @@
         public void Dispose()
         {
             this.Page.CloseAsync().GetAwaiter().GetResult();
+            this.Browser.CloseAsync().GetAwaiter().GetResult();
         }
 
         public override async Task InvokeAsync(

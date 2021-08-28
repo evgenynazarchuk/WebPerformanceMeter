@@ -1,64 +1,22 @@
-﻿using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-
-namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users
 {
-    public abstract class User : PerformanceUser
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Interfaces;
+
+    public abstract class User
     {
         public User()
         {
-            SetUserName(this.GetType().Name);
+            this.UserName = string.Empty;
         }
 
-        public override async Task InvokeAsync(
-            int loopCount = 1,
-            IEntityReader? dataReader = null,
-            bool reuseDataInLoop = true
-            )
+        protected void SetUserName(string userName)
         {
-            object? entity = null;
-
-            if (dataReader is not null)
-            {
-                entity = dataReader.GetEntity();
-
-                if (entity is null)
-                {
-                    return;
-                }
-            }
-
-            for (int i = 0; i < loopCount; i++)
-            {
-                if (entity is null)
-                {
-                    await PerformanceAsync();
-                }
-                else
-                {
-                    await PerformanceAsync(entity);
-                }
-
-                if (dataReader is not null && !reuseDataInLoop)
-                {
-                    entity = dataReader.GetEntity();
-
-                    if (entity is null)
-                    {
-                        return;
-                    }
-                }
-            }
+            this.UserName = userName;
         }
 
-        protected virtual Task PerformanceAsync(object entity)
-        {
-            return Task.CompletedTask;
-        }
+        public string UserName { get; private set; }
 
-        protected virtual Task PerformanceAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public abstract Task InvokeAsync(int loopCount, IEntityReader? dataReader, bool reuseDataInLoop);
     }
 }

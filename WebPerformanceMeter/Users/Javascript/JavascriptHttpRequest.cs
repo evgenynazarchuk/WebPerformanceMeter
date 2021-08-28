@@ -1,8 +1,8 @@
-﻿namespace WebPerformanceMeter.Users.HttpBrowser
+﻿namespace WebPerformanceMeter.Users.Javascript
 {
     using System.Threading.Tasks;
 
-    public abstract partial class BrowserRequest : PerformanceUser
+    public abstract partial class JavascriptUser : User
     {
         public async Task PostRequestAsync()
         {

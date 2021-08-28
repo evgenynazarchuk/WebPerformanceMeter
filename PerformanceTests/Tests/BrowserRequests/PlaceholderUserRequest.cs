@@ -1,9 +1,9 @@
 ﻿namespace PerformanceTests.Tests.BrowserRequests
 {
     using System.Threading.Tasks;
-    using WebPerformanceMeter.Users.HttpBrowser;
+    using WebPerformanceMeter.Users.Javascript;
 
-    public class PlaceholderUserRequest : BrowserRequest
+    public class PlaceholderUserRequest : JavascriptUser
     {
         protected override async Task PerformanceAsync()
         {

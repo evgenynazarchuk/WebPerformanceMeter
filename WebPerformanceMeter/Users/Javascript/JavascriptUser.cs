@@ -1,4 +1,4 @@
-﻿namespace WebPerformanceMeter.Users.HttpBrowser
+﻿namespace WebPerformanceMeter.Users.Javascript
 {
     using Microsoft.Playwright;
     using System;
@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
 
-    public abstract partial class BrowserRequest : PerformanceUser, IDisposable
+    public abstract partial class JavascriptUser : User, IDisposable
     {
         protected readonly IPlaywright Playwright;
 
@@ -16,16 +16,16 @@
 
         protected readonly IPage Page;
 
-        public BrowserRequest()
+        public JavascriptUser()
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
-            this.Browser = Playwright.Firefox.LaunchAsync(new()
+            this.Browser = Playwright.Firefox.LaunchAsync(new ()
             {
                 FirefoxUserPrefs = new Dictionary<string, object>()
                 {
                     { "network.http.max-connections", 20000 }
                 },
-                Headless = false
+                Headless = true
             }).GetAwaiter().GetResult();
 
             this.BrowserContext = Browser.NewContextAsync().GetAwaiter().GetResult();

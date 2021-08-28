@@ -21,7 +21,7 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly Timer Runner;
 
-        private readonly PerformanceUser PerformanceUser;
+        private readonly User PerformanceUser;
 
         private readonly TimeSpan MinimalInvokePeriod;
 
@@ -34,7 +34,7 @@ namespace WebPerformanceMeter.PerformancePlans
         private readonly bool ReuseDataInLoop;
 
         public UsersOnPeriod(
-            PerformanceUser user,
+            User user,
             int totalUsers,
             TimeSpan performancePlanDuration,
             TimeSpan? minimalInvokePeriod = null,

@@ -10,7 +10,7 @@
     public sealed class UsersPerPeriod : PerformancePlan
     {
         public UsersPerPeriod(
-            PerformanceUser user,
+            User user,
             int usersCountPerPeriod,
             TimeSpan performancePlanDuration,
             TimeSpan? perPeriod = null,
@@ -35,7 +35,7 @@
             this.reuseDataInLoop = reuseDataInLoop;
         }
 
-        private readonly PerformanceUser performanceUser;
+        private readonly User performanceUser;
 
         private readonly int totalUsersPerPeriod;
 

@@ -5,7 +5,7 @@
     using TestWebApiServer.Models;
     using WebPerformanceMeter.Users;
 
-    public class TestUserFacade : HttpUser
+    public class TestUserFacade : HttpClientUser
     {
         public TestUserFacade(HttpClient client, string userName = "")
             : base(client, userName)

@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
 
-    public abstract class BrowserUser : PerformanceUser
+    public abstract class BrowserUser : User, IDisposable
     {
         protected readonly IPlaywright Playwright;
 
@@ -15,10 +15,15 @@
         {
             this.SetUserName(this.GetType().Name);
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
-            this.Browser = Playwright.Chromium.LaunchAsync(new()
+            this.Browser = Playwright.Chromium.LaunchAsync(new ()
             {
-                Headless = false
+                Headless = true
             }).GetAwaiter().GetResult();
+        }
+
+        public void Dispose()
+        {
+            this.Browser.CloseAsync().GetAwaiter().GetResult();
         }
 
         public override async Task InvokeAsync(
@@ -27,8 +32,8 @@
             bool reuseDataInLoop = true
             )
         {
-            IBrowserContext ctx = await Browser.NewContextAsync();
-            IPage page = await ctx.NewPageAsync();
+            IBrowserContext browserContext = await Browser.NewContextAsync();
+            IPage page = await browserContext.NewPageAsync();
 
             page.Response += async (_, response) =>
             {
@@ -80,6 +85,7 @@
             }
 
             await page.CloseAsync();
+            await browserContext.CloseAsync();
         }
 
         protected virtual Task PerformanceAsync(PageContext page, object entity)

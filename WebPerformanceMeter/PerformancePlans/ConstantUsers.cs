@@ -6,7 +6,7 @@
 
     public sealed class ConstantUsers : PerformancePlan
     {
-        private readonly PerformanceUser performanceUser;
+        private readonly User performanceUser;
 
         private readonly int usersCount;
 
@@ -19,7 +19,7 @@
         private readonly bool reuseDataInLoop;
 
         public ConstantUsers(
-            PerformanceUser user,
+            User user,
             int usersCount,
             int userLoopCount = 1,
             IEntityReader? dataReader = null,

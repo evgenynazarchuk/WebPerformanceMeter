@@ -8,7 +8,7 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public sealed class ActiveUsersBySteps : PerformancePlan
     {
-        private readonly PerformanceUser PerformanceUser;
+        private readonly User PerformanceUser;
 
         private readonly int FromActiveUsersCount;
 
@@ -29,7 +29,7 @@ namespace WebPerformanceMeter.PerformancePlans
         private readonly bool ReuseDataInLoop;
 
         public ActiveUsersBySteps(
-            PerformanceUser user,
+            User user,
             int fromActiveUsersCount,
             int toActiveUsersCount,
             int step,

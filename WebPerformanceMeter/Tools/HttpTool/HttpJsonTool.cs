@@ -8,7 +8,7 @@
 
     public static class HttpJsonTool
     {
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new ()
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };

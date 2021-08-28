@@ -7,10 +7,10 @@
     public class TestWaitUser8 : TestUserFacade
     {
         // Arange
-        public readonly TestRequestContent Content = new () { Timeout = 800 };
+        public readonly TestRequestContent Content = new() { Timeout = 800 };
 
         public TestWaitUser8(HttpClient client)
-            : base(client) 
+            : base(client)
         {
         }
 

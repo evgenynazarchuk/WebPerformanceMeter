@@ -1,8 +1,8 @@
 ﻿namespace PerformanceTests
 {
-    using System.Net.Http;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
+    using System.Net.Http;
     using TestWebApiServer;
 
     public class WebApplication : WebApplicationFactory<Startup>

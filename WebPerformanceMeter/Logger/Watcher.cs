@@ -12,7 +12,7 @@ namespace WebPerformanceMeter.Logger
 
         public readonly List<AsyncReport> Reports;
 
-        public static Lazy<Watcher> Instance = new (() => new ());
+        public static Lazy<Watcher> Instance = new(() => new());
 
         public Watcher()
         {

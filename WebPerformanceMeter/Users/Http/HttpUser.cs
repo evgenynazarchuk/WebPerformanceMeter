@@ -24,7 +24,7 @@
                 BaseAddress = new Uri(host)
             };
 
-            this.Tool = new (this.Client);
+            this.Tool = new(this.Client);
         }
     }
 }

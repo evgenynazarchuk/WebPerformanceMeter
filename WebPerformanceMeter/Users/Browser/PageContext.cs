@@ -1,8 +1,10 @@
 ﻿namespace WebPerformanceMeter.Users
 {
-    using System.Threading.Tasks;
     using Microsoft.Playwright;
-    
+    using System;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+
     public class PageContext
     {
         public readonly IPage Page;
@@ -12,38 +14,49 @@
             this.Page = page;
         }
 
-        public async Task GotoAsync(string url)
+        public async Task GotoAsync(string url, string label = "goto")
         {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             await this.Page.GotoAsync(url);
+            await this.WaitAsync();
+            stopWatch.Stop();
+            Console.WriteLine($"{label} {stopWatch.Elapsed}");
         }
 
-        public async Task ReloadAsync()
+        public async Task ReloadAsync(string label = "reload")
         {
-            ////await this.WaitAsync();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             await this.Page.ReloadAsync();
+            await this.WaitAsync();
+            stopWatch.Stop();
+            Console.WriteLine($"{label} {stopWatch.Elapsed}");
         }
 
-        public async Task ClickAsync(string selector)
+        public async Task ClickAsync(string selector, string label = "click")
         {
-            ////await this.WaitAsync();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             await this.Page.ClickAsync(selector);
+            await this.WaitAsync();
+            stopWatch.Stop();
+            Console.WriteLine($"{label} {stopWatch.Elapsed}");
         }
 
-        public async Task TypeAsync(string selector, string text)
+        public async Task TypeAsync(string selector, string text, string label = "type")
         {
-            ////await this.WaitAsync();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             await this.Page.TypeAsync(selector, text);
+            await this.WaitAsync();
+            stopWatch.Stop();
+            Console.WriteLine($"{label} {stopWatch.Elapsed}");
         }
 
-        ////public async Task PageAction(Action<IPage> action)
-        ////{
-        ////    //await this.WaitAsync();
-        ////    action(this.Page);
-        ////}
-
-        ////public virtual async Task WaitAsync()
-        ////{
-        ////    await Task.CompletedTask;
-        ////}
+        public async Task WaitAsync()
+        {
+            await this.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        }
     }
 }

@@ -1,24 +1,40 @@
-﻿namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users.HttpBrowser
 {
     using Microsoft.Playwright;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
 
-    public abstract class BrowserUser : PerformanceUser
+    public abstract partial class BrowserRequest : PerformanceUser, IDisposable
     {
         protected readonly IPlaywright Playwright;
 
         protected readonly IBrowser Browser;
 
-        public BrowserUser()
+        protected readonly IBrowserContext BrowserContext;
+
+        protected readonly IPage Page;
+
+        public BrowserRequest()
         {
-            this.SetUserName(this.GetType().Name);
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
-            this.Browser = Playwright.Chromium.LaunchAsync(new()
+            this.Browser = Playwright.Firefox.LaunchAsync(new()
             {
+                FirefoxUserPrefs = new Dictionary<string, object>()
+                {
+                    { "network.http.max-connections", 20000 }
+                },
                 Headless = false
             }).GetAwaiter().GetResult();
+
+            this.BrowserContext = Browser.NewContextAsync().GetAwaiter().GetResult();
+            this.Page = this.BrowserContext.NewPageAsync().GetAwaiter().GetResult();
+        }
+
+        public void Dispose()
+        {
+            this.Page.CloseAsync().GetAwaiter().GetResult();
         }
 
         public override async Task InvokeAsync(
@@ -27,10 +43,7 @@
             bool reuseDataInLoop = true
             )
         {
-            IBrowserContext ctx = await Browser.NewContextAsync();
-            IPage page = await ctx.NewPageAsync();
-
-            page.Response += async (_, response) =>
+            this.Page.Response += async (_, response) =>
             {
                 await response.FinishedAsync();
 
@@ -42,8 +55,6 @@
                     $"{response.Request.Method} " +
                     $"{response.Url}");
             };
-
-            PageContext pageCtx = new(page);
 
             object? entity = null;
 
@@ -61,11 +72,11 @@
             {
                 if (entity is null)
                 {
-                    await PerformanceAsync(pageCtx);
+                    await PerformanceAsync();
                 }
                 else
                 {
-                    await PerformanceAsync(pageCtx, entity);
+                    await PerformanceAsync(entity);
                 }
 
                 if (dataReader is not null && !reuseDataInLoop)
@@ -78,16 +89,14 @@
                     }
                 }
             }
-
-            await page.CloseAsync();
         }
 
-        protected virtual Task PerformanceAsync(PageContext page, object entity)
+        protected virtual Task PerformanceAsync(object entity)
         {
             return Task.CompletedTask;
         }
 
-        protected virtual Task PerformanceAsync(PageContext page)
+        protected virtual Task PerformanceAsync()
         {
             return Task.CompletedTask;
         }

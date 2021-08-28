@@ -10,7 +10,7 @@
 
     public sealed class Scenario
     {
-        public static readonly Stopwatch ScenarioWatchTime = new ();
+        public static readonly Stopwatch ScenarioWatchTime = new();
 
         public Scenario()
         {
@@ -39,13 +39,13 @@
 
         private Scenario AddActs(ActType launchType, params PerformancePlan[] performancePlan)
         {
-            this.acts.Add(new (launchType, performancePlan));
+            this.acts.Add(new(launchType, performancePlan));
             return this;
         }
 
         public async Task StartAsync()
         {
-            CancellationTokenSource tokenSource = new ();
+            CancellationTokenSource tokenSource = new();
             CancellationToken token = tokenSource.Token;
             Task watcherWaiter = this.watcher.Processing(token);
 
@@ -86,7 +86,7 @@
                     Task.WaitAll(plansWaiter.ToArray());
                 }
             }
-            
+
             tokenSource.Cancel();
             await watcherWaiter;
 

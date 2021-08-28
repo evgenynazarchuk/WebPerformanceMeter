@@ -13,6 +13,7 @@ namespace PerformanceTests
         /// doc
         /// </summary>
         /// <returns>Task</returns>
+        /// version 1
         public static async Task Main()
         {
             await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());

@@ -8,12 +8,12 @@
     public class TestUserFacade : HttpUser
     {
         public TestUserFacade(HttpClient client, string userName = "")
-            : base(client, userName) 
+            : base(client, userName)
         {
         }
 
         public async Task<TestResponseContent?> TestWaitMethod1(
-            TestRequestContent content, 
+            TestRequestContent content,
             string requestLabel = "")
         {
             return await this.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(
@@ -24,7 +24,7 @@
         }
 
         public async Task<TestResponseContent?> TestWaitMethod2(
-            TestRequestContent content, 
+            TestRequestContent content,
             string requestLabel = "")
         {
             return await this.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(

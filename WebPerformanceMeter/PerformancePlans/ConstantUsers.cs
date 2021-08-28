@@ -23,7 +23,7 @@
             int usersCount,
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
-            bool reuseDataInLoop = true) 
+            bool reuseDataInLoop = true)
         {
             this.performanceUser = user;
             this.usersCount = usersCount;

@@ -1,13 +1,13 @@
 ﻿namespace PerformanceTests.Tests.Scenarios
 {
-    using System.Threading.Tasks;
     using PerformanceTests.Tests.Users;
+    using System.Threading.Tasks;
     using WebPerformanceMeter.Attributes;
     using WebPerformanceMeter.Extensions;
     using WebPerformanceMeter.PerformancePlans;
     using WebPerformanceMeter.Support;
 
-    public class GoogleSearchScenatio
+    public class SampleTest1
     {
         [PerformanceTest(1, 200)]
         [PerformanceTest(10, 200)]

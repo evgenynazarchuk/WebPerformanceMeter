@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Logger\HttpClientLogger\" />
+    <Folder Include="Logger\GrpcLogger\" />
+    <Folder Include="Logger\HttpLogger\" />
+    <Folder Include="Logger\WebSocketLogger\" />
     <Folder Include="Runner\" />
   </ItemGroup>
 

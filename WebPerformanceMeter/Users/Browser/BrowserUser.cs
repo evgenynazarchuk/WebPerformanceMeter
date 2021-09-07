@@ -4,26 +4,32 @@
     using System;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Tools.BrowserTool;
 
     public abstract class BrowserUser : User, IDisposable
     {
-        protected readonly IPlaywright Playwright;
+        //protected readonly IPlaywright Playwright;
+        //
+        //protected readonly IBrowser Browser;
 
-        protected readonly IBrowser Browser;
+        protected readonly BrowserTool BrowserTool;
 
         public BrowserUser(string userName = "")
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
-            this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
-            this.Browser = Playwright.Chromium.LaunchAsync(new ()
-            {
-                Headless = true
-            }).GetAwaiter().GetResult();
+            this.BrowserTool = new();
+            //this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
+            //this.Browser = Playwright.Chromium.LaunchAsync(new ()
+            //{
+            //    Headless = true
+            //}).GetAwaiter().GetResult();
         }
 
         public void Dispose()
         {
-            this.Browser.CloseAsync().GetAwaiter().GetResult();
+            this.BrowserTool.Dispose();
+            //this.Browser.CloseAsync().GetAwaiter().GetResult();
+            //this.BrowserTool.Browser.CloseAsync().GetAwaiter().GetResult();
         }
 
         public override async Task InvokeAsync(
@@ -32,21 +38,22 @@
             bool reuseDataInLoop = true
             )
         {
-            IBrowserContext browserContext = await Browser.NewContextAsync();
-            IPage page = await browserContext.NewPageAsync();
+            //IBrowserContext browserContext = await Browser.NewContextAsync();
+            //IPage page = await browserContext.NewPageAsync();
 
-            page.RequestFinished += (_, request) =>
-            {
-                Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
-                    $"{request.Method} " +
-                    $"{request.Url}");
-            };
+            //page.RequestFinished += (_, request) =>
+            //{
+            //    Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
+            //        $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
+            //        $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
+            //        $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
+            //        $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
+            //        $"{request.Method} " +
+            //        $"{request.Url}");
+            //};
 
-            PageContext pageContext = new(page);
+            //PageContext pageContext = new(page);
+            var pageContext = await this.BrowserTool.GetNewPageContextAsync();
 
             object? entity = null;
 
@@ -82,8 +89,9 @@
                 }
             }
 
-            await page.CloseAsync();
-            await browserContext.CloseAsync();
+            //await page.CloseAsync();
+            //await browserContext.CloseAsync();
+            await pageContext.CloseAsync();
         }
 
         protected virtual Task PerformanceAsync(PageContext pageContext, object entity)

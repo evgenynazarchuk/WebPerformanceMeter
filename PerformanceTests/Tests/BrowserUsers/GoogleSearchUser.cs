@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using WebPerformanceMeter.Users;
+    using WebPerformanceMeter.Tools.BrowserTool;
 
     public class GoogleSearchUser : BrowserUser
     {

@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace WebPerformanceMeter.Logger
 {
-    public class HtmlGenerator
+    public class HttpClientHtmlReportGenerator
     {
         private string _rawLogPath;
 
@@ -14,9 +14,9 @@ namespace WebPerformanceMeter.Logger
 
         private StreamReader? _rawLogReader = null;
 
-        private List<LogMessage>? _rawLogMessages = null;
+        private List<HttpClientLogMessage>? _rawLogMessages = null;
 
-        public HtmlGenerator(
+        public HttpClientHtmlReportGenerator(
             string rawLogPath,
             string outputHtmlPath)
         {
@@ -30,11 +30,11 @@ namespace WebPerformanceMeter.Logger
             _rawLogMessages = new();
 
             string? rawLogAsString;
-            LogMessage? rawLogMessage;
+            HttpClientLogMessage? rawLogMessage;
 
             while ((rawLogAsString = _rawLogReader.ReadLine()) != null)
             {
-                rawLogMessage = JsonSerializer.Deserialize<LogMessage>(rawLogAsString);
+                rawLogMessage = JsonSerializer.Deserialize<HttpClientLogMessage>(rawLogAsString);
                 if (rawLogMessage is null) break;
                 _rawLogMessages.Add(rawLogMessage);
             }
@@ -81,7 +81,7 @@ namespace WebPerformanceMeter.Logger
 
             foreach (var item in groupByRequestStatusCodeEndResponse)
             {
-                LogMessageTimeAnalytic totalLog = new(
+                HttpClientLogMessageTimeAnalytic totalLog = new(
                     item.Key.User,
                     item.Key.Request,
                     item.Key.RequestLabel,
@@ -98,8 +98,8 @@ namespace WebPerformanceMeter.Logger
 
             foreach (var item in groupByEndResponse)
             {
-                sentStringLog.Append(JsonSerializer.Serialize(new LogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
-                receivedStringLog.Append(JsonSerializer.Serialize(new LogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
+                sentStringLog.Append(JsonSerializer.Serialize(new HttpClientLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
+                receivedStringLog.Append(JsonSerializer.Serialize(new HttpClientLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
             }
 
             //

@@ -1,8 +1,8 @@
 ﻿namespace WebPerformanceMeter.Logger
 {
-    public class LogMessage
+    public class HttpClientLogMessage
     {
-        public LogMessage(
+        public HttpClientLogMessage(
             string user,
             string protocolType,
             string request,

@@ -18,7 +18,6 @@
             this.watcher = Watcher.Instance.Value;
             this.watcher.AddReport(new ConsoleReport());
             this.watcher.AddReport(new FileReport());
-            this.watcher.AddReport(new GrpcReport());
         }
 
         private readonly List<KeyValuePair<ActType, PerformancePlan[]>> acts;
@@ -47,7 +46,9 @@
         {
             CancellationTokenSource tokenSource = new();
             CancellationToken token = tokenSource.Token;
-            Task watcherWaiter = this.watcher.Processing(token);
+            Task httpClientProcessing = this.watcher.HttpClientLogProcessing(token);
+            Task browserActionProcessing = this.watcher.BrowserActionLogProcessing(token);
+
 
             if (this.acts.Count == 0)
             {
@@ -88,7 +89,8 @@
             }
 
             tokenSource.Cancel();
-            await watcherWaiter;
+            await httpClientProcessing;
+            await browserActionProcessing;
 
             ScenarioWatchTime.Stop();
         }

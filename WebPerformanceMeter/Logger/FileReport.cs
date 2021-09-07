@@ -41,17 +41,17 @@ namespace WebPerformanceMeter.Logger
 
         public override async Task WriteAsync(string message)
         {
-            var log = GetLogEntity(message);
+            var log = GetHttpClientLogEntity(message);
             var serializedLog = JsonSerializer.Serialize(log, JsonSerializerOptions);
 
             FileStream.WriteLine(serializedLog);
             await Task.CompletedTask;
         }
 
-        private LogMessage GetLogEntity(string message)
+        private HttpClientLogMessage GetHttpClientLogEntity(string message)
         {
             var splittedMessage = message.Split(',');
-            LogMessage log = new(splittedMessage[0],
+            HttpClientLogMessage log = new(splittedMessage[0],
                 splittedMessage[1],
                 splittedMessage[2],
                 splittedMessage[3],
@@ -71,7 +71,7 @@ namespace WebPerformanceMeter.Logger
             FileStream.Flush();
             FileStream.Close();
 
-            var htmlGenerate = new HtmlGenerator(_rawLogFileName, _htmlReportFileName);
+            var htmlGenerate = new HttpClientHtmlReportGenerator(_rawLogFileName, _htmlReportFileName);
             htmlGenerate.ReadRawLogMessages();
             htmlGenerate.GenerateReport();
         }

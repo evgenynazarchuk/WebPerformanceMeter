@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-
-namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users
 {
     using System;
     using System.Net.Http;
     using WebPerformanceMeter.Tools.HttpTool;
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Interfaces;
 
     public abstract partial class HttpClientUser : User
     {

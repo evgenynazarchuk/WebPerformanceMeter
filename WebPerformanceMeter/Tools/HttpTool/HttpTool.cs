@@ -75,34 +75,23 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string userName = "",
             string requestLabel = "")
         {
-            //DateTime startSendRequest;
-            //DateTime startWaitResponse;
-            //DateTime startResponse;
-            //DateTime endResponse;
-
             long startSendRequest;
             long startWaitResponse;
             long startResponse;
             long endResponse;
 
-            //Console.WriteLine($"3333333 {Scenario.WatchTime.ElapsedMilliseconds}");
-
             Task<HttpResponseMessage>? httpResponseMessageTask = null;
             HttpResponseMessage httpResponseMessage;
             byte[] content;
 
-            //startSendRequest = DateTime.UtcNow;
             startSendRequest = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             httpResponseMessageTask = HttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
 
-            //startWaitResponse = DateTime.UtcNow;
             startWaitResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             httpResponseMessage = await httpResponseMessageTask;
 
-            //startResponse = DateTime.UtcNow;
             startResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
             content = await httpResponseMessage.Content.ReadAsByteArrayAsync();
-            //endResponse = DateTime.UtcNow;
             endResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
 
             int responseSize = content.Length;
@@ -112,8 +101,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            //Console.WriteLine($"123 {user},{httpRequestMessage.RequestUri},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
-            Watcher.Send($"{userName},http,{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
+            Watcher.SendFromHttpClient($"{userName},http,{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
 
             HttpResponse response = new(
                 statusCode: (int)httpResponseMessage.StatusCode,

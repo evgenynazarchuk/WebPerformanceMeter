@@ -1,6 +1,6 @@
 using System;
 
-namespace RestWebApplication
+namespace ActorsWebApplication
 {
     public class WeatherForecast
     {

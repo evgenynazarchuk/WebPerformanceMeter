@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcWebApplication", "GrpcW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketWebApplication", "WebSocketWebApplication\WebSocketWebApplication.csproj", "{DF798525-DF96-4E78-8283-A219CC4D93A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorsWebApplication", "ActorsWebApplication\ActorsWebApplication.csproj", "{73F1C9BB-0F95-4545-81E1-3DF356D62F75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{DF798525-DF96-4E78-8283-A219CC4D93A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF798525-DF96-4E78-8283-A219CC4D93A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF798525-DF96-4E78-8283-A219CC4D93A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73F1C9BB-0F95-4545-81E1-3DF356D62F75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73F1C9BB-0F95-4545-81E1-3DF356D62F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73F1C9BB-0F95-4545-81E1-3DF356D62F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73F1C9BB-0F95-4545-81E1-3DF356D62F75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{64AAF01C-C7FC-432D-81E4-B15F2C256B4C} = {FE260715-F1E1-4BAB-9DA9-9DF385EB7E9D}
 		{3E798A9A-B222-43F4-B453-C3ED4A30C33E} = {FE260715-F1E1-4BAB-9DA9-9DF385EB7E9D}
 		{DF798525-DF96-4E78-8283-A219CC4D93A5} = {FE260715-F1E1-4BAB-9DA9-9DF385EB7E9D}
+		{73F1C9BB-0F95-4545-81E1-3DF356D62F75} = {FE260715-F1E1-4BAB-9DA9-9DF385EB7E9D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4E79BCD-B7BE-4429-B6A7-3E4D90282668}

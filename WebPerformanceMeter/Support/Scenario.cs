@@ -10,7 +10,7 @@
 
     public sealed class Scenario
     {
-        public static readonly Stopwatch ScenarioWatchTime = new();
+        //public static readonly Stopwatch ScenarioWatchTime = new();
 
         public Scenario()
         {
@@ -44,19 +44,29 @@
 
         public async Task StartAsync()
         {
-            CancellationTokenSource tokenSource = new();
-            CancellationToken token = tokenSource.Token;
-            Task httpClientProcessing = this.watcher.HttpClientLogProcessing(token);
-            Task browserActionProcessing = this.watcher.BrowserActionLogProcessing(token);
-
+            //CancellationTokenSource tokenSource = new();
+            //CancellationToken token = tokenSource.Token;
+            //Task httpClientProcessing = this.watcher.ProcessingAsync(token);
 
             if (this.acts.Count == 0)
             {
                 throw new ApplicationException("UserPerformancePlan not added");
             }
 
-            ScenarioWatchTime.Reset();
-            ScenarioWatchTime.Start();
+            List<Task> loggersProcessing = new();
+            foreach (var (_, plans) in this.acts)
+            {
+                foreach (var plan in plans)
+                {
+                    loggersProcessing.Add(Task.Run(() => plan.User.Logger.StartProcessingAsync()));
+                }
+            }
+
+            ////ScenarioTimer.Time.Reset();
+            ScenarioTimer.Time.Start();
+
+            //ScenarioWatchTime.Reset();
+            //ScenarioWatchTime.Start();
 
             foreach (var act in this.acts)
             {
@@ -80,19 +90,25 @@
                         {
                             await plan.StartAsync();
                         }));
-
-                        ////plansWaiter.Add(plan.StartAsync()); // do not work!?
                     }
 
                     Task.WaitAll(plansWaiter.ToArray());
                 }
             }
 
-            tokenSource.Cancel();
-            await httpClientProcessing;
-            await browserActionProcessing;
+            //tokenSource.Cancel();
+            foreach (var (_, plans) in this.acts)
+            {
+                foreach (var plan in plans)
+                {
+                    plan.User.Logger.StopProcessing();
+                }
+            }
+            Task.WaitAll(loggersProcessing.ToArray());
+            //await httpClientProcessing;
 
-            ScenarioWatchTime.Stop();
+            ////ScenarioWatchTime.Stop();
+            ScenarioTimer.Time.Stop();
         }
     }
 }

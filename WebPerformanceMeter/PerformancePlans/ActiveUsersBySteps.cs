@@ -1,14 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
-
-namespace WebPerformanceMeter.PerformancePlans
+﻿namespace WebPerformanceMeter.PerformancePlans
 {
+    using System;
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Support;
+    using WebPerformanceMeter.Users;
+
     public sealed class ActiveUsersBySteps : PerformancePlan
     {
-        private readonly User PerformanceUser;
+        ////public readonly User User;
 
         private readonly int FromActiveUsersCount;
 
@@ -38,6 +38,7 @@ namespace WebPerformanceMeter.PerformancePlans
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
+            : base(user)
         {
             UsersCountValidation(fromActiveUsersCount, toActiveUsersCount);
             DurationTimeValidation(stepPeriodDuration, performancePlanDuration);
@@ -46,7 +47,7 @@ namespace WebPerformanceMeter.PerformancePlans
             int maximumActiveUsersCount = Math.Max(fromActiveUsersCount, toActiveUsersCount);
             int minimumActiveUsersCount = Math.Min(fromActiveUsersCount, toActiveUsersCount);
 
-            this.PerformanceUser = user;
+            ////this.User = user;
             this.FromActiveUsersCount = fromActiveUsersCount;
             this.ToActiveUsersCount = toActiveUsersCount;
             this.Step = step;
@@ -65,15 +66,16 @@ namespace WebPerformanceMeter.PerformancePlans
 
             for (int i = 1; i <= this.PeriodsCount; i++)
             {
-                var endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.StepPeriodDuration.TotalSeconds;
+                ////var endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.StepPeriodDuration.TotalSeconds;
+                var endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this.StepPeriodDuration.TotalSeconds;
 
-                while (Scenario.ScenarioWatchTime.Elapsed.TotalSeconds < endTime)
+                while (ScenarioTimer.Time.Elapsed.TotalSeconds < endTime)
                 {
                     for (int currentUser = 0; currentUser < currentMaximumActiveUsersCountPerPeriod; currentUser++)
                     {
                         if (this.ActiveUsers[currentUser] is null || this.ActiveUsers[currentUser].IsCompleted)
                         {
-                            this.ActiveUsers[currentUser] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                            this.ActiveUsers[currentUser] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                         }
                     }
                 }

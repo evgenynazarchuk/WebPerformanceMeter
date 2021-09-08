@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Logger;
 
     public abstract partial class JavascriptUser : User, IDisposable
     {
@@ -16,7 +17,8 @@
 
         protected readonly IPage Page;
 
-        public JavascriptUser()
+        public JavascriptUser(ILogger logger)
+            : base(logger)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Firefox.LaunchAsync(new ()
@@ -44,16 +46,16 @@
             bool reuseDataInLoop = true
             )
         {
-            this.Page.RequestFinished += (_, request) =>
-            {
-                Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
-                    $"{request.Method} " +
-                    $"{request.Url}");
-            };
+            ////this.Page.RequestFinished += (_, request) =>
+            ////{
+            ////    Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
+            ////        $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
+            ////        $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
+            ////        $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
+            ////        $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
+            ////        $"{request.Method} " +
+            ////        $"{request.Url}");
+            ////};
 
             object? entity = null;
 

@@ -1,7 +1,4 @@
-﻿/// <summary>
-/// 
-/// </summary>
-namespace PerformanceTests
+﻿namespace PerformanceTests
 {
     using System.Reflection;
     using System.Threading.Tasks;
@@ -9,11 +6,6 @@ namespace PerformanceTests
 
     public class Program
     {
-        /// <summary>
-        /// doc
-        /// </summary>
-        /// <returns>Task</returns>
-        /// version 1
         public static async Task Main()
         {
             await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());

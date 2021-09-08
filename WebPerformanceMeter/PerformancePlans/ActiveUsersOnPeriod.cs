@@ -1,14 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
-
-namespace WebPerformanceMeter.PerformancePlans
+﻿namespace WebPerformanceMeter.PerformancePlans
 {
+    using System;
+    using System.Threading.Tasks;
+    using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Support;
+    using WebPerformanceMeter.Users;
+
     public sealed class ActiveUsersOnPeriod : PerformancePlan
     {
-        private readonly User PerformanceUser;
+        ////public readonly User User;
 
         private readonly int ActiveUsersCount;
 
@@ -29,8 +29,9 @@ namespace WebPerformanceMeter.PerformancePlans
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
+            : base(user)
         {
-            this.PerformanceUser = user;
+            ////this.User = user;
             this.ActiveUsersCount = activeUsersCount;
             this.ActiveUsers = new Task[this.ActiveUsersCount];
             this.PerformancePlanDuration = performancePlanDuration;
@@ -41,17 +42,19 @@ namespace WebPerformanceMeter.PerformancePlans
 
         public override async Task StartAsync()
         {
-            double endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.PerformancePlanDuration.TotalSeconds;
-            while (Scenario.ScenarioWatchTime.Elapsed.TotalSeconds < endTime)
+            double endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this.PerformancePlanDuration.TotalSeconds;
+
+            while (ScenarioTimer.Time.Elapsed.TotalSeconds < endTime)
             {
                 for (int i = 0; i < this.ActiveUsersCount; i++)
                 {
                     if (this.ActiveUsers[i] is null || this.ActiveUsers[i].IsCompleted)
                     {
-                        this.ActiveUsers[i] = this.PerformanceUser.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                        this.ActiveUsers[i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
                     }
                 }
             }
+
             await this.WaitUserTerminationAsync();
         }
 

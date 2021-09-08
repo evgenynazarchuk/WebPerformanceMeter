@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public class ConsoleReport : AsyncReport
+    public class ConsoleReport : IAsyncReport
     {
         private long counter = 0;
 
@@ -12,7 +12,7 @@
             Console.Clear();
         }
 
-        public override async Task WriteAsync(string message)
+        public async Task WriteAsync(string fileName, string message)
         {
             Console.Write($"Completed Requests: {++this.counter}\r");
 

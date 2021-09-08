@@ -1,106 +1,90 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace WebPerformanceMeter.Logger
+﻿namespace WebPerformanceMeter.Logger
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class Watcher
     {
-        public readonly ConcurrentQueue<string> HttpClientActionLogQueue;
-
-        public readonly ConcurrentQueue<string> BrowserActionLogQueue;
-
-        public readonly ConcurrentQueue<string> JavascriptActionLogQueue;
-
-        public readonly ConcurrentQueue<string> GrpcActionLogQueue;
-
-        public readonly ConcurrentQueue<string> WebSocketActionLogQueue;
-
-        public readonly List<AsyncReport> Reports;
-
         public static Lazy<Watcher> Instance = new(() => new());
+
+        public readonly ConcurrentDictionary<string, ConcurrentQueue<string>> LogQueue;
+
+        public readonly List<IAsyncReport> Reports;
 
         public Watcher()
         {
-            HttpClientActionLogQueue = new();
-            BrowserActionLogQueue = new();
-            JavascriptActionLogQueue = new();
-            GrpcActionLogQueue = new();
-            WebSocketActionLogQueue = new();
-            Reports = new();
+            this.LogQueue = new();
+            this.Reports = new();
         }
 
-        public void AddReport(AsyncReport report)
+        public void AddReport(IAsyncReport report)
         {
             Reports.Add(report);
         }
 
-        public void SendFromHttpClient(string message)
+        public void Send(string fileName, string message)
         {
-            HttpClientActionLogQueue.Enqueue(message);
-        }
-
-        public void SendFromBrowser(string message)
-        {
-            this.BrowserActionLogQueue.Enqueue(message);
-        }
-
-        public Task HttpClientLogProcessing(CancellationToken token)
-        {
-            return Task.Run(async () =>
+            ////Console.WriteLine($"Send {fileName} {message}"); // OK
+            if (this.LogQueue.TryGetValue(fileName, out ConcurrentQueue<string>? logQueue))
             {
-                while (true)
+                ////Console.WriteLine($"if TryGetValue {fileName} {message}"); // OK
+                logQueue.Enqueue(message);
+            }
+            else
+            {
+                ////Console.WriteLine($"else TryGetValue {fileName} {message}"); // Bad
+                var newLogQueue = new ConcurrentQueue<string>();
+
+                if (this.LogQueue.TryAdd(fileName, newLogQueue))
                 {
-                    if (token.IsCancellationRequested && this.HttpClientActionLogQueue.IsEmpty)
-                    {
-                        foreach (var report in this.Reports)
-                        {
-                            report.Finish();
-                        }
-
-                        return;
-                    }
-
-                    this.HttpClientActionLogQueue.TryDequeue(out string? message);
-                    if (message is not null)
-                    {
-                        foreach (var report in this.Reports)
-                        {
-                            await report.WriteAsync(message);
-                        }
-                    }
+                    ////Console.WriteLine($"TryAdd {fileName} {message}"); //
+                    newLogQueue.Enqueue(message);
                 }
-            });
+                else
+                {
+                    throw new ApplicationException("Error add new Log Queue");
+                }
+            }
         }
 
-        public Task BrowserActionLogProcessing(CancellationToken token)
+        public async Task ProcessingAsync(CancellationToken token)
         {
-            return Task.Run(async () =>
+            List<Task> writerTasks = new();
+
+            foreach (var (fileName, queue) in this.LogQueue)
             {
-                while (true)
+                writerTasks.Add(Task.Run(async () =>
                 {
-                    if (token.IsCancellationRequested && this.BrowserActionLogQueue.IsEmpty)
+                    while (true)
                     {
-                        foreach (var report in this.Reports)
+                        if (token.IsCancellationRequested && queue.IsEmpty)
                         {
-                            report.Finish();
+                            foreach (var report in this.Reports)
+                            {
+                                report.Finish();
+                            }
+
+                            break;
                         }
 
-                        return;
-                    }
+                        queue.TryDequeue(out string? message);
 
-                    this.BrowserActionLogQueue.TryDequeue(out string? message);
-                    if (message is not null)
-                    {
-                        foreach (var report in this.Reports)
+                        if (message is not null)
                         {
-                            await report.WriteAsync(message);
+                            foreach (var report in this.Reports)
+                            {
+                                await report.WriteAsync(fileName, message);
+                            }
                         }
                     }
-                }
-            });
+                }));
+
+                Task.WaitAll(writerTasks.ToArray());
+                await Task.CompletedTask;
+            }
         }
     }
 }

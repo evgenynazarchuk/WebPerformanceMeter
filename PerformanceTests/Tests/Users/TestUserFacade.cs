@@ -4,32 +4,20 @@
     using System.Threading.Tasks;
     using TestWebApiServer.Models;
     using WebPerformanceMeter.Users;
+    using WebPerformanceMeter.Logger;
 
     public class TestUserFacade : HttpClientUser
     {
-        public TestUserFacade(HttpClient client, string userName = "")
-            : base(client, userName)
-        {
-        }
+        public TestUserFacade(HttpClient client, ILogger? logger = null, string userName = "")
+            : base(client, logger, userName) { }
 
-        public async Task<TestResponseContent?> TestWaitMethod1(
+        public async Task<TestResponseContent?> TestWaitMethod(
             TestRequestContent content,
             string requestLabel = "")
         {
             return await this.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(
                 HttpMethod.Post,
-                "/Test/TestWaitMethod1",
-                content,
-                requestLabel);
-        }
-
-        public async Task<TestResponseContent?> TestWaitMethod2(
-            TestRequestContent content,
-            string requestLabel = "")
-        {
-            return await this.RequestAsJsonAsync<TestRequestContent, TestResponseContent>(
-                HttpMethod.Post,
-                "/Test/TestWaitMethod2",
+                "/Test/TestWaitMethod",
                 content,
                 requestLabel);
         }

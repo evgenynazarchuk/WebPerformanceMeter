@@ -6,7 +6,7 @@
 
     public sealed class ConstantUsers : PerformancePlan
     {
-        private readonly User performanceUser;
+        ////public readonly User User;
 
         private readonly int usersCount;
 
@@ -24,8 +24,9 @@
             int userLoopCount = 1,
             IEntityReader? dataReader = null,
             bool reuseDataInLoop = true)
+            : base(user)
         {
-            this.performanceUser = user;
+            ////this.User = user;
             this.usersCount = usersCount;
             this.userLoopCount = userLoopCount;
             this.invokedUsers = new Task[this.usersCount];
@@ -37,7 +38,7 @@
         {
             for (int i = 0; i < this.usersCount; i++)
             {
-                this.invokedUsers[i] = this.performanceUser.InvokeAsync(this.userLoopCount, this.dataReader, this.reuseDataInLoop);
+                this.invokedUsers[i] = this.User.InvokeAsync(this.userLoopCount, this.dataReader, this.reuseDataInLoop);
             }
 
             Task.WaitAll(this.invokedUsers);

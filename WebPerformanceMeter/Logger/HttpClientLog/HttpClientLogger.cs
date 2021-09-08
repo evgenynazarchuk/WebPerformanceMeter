@@ -20,21 +20,21 @@
 
         public readonly CancellationTokenSource TokenSource;
 
-        public readonly string RawHttpClientLog;
+        public readonly string HttpClientLogFileName;
 
         private readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
 
-        public HttpClientLogger(string reportFileName)
+        public HttpClientLogger(string httpClientLogFileName)
         {
-            this.RawHttpClientLog = reportFileName;
+            this.HttpClientLogFileName = httpClientLogFileName;
             this.TokenSource = new();
             this.Token = this.TokenSource.Token;
 
             this.LogQueue = new();
-            this.FileWriter = new StreamWriter(reportFileName, false, Encoding.UTF8, 65535);
+            this.FileWriter = new StreamWriter(httpClientLogFileName, false, Encoding.UTF8, 65535);
 
             ////long reportNumber = DateTime.UtcNow.Ticks;
             ////string targetFolder = $"Logs//{reportNumber}";
@@ -55,25 +55,6 @@
             this.LogQueue.Enqueue(message);
         }
 
-        ////public virtual void Processing()
-        ////{
-        ////    while (true)
-        ////    {
-        ////        if (this.Token.IsCancellationRequested && this.LogQueue.IsEmpty)
-        ////        {
-        ////            this.Finish();
-        ////            break;
-        ////        }
-        ////
-        ////        this.LogQueue.TryDequeue(out string? message);
-        ////
-        ////        if (message is not null)
-        ////        {
-        ////            this.FileWriter.WriteLine(message);
-        ////        }
-        ////    }
-        ////}
-
         public virtual async Task StartProcessingAsync()
         {
             await Task.Run(() =>
@@ -90,9 +71,9 @@
 
                     if (message is not null)
                     {
-                        var jsonObject = this.GetHttpClientLogMessage(message);
-                        var jsonMessage = JsonSerializer.Serialize(jsonObject, this.JsonSerializerOptions);
-                        this.FileWriter.WriteLine(jsonMessage);
+                        var logMesageEntity = this.GetHttpClientLogMessage(message);
+                        var logMessageJsonString = JsonSerializer.Serialize(logMesageEntity, this.JsonSerializerOptions);
+                        this.FileWriter.WriteLine(logMessageJsonString);
                     }
                 }
             });
@@ -131,8 +112,7 @@
 
         public virtual void GenerateHtmlReport()
         {
-            var htmlGenerate = new HttpClientHtmlReportGenerator(this.RawHttpClientLog, "httpclient_report.html");
-            ////htmlGenerate.ReadRawLogMessages();
+            var htmlGenerate = new HttpClientHtmlReportGenerator(this.HttpClientLogFileName, "httpclient_report.html");
             htmlGenerate.GenerateReport();
         }
     }

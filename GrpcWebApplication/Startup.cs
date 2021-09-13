@@ -15,7 +15,12 @@
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<DataAccess>();
+            using var db = new WritableDataAccess();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            services.AddScoped<WritableDataAccess>();
+            services.AddScoped<ReadableDataAccess>();
             services.AddGrpc();
         }
 

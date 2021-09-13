@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31129.286
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebPerformanceMeter", "WebPerformanceMeter\WebPerformanceMeter.csproj", "{02D466D7-2175-49F4-9343-A3A3F27B9FBE}"
 EndProject
@@ -11,13 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceTests", "Perform
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAppSamples", "WebAppSamples", "{FE260715-F1E1-4BAB-9DA9-9DF385EB7E9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestWebApplication", "RestWebApplication\RestWebApplication.csproj", "{64AAF01C-C7FC-432D-81E4-B15F2C256B4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestWebApplication", "RestWebApplication\RestWebApplication.csproj", "{64AAF01C-C7FC-432D-81E4-B15F2C256B4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcWebApplication", "GrpcWebApplication\GrpcWebApplication.csproj", "{3E798A9A-B222-43F4-B453-C3ED4A30C33E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcWebApplication", "GrpcWebApplication\GrpcWebApplication.csproj", "{3E798A9A-B222-43F4-B453-C3ED4A30C33E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketWebApplication", "WebSocketWebApplication\WebSocketWebApplication.csproj", "{DF798525-DF96-4E78-8283-A219CC4D93A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketWebApplication", "WebSocketWebApplication\WebSocketWebApplication.csproj", "{DF798525-DF96-4E78-8283-A219CC4D93A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorsWebApplication", "ActorsWebApplication\ActorsWebApplication.csproj", "{73F1C9BB-0F95-4545-81E1-3DF356D62F75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActorsWebApplication", "ActorsWebApplication\ActorsWebApplication.csproj", "{73F1C9BB-0F95-4545-81E1-3DF356D62F75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAppTests", "WebAppTests", "{6462D763-9E62-4409-A4F6-45A32E5CECAC}"
 EndProject
@@ -29,9 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ActorWebAppTests", "ActorWe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSocketWebAppTest", "WebSocketWebAppTest", "{C8E46B5B-AEB0-4470-8278-3DD2C8B56386}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestWebApplication.IntegrationTest", "RestWebApplication.IntegrationTest\RestWebApplication.IntegrationTest.csproj", "{492CA73B-3097-4B0C-A0D4-65B038CA6FDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestWebApplication.IntegrationTest", "RestWebApplication.IntegrationTest\RestWebApplication.IntegrationTest.csproj", "{492CA73B-3097-4B0C-A0D4-65B038CA6FDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestWebApplication.WebPerformanceTest", "RestWebApplication.WebPerformanceTest\RestWebApplication.WebPerformanceTest.csproj", "{FEA77B96-8D41-4A30-8040-A50BA208FE7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestWebApplication.WebPerformanceTest", "RestWebApplication.WebPerformanceTest\RestWebApplication.WebPerformanceTest.csproj", "{FEA77B96-8D41-4A30-8040-A50BA208FE7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcWebApplication.IntegrationTest", "GrpcWebApplication.IntegrationTest\GrpcWebApplication.IntegrationTest.csproj", "{250C7178-677D-4DBB-AE6A-F028795FA749}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{FEA77B96-8D41-4A30-8040-A50BA208FE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEA77B96-8D41-4A30-8040-A50BA208FE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEA77B96-8D41-4A30-8040-A50BA208FE7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{250C7178-677D-4DBB-AE6A-F028795FA749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{250C7178-677D-4DBB-AE6A-F028795FA749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{250C7178-677D-4DBB-AE6A-F028795FA749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{250C7178-677D-4DBB-AE6A-F028795FA749}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{C8E46B5B-AEB0-4470-8278-3DD2C8B56386} = {6462D763-9E62-4409-A4F6-45A32E5CECAC}
 		{492CA73B-3097-4B0C-A0D4-65B038CA6FDC} = {EED1249E-7FB0-4DBF-B3C6-9CF7FDB71C10}
 		{FEA77B96-8D41-4A30-8040-A50BA208FE7B} = {EED1249E-7FB0-4DBF-B3C6-9CF7FDB71C10}
+		{250C7178-677D-4DBB-AE6A-F028795FA749} = {35A5B2A4-0CA8-454B-B319-70AE53F9BA7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4E79BCD-B7BE-4429-B6A7-3E4D90282668}

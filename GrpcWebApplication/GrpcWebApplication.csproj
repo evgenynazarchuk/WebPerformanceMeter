@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\usermessage.proto" />
+    <None Remove="Protos\usermessager.proto" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\usermessage.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\usermessager.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

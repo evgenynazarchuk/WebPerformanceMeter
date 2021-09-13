@@ -45,12 +45,14 @@ namespace GrpcWebApplication
             IAsyncStreamReader<MessageRequest> requestStream, 
             ServerCallContext context)
         {
-            await foreach (var request in requestStream.ReadAllAsync())
+            while (await requestStream.MoveNext())
             {
                 await this.writableDataAccess.Set<Message>().AddAsync(new Message
                 {
-                    Text = request.Text
+                    Text = requestStream.Current.Text
                 });
+
+                
             }
             await this.writableDataAccess.SaveChangesAsync();
 
@@ -86,17 +88,17 @@ namespace GrpcWebApplication
                     {
                         Text = requestStream.Current.Text
                     });
-
+            
                     await this.writableDataAccess.SaveChangesAsync();
                 }
             });
-
+            
             var responseTask = Task.Run(async () =>
             {
                 while (!context.CancellationToken.IsCancellationRequested)
                 {
                     var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
-
+            
                     foreach (var message in messagesTask)
                     {
                         await responseStream.WriteAsync(new MessageReply
@@ -106,6 +108,18 @@ namespace GrpcWebApplication
                     }
                 }
             });
+
+            //while (await requestStream.MoveNext())
+            //{
+            //    var message = requestStream.Current;
+            //    //List<RouteNote> prevNotes = AddNoteForLocation(note.Location, note);
+            //    var messages = await this.readableDataAccess.Set<Message>().ToListAsync();
+            //    messages.Add(new Message { Id = message.});
+            //    foreach (var prevNote in prevNotes)
+            //    {
+            //        await responseStream.WriteAsync(prevNote);
+            //    }
+            //}
 
 
             await requestTask;

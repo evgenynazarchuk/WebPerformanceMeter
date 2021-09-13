@@ -8,8 +8,10 @@
     using Microsoft.AspNetCore.Mvc.Testing;
     using Grpc.Net.Client;
     using System.Net.Http;
+    using GrpcWebApplication.Services;
+    using Microsoft.Extensions.DependencyInjection;
 
-    public class TestEnvironment
+    public class TestEnvironment : IDisposable
     {
         public readonly TestApplication TestApplication;
 
@@ -18,6 +20,8 @@
         public readonly GrpcChannel GrpcChannel;
 
         public readonly UserMessager.UserMessagerClient UserMessagerClient;
+
+        public readonly WritableDataAccess Repository;
 
         public TestEnvironment()
         {
@@ -28,6 +32,13 @@
                 HttpClient = this.HttpClient
             });
             this.UserMessagerClient = new UserMessager.UserMessagerClient(this.GrpcChannel);
+            this.Repository = this.TestApplication.Services.GetRequiredService<WritableDataAccess>();
+            this.Repository.Database.EnsureCreated();
+        }
+
+        public void Dispose()
+        {
+            //this.Repository.Database.EnsureDeleted();
         }
     }
 }

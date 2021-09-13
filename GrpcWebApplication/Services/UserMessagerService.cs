@@ -28,7 +28,9 @@ namespace GrpcWebApplication
             this.readableDataAccess = readableDataAccess;
         }
 
-        public override async Task<Empty> SendMessage(MessageRequest request, ServerCallContext context)
+        public override async Task<Empty> SendMessage(
+            MessageRequest request, 
+            ServerCallContext context)
         {
             await this.writableDataAccess.Set<Message>().AddAsync(new Message
             {
@@ -39,7 +41,9 @@ namespace GrpcWebApplication
             return new Empty();
         }
 
-        public override async Task<Empty> SendMessages(IAsyncStreamReader<MessageRequest> requestStream, ServerCallContext context)
+        public override async Task<Empty> SendMessages(
+            IAsyncStreamReader<MessageRequest> requestStream, 
+            ServerCallContext context)
         {
             await foreach (var request in requestStream.ReadAllAsync())
             {
@@ -53,7 +57,10 @@ namespace GrpcWebApplication
             return new Empty();
         }
 
-        public override async Task GetMessages(Empty request, IServerStreamWriter<MessageReply> responseStream, ServerCallContext context)
+        public override async Task GetMessages(
+            Empty request, 
+            IServerStreamWriter<MessageReply> responseStream, 
+            ServerCallContext context)
         {
             var messages = await this.readableDataAccess.Set<Message>().ToListAsync();
 
@@ -66,60 +73,43 @@ namespace GrpcWebApplication
             }
         }
 
-        public override async Task Messages(IAsyncStreamReader<MessageRequest> requestStream, IServerStreamWriter<MessageReply> responseStream, ServerCallContext context)
+        public override async Task Messages(
+            IAsyncStreamReader<MessageRequest> requestStream, 
+            IServerStreamWriter<MessageReply> responseStream, 
+            ServerCallContext context)
         {
-            await foreach (var request in requestStream.ReadAllAsync())
+            var requestTask = Task.Run(async () =>
             {
-                await this.writableDataAccess.Set<Message>().AddAsync(new Message
+                while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)
                 {
-                    Text = request.Text
-                });
-            
-                await this.writableDataAccess.SaveChangesAsync();
-            }
-            
-            do
-            {
-                var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
-            
-                foreach (var message in messagesTask)
-                {
-                    await responseStream.WriteAsync(new MessageReply
+                    await this.writableDataAccess.Set<Message>().AddAsync(new Message
                     {
-                        Text = message.Text
+                        Text = requestStream.Current.Text
                     });
-                }
-            
-            } while (await requestStream.MoveNext());
 
-            //var taskRequestStream = Task.Run(async () =>
-            //{
-            //    await foreach (var request in requestStream.ReadAllAsync())
-            //    {
-            //        await this.writableDataAccess.Set<Message>().AddAsync(new Message
-            //        {
-            //            Text = request.Text
-            //        });
-            //
-            //        await this.writableDataAccess.SaveChangesAsync();
-            //    }
-            //});
-            //
-            //var taskResponseStream = Task.Run(async () =>
-            //{
-            //    var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
-            //
-            //    foreach (var message in messagesTask)
-            //    {
-            //        await responseStream.WriteAsync(new MessageReply
-            //        {
-            //            Text = message.Text
-            //        });
-            //    }
-            //});
-            //
-            //await taskRequestStream;
-            //await taskResponseStream;
+                    await this.writableDataAccess.SaveChangesAsync();
+                }
+            });
+
+            var responseTask = Task.Run(async () =>
+            {
+                while (!context.CancellationToken.IsCancellationRequested)
+                {
+                    var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
+
+                    foreach (var message in messagesTask)
+                    {
+                        await responseStream.WriteAsync(new MessageReply
+                        {
+                            Text = message.Text
+                        });
+                    }
+                }
+            });
+
+
+            await requestTask;
+            await responseTask;
         }
     }
 }

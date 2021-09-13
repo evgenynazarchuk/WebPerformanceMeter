@@ -78,20 +78,25 @@ namespace GrpcWebApplication.IntegrationTest
             // Act
             using var call = env.UserMessagerClient.Messages();
 
-            var readStreamTask = Task.Run(async () =>
-            {
-                await foreach (var response in call.ResponseStream.ReadAllAsync(token))
-                {
-                    expectedText.Add(response.Text);
-                }
-            });
+            //var readStreamTask = Task.Run(async () =>
+            //{
+            //    await foreach (var response in call.ResponseStream.ReadAllAsync(token))
+            //    {
+            //        expectedText.Add(response.Text);
+            //    }
+            //});
 
             await call.RequestStream.WriteAsync(new MessageRequest { Text = "test test 1" });
             await call.RequestStream.WriteAsync(new MessageRequest { Text = "test test 2" });
             await call.RequestStream.CompleteAsync();
-            source.Cancel();
+            //source.Cancel();
 
-            await readStreamTask;
+            //await foreach (var response in call.ResponseStream.ReadAllAsync())
+            //{
+            //    expectedText.Add(response.Text);
+            //}
+
+            //await readStreamTask;
 
             expectedText.Should().BeEquivalentTo("test test 1", "test test 2");
         }

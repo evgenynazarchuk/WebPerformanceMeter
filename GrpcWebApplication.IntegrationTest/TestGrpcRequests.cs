@@ -11,6 +11,7 @@ namespace GrpcWebApplication.IntegrationTest
     using Grpc.Net.ClientFactory;
     using Grpc.Core;
     using System.Collections.Generic;
+    using System.Threading;
 
     public class Tests
     {
@@ -67,26 +68,31 @@ namespace GrpcWebApplication.IntegrationTest
         public async Task TestBiDirectionalStream()
         {
             // Arrange
-            var env = new TestEnvironment();
             List<string> expectedText = new();
+            CancellationTokenSource source = new();
+            CancellationToken token = source.Token;
+
+            var env = new TestEnvironment();
+            
 
             // Act
             using var call = env.UserMessagerClient.Messages();
 
+            var readStreamTask = Task.Run(async () =>
+            {
+                await foreach (var response in call.ResponseStream.ReadAllAsync(token))
+                {
+                    expectedText.Add(response.Text);
+                }
+            });
+
             await call.RequestStream.WriteAsync(new MessageRequest { Text = "test test 1" });
             await call.RequestStream.WriteAsync(new MessageRequest { Text = "test test 2" });
             await call.RequestStream.CompleteAsync();
+            source.Cancel();
 
-            await foreach (var response in call.ResponseStream.ReadAllAsync())
-            {
-                expectedText.Add(response.Text);
-            }
-            //while (await call.ResponseStream.MoveNext(new System.Threading.CancellationToken()))
-            //{
-            //    expectedText.Add(call.ResponseStream.Current.Text);
-            //}
+            await readStreamTask;
 
-            // Assert
             expectedText.Should().BeEquivalentTo("test test 1", "test test 2");
         }
     }

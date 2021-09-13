@@ -77,11 +77,11 @@ namespace GrpcWebApplication
             
                 await this.writableDataAccess.SaveChangesAsync();
             }
-
+            
             do
             {
                 var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
-
+            
                 foreach (var message in messagesTask)
                 {
                     await responseStream.WriteAsync(new MessageReply
@@ -89,7 +89,7 @@ namespace GrpcWebApplication
                         Text = message.Text
                     });
                 }
-
+            
             } while (await requestStream.MoveNext());
 
             //var taskRequestStream = Task.Run(async () =>

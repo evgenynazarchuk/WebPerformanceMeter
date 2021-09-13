@@ -38,7 +38,7 @@
 
         public void Dispose()
         {
-            //this.Repository.Database.EnsureDeleted();
+            this.Repository.Database.EnsureDeleted();
         }
     }
 }

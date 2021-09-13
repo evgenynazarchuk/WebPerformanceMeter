@@ -1,15 +1,10 @@
 ﻿namespace GrpcWebApplication.IntegrationTest.Support
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc.Testing;
     using Grpc.Net.Client;
-    using System.Net.Http;
     using GrpcWebApplication.Services;
     using Microsoft.Extensions.DependencyInjection;
+    using System;
+    using System.Net.Http;
 
     public class TestEnvironment : IDisposable
     {

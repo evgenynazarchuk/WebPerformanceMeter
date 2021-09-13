@@ -21,7 +21,7 @@
             : base(logger)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
-            this.Browser = Playwright.Firefox.LaunchAsync(new ()
+            this.Browser = Playwright.Firefox.LaunchAsync(new()
             {
                 FirefoxUserPrefs = new Dictionary<string, object>()
                 {

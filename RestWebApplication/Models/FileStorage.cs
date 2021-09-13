@@ -1,10 +1,5 @@
 ﻿namespace RestWebApplication.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     public class FileStorage
     {
         public int Id { get; set; }

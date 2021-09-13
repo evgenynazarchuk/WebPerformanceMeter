@@ -3,8 +3,8 @@
     using System;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
-    using WebPerformanceMeter.Tools.BrowserTool;
     using WebPerformanceMeter.Logger;
+    using WebPerformanceMeter.Tools.BrowserTool;
 
     public abstract class BrowserUser : User, IDisposable
     {

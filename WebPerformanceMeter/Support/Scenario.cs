@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Logger;
     using WebPerformanceMeter.PerformancePlans;

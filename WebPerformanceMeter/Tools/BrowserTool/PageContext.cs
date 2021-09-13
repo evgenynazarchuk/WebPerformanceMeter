@@ -4,8 +4,6 @@
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Support;
 
     public class PageContext
     {

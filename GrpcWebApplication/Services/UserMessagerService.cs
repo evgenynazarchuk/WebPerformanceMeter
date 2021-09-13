@@ -1,16 +1,13 @@
 namespace GrpcWebApplication
 {
-    using Grpc.Core;
-    using Microsoft.Extensions.Logging;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Google.Protobuf.WellKnownTypes;
+    using Grpc.Core;
     using GrpcWebApplication.Models;
     using GrpcWebApplication.Services;
     using Microsoft.EntityFrameworkCore;
-    
+    using Microsoft.Extensions.Logging;
+    using System.Threading.Tasks;
+
     public class UserMessagerService : UserMessager.UserMessagerBase
     {
         protected readonly ILogger<UserMessagerService> logger;
@@ -19,7 +16,7 @@ namespace GrpcWebApplication
 
         protected readonly ReadableDataAccess readableDataAccess;
 
-        public UserMessagerService(ILogger<UserMessagerService> logger, 
+        public UserMessagerService(ILogger<UserMessagerService> logger,
             WritableDataAccess writableDataAccess,
             ReadableDataAccess readableDataAccess)
         {
@@ -29,7 +26,7 @@ namespace GrpcWebApplication
         }
 
         public override async Task<Empty> SendMessage(
-            MessageRequest request, 
+            MessageRequest request,
             ServerCallContext context)
         {
             await this.writableDataAccess.Set<Message>().AddAsync(new Message
@@ -42,7 +39,7 @@ namespace GrpcWebApplication
         }
 
         public override async Task<Empty> SendMessages(
-            IAsyncStreamReader<MessageRequest> requestStream, 
+            IAsyncStreamReader<MessageRequest> requestStream,
             ServerCallContext context)
         {
             while (await requestStream.MoveNext())
@@ -52,7 +49,7 @@ namespace GrpcWebApplication
                     Text = requestStream.Current.Text
                 });
 
-                
+
             }
             await this.writableDataAccess.SaveChangesAsync();
 
@@ -60,8 +57,8 @@ namespace GrpcWebApplication
         }
 
         public override async Task GetMessages(
-            Empty request, 
-            IServerStreamWriter<MessageReply> responseStream, 
+            Empty request,
+            IServerStreamWriter<MessageReply> responseStream,
             ServerCallContext context)
         {
             var messages = await this.readableDataAccess.Set<Message>().ToListAsync();
@@ -76,8 +73,8 @@ namespace GrpcWebApplication
         }
 
         public override async Task Messages(
-            IAsyncStreamReader<MessageRequest> requestStream, 
-            IServerStreamWriter<MessageReply> responseStream, 
+            IAsyncStreamReader<MessageRequest> requestStream,
+            IServerStreamWriter<MessageReply> responseStream,
             ServerCallContext context)
         {
             while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)

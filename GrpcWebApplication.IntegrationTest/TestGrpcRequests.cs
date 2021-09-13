@@ -1,20 +1,14 @@
 namespace GrpcWebApplication.IntegrationTest
 {
-    using System.Threading.Tasks;
-    using NUnit.Framework;
-    using GrpcWebApplication.IntegrationTest.Support;
-    using Google.Protobuf.WellKnownTypes;
     using FluentAssertions;
-    using Grpc.Net.Client;
-    using Grpc.AspNetCore.Server;
-    using Grpc.AspNetCore.ClientFactory;
-    using Grpc.Net.ClientFactory;
+    using Google.Protobuf.WellKnownTypes;
     using Grpc.Core;
-    using System.Collections.Generic;
-    using System.Threading;
+    using GrpcWebApplication.IntegrationTest.Support;
     using GrpcWebApplication.Models;
+    using NUnit.Framework;
+    using System.Collections.Generic;
     using System.Linq;
-    using GrpcWebApplication.Services;
+    using System.Threading.Tasks;
 
     public class Tests
     {
@@ -127,7 +121,7 @@ namespace GrpcWebApplication.IntegrationTest
 
             await call.RequestStream.CompleteAsync();
             await reader;
-            
+
             // Arrange
             expectedText.Should().BeEquivalentTo("test 1", "test 2");
         }

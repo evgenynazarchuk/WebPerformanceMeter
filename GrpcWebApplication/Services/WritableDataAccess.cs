@@ -1,11 +1,7 @@
 ﻿namespace GrpcWebApplication.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
     using GrpcWebApplication.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class WritableDataAccess : DbContext
     {

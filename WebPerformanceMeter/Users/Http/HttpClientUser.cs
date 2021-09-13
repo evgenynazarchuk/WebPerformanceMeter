@@ -2,11 +2,11 @@
 {
     using System;
     using System.Net.Http;
-    using WebPerformanceMeter.Tools.HttpTool;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
     using WebPerformanceMeter.Logger;
     using WebPerformanceMeter.Logger.HttpClientLog;
+    using WebPerformanceMeter.Tools.HttpTool;
 
     public abstract partial class HttpClientUser : User
     {

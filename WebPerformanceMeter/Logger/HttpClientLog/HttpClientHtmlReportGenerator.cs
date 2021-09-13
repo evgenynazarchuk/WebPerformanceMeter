@@ -31,7 +31,7 @@
             while ((rawLogAsString = this.rawLogReader.ReadLine()) != null)
             {
                 rawLogMessage = JsonSerializer.Deserialize<HttpClientLogMessage>(rawLogAsString);
-                
+
                 if (rawLogMessage is null) break;
 
                 this.rawLogMessages.Add(rawLogMessage);

@@ -3,8 +3,8 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using TestWebApiServer.Models;
-    using WebPerformanceMeter.Users;
     using WebPerformanceMeter.Logger;
+    using WebPerformanceMeter.Users;
 
     public class TestUserFacade : HttpClientUser
     {

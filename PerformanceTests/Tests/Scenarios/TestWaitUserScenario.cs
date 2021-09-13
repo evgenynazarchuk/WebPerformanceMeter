@@ -6,7 +6,6 @@
     using WebPerformanceMeter.Extensions;
     using WebPerformanceMeter.PerformancePlans;
     using WebPerformanceMeter.Support;
-    using WebPerformanceMeter.Logger.HttpClientLog;
 
     public class TestWaitUserScenario
     {

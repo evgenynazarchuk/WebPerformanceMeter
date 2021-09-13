@@ -1,14 +1,12 @@
 ﻿namespace WebPerformanceMeter.Logger.HttpClientLog
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Concurrent;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Threading;
     using System.IO;
+    using System.Text;
     using System.Text.Json;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class HttpClientLogger : ILogger
     {
@@ -106,7 +104,7 @@
                 Int64.Parse(splittedMessage[8]),
                 Int32.Parse(splittedMessage[9]),
                 Int32.Parse(splittedMessage[10]));
-        
+
             return log;
         }
 

@@ -105,38 +105,16 @@ namespace GrpcWebApplication.IntegrationTest
         }
 
         [Test]
-        public async Task SendUnaryAndReadStream()
-        {
-            // Arrange
-            var env = new TestEnvironment();
-
-            // Act
-            env.UserMessagerClient.SendMessage(new MessageRequest
-            {
-                Text = "test test 123"
-            });
-
-            using var call = env.UserMessagerClient.GetMessages(new Empty());
-
-            // Assert
-            while (await call.ResponseStream.MoveNext())
-            {
-                call.ResponseStream.Current.Text.Should().Be("test test 123");
-            }
-        }
-
-        [Test]
-        public async Task TestBiDirectionalStream()
+        public async Task Messages()
         {
             // Arrange
             var expectedText = new List<string>();
-            var env = new TestEnvironment();
+            using var env = new TestEnvironment();
 
             // Act
             using var call = env.UserMessagerClient.Messages();
 
-            // Act 1
-            var readStreamTask = Task.Run(async () =>
+            var reader = Task.Run(async () =>
             {
                 while (await call.ResponseStream.MoveNext())
                 {
@@ -144,14 +122,14 @@ namespace GrpcWebApplication.IntegrationTest
                 }
             });
 
-            // Act 2
-            await call.RequestStream.WriteAsync(new MessageRequest { Text = "test test 1" });
-            await call.RequestStream.WriteAsync(new MessageRequest { Text = "test test 2" });
-            await call.RequestStream.CompleteAsync();
+            await call.RequestStream.WriteAsync(new MessageRequest { Text = "test 1" });
+            await call.RequestStream.WriteAsync(new MessageRequest { Text = "test 2" });
 
-            // Assert
-            await readStreamTask;
-            expectedText.Should().BeEquivalentTo("test test 1", "test test 2");
+            await call.RequestStream.CompleteAsync();
+            await reader;
+            
+            // Arrange
+            expectedText.Should().BeEquivalentTo("test 1", "test 2");
         }
     }
 }

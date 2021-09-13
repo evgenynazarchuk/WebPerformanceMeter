@@ -80,50 +80,28 @@ namespace GrpcWebApplication
             IServerStreamWriter<MessageReply> responseStream, 
             ServerCallContext context)
         {
-            var requestTask = Task.Run(async () =>
+            while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)
             {
-                while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)
+                await this.writableDataAccess.Set<Message>().AddAsync(new Message
                 {
-                    await this.writableDataAccess.Set<Message>().AddAsync(new Message
+                    Text = requestStream.Current.Text
+                });
+
+                await this.writableDataAccess.SaveChangesAsync();
+            }
+
+            if (!context.CancellationToken.IsCancellationRequested)
+            {
+                var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
+
+                foreach (var message in messagesTask)
+                {
+                    await responseStream.WriteAsync(new MessageReply
                     {
-                        Text = requestStream.Current.Text
+                        Text = message.Text
                     });
-            
-                    await this.writableDataAccess.SaveChangesAsync();
                 }
-            });
-            
-            var responseTask = Task.Run(async () =>
-            {
-                while (!context.CancellationToken.IsCancellationRequested)
-                {
-                    var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
-            
-                    foreach (var message in messagesTask)
-                    {
-                        await responseStream.WriteAsync(new MessageReply
-                        {
-                            Text = message.Text
-                        });
-                    }
-                }
-            });
-
-            //while (await requestStream.MoveNext())
-            //{
-            //    var message = requestStream.Current;
-            //    //List<RouteNote> prevNotes = AddNoteForLocation(note.Location, note);
-            //    var messages = await this.readableDataAccess.Set<Message>().ToListAsync();
-            //    messages.Add(new Message { Id = message.});
-            //    foreach (var prevNote in prevNotes)
-            //    {
-            //        await responseStream.WriteAsync(prevNote);
-            //    }
-            //}
-
-
-            await requestTask;
-            await responseTask;
+            }
         }
     }
 }

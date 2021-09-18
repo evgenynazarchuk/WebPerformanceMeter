@@ -9,8 +9,6 @@
 
     public sealed class UsersPerPeriod : PerformancePlan
     {
-        ////public readonly User User;
-
         private readonly int totalUsersPerPeriod;
 
         private readonly TimeSpan perPeriod;
@@ -42,7 +40,6 @@
             bool reuseDataInLoop = true)
             : base(user)
         {
-            ////this.User = user;
             this.totalUsersPerPeriod = usersCountPerPeriod;
             this.performancePlanDuration = performancePlanDuration;
             this.sizePeriodBuffer = sizePeriodBuffer;

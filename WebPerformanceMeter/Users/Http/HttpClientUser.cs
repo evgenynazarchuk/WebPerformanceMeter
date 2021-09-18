@@ -18,7 +18,7 @@
             : base(logger ?? new HttpClientLogger("httpclient_report.txt"))
         {
             this.Client = client;
-            this.Tool = new(this.Logger, Client);
+            this.Tool = new(this.Logger, this.Client);
 
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
         }
@@ -30,7 +30,8 @@
             {
                 BaseAddress = new Uri(host)
             };
-            this.Tool = new(logger, this.Client);
+            this.Tool = new(this.Logger, this.Client);
+
             SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
         }
 

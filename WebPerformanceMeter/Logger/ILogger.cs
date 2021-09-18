@@ -4,7 +4,7 @@
 
     public interface ILogger
     {
-        void Write(string message);
+        void AddMessageLog(string message);
 
         void Finish();
 

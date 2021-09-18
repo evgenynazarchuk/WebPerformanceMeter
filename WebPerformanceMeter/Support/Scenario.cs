@@ -1,70 +1,47 @@
 ﻿namespace WebPerformanceMeter.Support
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using WebPerformanceMeter.Logger;
     using WebPerformanceMeter.PerformancePlans;
 
     public sealed class Scenario
     {
-        //public static readonly Stopwatch ScenarioWatchTime = new();
+        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> acts;
+
+        private readonly List<Task> loggersProcessing;
 
         public Scenario()
         {
             this.acts = new();
-            this.watcher = Watcher.Instance.Value;
-            this.watcher.AddReport(new ConsoleReport());
-            this.watcher.AddReport(new FileReport());
+            this.loggersProcessing = new();
         }
-
-        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> acts;
-
-        private readonly Watcher watcher;
 
         public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Parallel, performancePlan);
+
             return this;
         }
 
         public Scenario AddSequentialPlans(params PerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Sequential, performancePlan);
+
             return this;
         }
 
         private Scenario AddActs(ActType launchType, params PerformancePlan[] performancePlan)
         {
             this.acts.Add(new(launchType, performancePlan));
+
             return this;
         }
 
         public async Task StartAsync()
         {
-            //CancellationTokenSource tokenSource = new();
-            //CancellationToken token = tokenSource.Token;
-            //Task httpClientProcessing = this.watcher.ProcessingAsync(token);
+            this.StartLoggers();
 
-            if (this.acts.Count == 0)
-            {
-                throw new ApplicationException("UserPerformancePlan not added");
-            }
-
-            List<Task> loggersProcessing = new();
-            foreach (var (_, plans) in this.acts)
-            {
-                foreach (var plan in plans)
-                {
-                    loggersProcessing.Add(Task.Run(() => plan.User.Logger.StartProcessingAsync()));
-                }
-            }
-
-            ////ScenarioTimer.Time.Reset();
             ScenarioTimer.Time.Start();
-
-            //ScenarioWatchTime.Reset();
-            //ScenarioWatchTime.Start();
 
             foreach (var act in this.acts)
             {
@@ -94,7 +71,24 @@
                 }
             }
 
-            //tokenSource.Cancel();
+            ScenarioTimer.Time.Stop();
+
+            this.WaitLoggers();
+        }
+
+        public void StartLoggers()
+        {
+            foreach (var (_, plans) in this.acts)
+            {
+                foreach (var plan in plans)
+                {
+                    loggersProcessing.Add(Task.Run(() => plan.User.Logger.StartProcessingAsync()));
+                }
+            }
+        }
+
+        public void WaitLoggers()
+        {
             foreach (var (_, plans) in this.acts)
             {
                 foreach (var plan in plans)
@@ -102,11 +96,8 @@
                     plan.User.Logger.StopProcessing();
                 }
             }
-            Task.WaitAll(loggersProcessing.ToArray());
-            //await httpClientProcessing;
 
-            ////ScenarioWatchTime.Stop();
-            ScenarioTimer.Time.Stop();
+            Task.WaitAll(loggersProcessing.ToArray());
         }
     }
 }

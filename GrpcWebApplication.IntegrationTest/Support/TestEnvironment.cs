@@ -21,12 +21,14 @@
         public TestEnvironment()
         {
             this.TestApplication = new();
+
             this.HttpClient = this.TestApplication.CreateDefaultClient();
             this.GrpcChannel = GrpcChannel.ForAddress(this.HttpClient.BaseAddress, new GrpcChannelOptions
             {
                 HttpClient = this.HttpClient
             });
             this.UserMessagerClient = new UserMessager.UserMessagerClient(this.GrpcChannel);
+
             this.Repository = this.TestApplication.Services.GetRequiredService<WritableDataAccess>();
             this.Repository.Database.EnsureCreated();
         }

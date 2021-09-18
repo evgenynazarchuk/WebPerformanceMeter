@@ -4,6 +4,5 @@
 
     public class Tool
     {
-        protected Watcher Watcher => Watcher.Instance.Value;
     }
 }

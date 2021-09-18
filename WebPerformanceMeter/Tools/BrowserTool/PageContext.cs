@@ -4,68 +4,74 @@
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using WebPerformanceMeter.Support;
+    using WebPerformanceMeter.Logger;
 
     public class PageContext
     {
         public readonly IPage Page;
+
         public readonly IBrowserContext BrowserContext;
 
-        //protected Watcher Watcher => Watcher.Instance.Value;
+        public readonly ILogger Logger;
 
-        public PageContext(IBrowserContext browserContext, IPage page)
+        public readonly string UserName;
+
+        public string? Url { get; private set; }
+
+        public PageContext(IBrowserContext browserContext, IPage page, ILogger logger, string userName)
         {
             this.BrowserContext = browserContext;
             this.Page = page;
+
+            this.Logger = logger;
+            this.UserName = userName;
         }
 
         public async Task GotoAsync(string url, string label = "goto")
         {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            //var startGoto = Scenario.ScenarioWatchTime.Elapsed.Ticks;
+            var start = ScenarioTimer.Time.Elapsed.Ticks;
             await this.Page.GotoAsync(url);
             await this.WaitAsync();
-            //var finishGoto = Scenario.ScenarioWatchTime.Elapsed.Ticks;
-            stopWatch.Stop();
-            Console.WriteLine($"{label} {stopWatch.Elapsed}");
+            var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            //Watcher.SendFromHttpClient($"{startGoto} {finishGoto}");
+            this.Url = url;
+            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task ReloadAsync(string label = "reload")
         {
-            //var stopWatch = new Stopwatch();
-            //stopWatch.Start();
+            var start = ScenarioTimer.Time.Elapsed.Ticks;
             await this.Page.ReloadAsync();
             await this.WaitAsync();
-            //stopWatch.Stop();
-            //Console.WriteLine($"{label} {stopWatch.Elapsed}");
+            var end = ScenarioTimer.Time.Elapsed.Ticks;
+
+            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task ClickAsync(string selector, string label = "click")
         {
-            //var stopWatch = new Stopwatch();
-            //stopWatch.Start();
+            var start = ScenarioTimer.Time.Elapsed.Ticks;
             await this.Page.ClickAsync(selector);
             await this.WaitAsync();
-            //stopWatch.Stop();
-            //Console.WriteLine($"{label} {stopWatch.Elapsed}");
+            var end = ScenarioTimer.Time.Elapsed.Ticks;
+
+            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task TypeAsync(string selector, string text, string label = "type")
         {
-            //var stopWatch = new Stopwatch();
-            //stopWatch.Start();
+            var start = ScenarioTimer.Time.Elapsed.Ticks;
             await this.Page.TypeAsync(selector, text);
             await this.WaitAsync();
-            //stopWatch.Stop();
-            //Console.WriteLine($"{label} {stopWatch.Elapsed}");
+            var end = ScenarioTimer.Time.Elapsed.Ticks;
+
+            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task WaitAsync()
         {
             await this.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            //await this.Page.WaitForRequestFinishedAsync(); // warning
         }
 
         public async Task CloseAsync()

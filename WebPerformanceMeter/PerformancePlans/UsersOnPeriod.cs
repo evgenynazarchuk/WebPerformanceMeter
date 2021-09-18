@@ -9,8 +9,6 @@
 
     public sealed class UsersOnPeriod : PerformancePlan
     {
-        ////public readonly User User;
-
         private readonly int TotalUsers;
 
         private readonly TimeSpan UserPerformancePlanDuration;
@@ -43,7 +41,6 @@
             bool reuseDataInLoop = true)
             : base(user)
         {
-            //this.User = user;
             this.TotalUsers = totalUsers;
             this.UserPerformancePlanDuration = performancePlanDuration;
             this.InvokedUsers = new Task[this.TotalUsers];

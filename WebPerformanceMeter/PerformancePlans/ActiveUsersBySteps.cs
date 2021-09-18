@@ -8,8 +8,6 @@
 
     public sealed class ActiveUsersBySteps : PerformancePlan
     {
-        ////public readonly User User;
-
         private readonly int FromActiveUsersCount;
 
         private readonly int ToActiveUsersCount;
@@ -47,7 +45,6 @@
             int maximumActiveUsersCount = Math.Max(fromActiveUsersCount, toActiveUsersCount);
             int minimumActiveUsersCount = Math.Min(fromActiveUsersCount, toActiveUsersCount);
 
-            ////this.User = user;
             this.FromActiveUsersCount = fromActiveUsersCount;
             this.ToActiveUsersCount = toActiveUsersCount;
             this.Step = step;
@@ -66,7 +63,6 @@
 
             for (int i = 1; i <= this.PeriodsCount; i++)
             {
-                ////var endTime = Scenario.ScenarioWatchTime.Elapsed.TotalSeconds + this.StepPeriodDuration.TotalSeconds;
                 var endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this.StepPeriodDuration.TotalSeconds;
 
                 while (ScenarioTimer.Time.Elapsed.TotalSeconds < endTime)
@@ -100,7 +96,9 @@
                 throw new ApplicationException("StepValueMustBeLessOrEqualEndUserCount");
         }
 
-        private static void DurationTimeValidation(TimeSpan? stepPeriodDuration = null, TimeSpan? performancePlanDuration = null)
+        private static void DurationTimeValidation(
+            TimeSpan? stepPeriodDuration = null, 
+            TimeSpan? performancePlanDuration = null)
         {
             if (stepPeriodDuration is not null && performancePlanDuration is not null)
             {
@@ -119,7 +117,8 @@
                 throw new ApplicationException("ErrorUsersCount");
         }
 
-        private static TimeSpan CalculateStepPeriodDuration(TimeSpan? stepPeriodDuration,
+        private static TimeSpan CalculateStepPeriodDuration(
+            TimeSpan? stepPeriodDuration,
             TimeSpan? performancePlanDuration,
             int periodsCount)
         {

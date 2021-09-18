@@ -11,14 +11,10 @@
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //using var db = new WritableDataAccess();
-            //db.Database.EnsureDeleted();
-            //db.Database.EnsureCreated();
-            //db.Dispose();
-
             services.AddTransient<WritableDataAccess>();
             services.AddTransient<ReadableDataAccess>();
             services.AddGrpc();
+            services.AddGrpcReflection();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,9 +26,16 @@
 
             app.UseRouting();
 
+            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<UserMessagerService>();
+
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapGrpcReflectionService();
+                }
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -6,8 +6,6 @@
 
     public sealed class ConstantUsers : PerformancePlan
     {
-        ////public readonly User User;
-
         private readonly int usersCount;
 
         private readonly int userLoopCount;
@@ -26,7 +24,6 @@
             bool reuseDataInLoop = true)
             : base(user)
         {
-            ////this.User = user;
             this.usersCount = usersCount;
             this.userLoopCount = userLoopCount;
             this.invokedUsers = new Task[this.usersCount];

@@ -63,6 +63,17 @@
                     ReceivedTime = x.Average(y => y.EndResponseTime - y.StartResponseTime)
                 }).ToList();
 
+            var startedRequestLog = this.rawLogMessages
+                .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, StartRequestTime = (long)(x.StartSendRequestTime / 10000000) })
+                .Select(x => new HttpClientLogMessageByStartedRequest(
+                    x.Key.User,
+                    x.Key.RequestMethod,
+                    x.Key.Request,
+                    x.Key.RequestLabel,
+                    x.Key.StatusCode,
+                    x.Key.StartRequestTime,
+                    x.LongCount())).ToList();
+
             var groupByEndResponse = this.rawLogMessages
                 .GroupBy(x => new { EndResponseTime = x.EndResponseTime / 10000000 })
                 .Select(x => new
@@ -75,6 +86,7 @@
             StringBuilder groupedStringLog = new();
             StringBuilder sentStringLog = new();
             StringBuilder receivedStringLog = new();
+            StringBuilder startedRequestTimeLogString = new();
 
             foreach (var item in groupByRequestStatusCodeEndResponse)
             {
@@ -94,6 +106,11 @@
                 groupedStringLog.Append(JsonSerializer.Serialize(totalLog) + ",\n");
             }
 
+            foreach (var item in startedRequestLog)
+            {
+                startedRequestTimeLogString.Append(JsonSerializer.Serialize(item) + ",\n");
+            }
+
             foreach (var item in groupByEndResponse)
             {
                 sentStringLog.Append(JsonSerializer.Serialize(new HttpClientLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
@@ -107,12 +124,13 @@
 const groupedRawLog = [{groupedStringLog}]
 const sentBytesLog = [{sentStringLog}]
 const receivedBytesLog = [{receivedStringLog}]
+const startedRequestLog = [{startedRequestTimeLogString}]
 </script>
 ";
 
             var plotlyJsLineDraw = @"
 <script>
-function PlotlyJsLineDraw(chartName, plotlyIdent, plotlyData, rawData=true) {
+function PlotlyJsLineDraw(chartName, yaxisLabel, plotlyIdent, plotlyData, rawData=true) {
     let chartPlotData = []
 	if(rawData)
 	{
@@ -164,7 +182,7 @@ function PlotlyJsLineDraw(chartName, plotlyIdent, plotlyData, rawData=true) {
 		
 		yaxis: {
 			title: {
-				text: 'Milliseconds',
+				text: yaxisLabel,
 				font: {
 					color: '#7C7C7C',
 					family: 'Open Sans',
@@ -186,24 +204,27 @@ function PlotlyJsLineDraw(chartName, plotlyIdent, plotlyData, rawData=true) {
 
             var charts = @"
 <script>
+
 /*
 **
 */
-let responseTimeData = {}
-for(let item of groupedRawLog) {
-	if (responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+let startedRequestData = { };
+for (let item of startedRequestLog)
+{
+    if (startedRequestData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
     {
-        responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+        startedRequestData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
     }
 
 	let date = new Date(0);
-	date.setSeconds(item.EndResponseTime);
+	date.setSeconds(item.StartRequestTime);
 	let timeString = date.toISOString().substr(11, 8);
 
-    responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ResponseTime / 10000 })
+    startedRequestData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CountStartedRequest })
 }
 
-PlotlyJsLineDraw('Response Time', 'ResponseTimeChart', responseTimeData)
+PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedRequestData)
+
 
 /*
 **
@@ -223,7 +244,26 @@ for (let item of groupedRawLog)
     completedRequestsData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CompletedRequests })
 }
 
-PlotlyJsLineDraw('Completed Requests','CompletedRequestsChart', completedRequestsData)
+PlotlyJsLineDraw('Completed Requests', 'Count', 'CompletedRequestsChart', completedRequestsData)
+
+/*
+**
+*/
+let responseTimeData = {}
+for(let item of groupedRawLog) {
+	if (responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+
+	let date = new Date(0);
+	date.setSeconds(item.EndResponseTime);
+	let timeString = date.toISOString().substr(11, 8);
+
+    responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ResponseTime / 10000 })
+}
+
+PlotlyJsLineDraw('Response Time', 'Milliseconds', 'ResponseTimeChart', responseTimeData)
 
 /*
 **
@@ -241,7 +281,7 @@ for (let item of groupedRawLog)
     sentTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.SentTime / 10000 })
 }
 
-PlotlyJsLineDraw('Data Timed Sending','SentTimeChart', sentTimeData)
+PlotlyJsLineDraw('Data Timed Sending', 'Milliseconds', 'SentTimeChart', sentTimeData)
 
 /*
 **
@@ -259,7 +299,7 @@ for (let item of groupedRawLog)
     waitTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.WaitTime / 10000 })
 }
 
-PlotlyJsLineDraw('Data Wait Times','WaitTimeChart', waitTimeData)
+PlotlyJsLineDraw('Data Wait Times', 'Milliseconds', 'WaitTimeChart', waitTimeData)
 
 /*
 **
@@ -277,7 +317,7 @@ for (let item of groupedRawLog)
     receivedTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ReceivedTime / 10000 })
 }
 
-PlotlyJsLineDraw('Data Timed Receiving','ReceivedTimeChart', receivedTimeData)
+PlotlyJsLineDraw('Data Timed Receiving', 'Milliseconds', 'ReceivedTimeChart', receivedTimeData)
 
 /*
 **
@@ -293,7 +333,7 @@ sentBytesChartDataset.push({
 	type: 'scatter'
 })
 
-PlotlyJsLineDraw('Sent Bytes','SentBytesChart', sentBytesChartDataset, false)
+PlotlyJsLineDraw('Sent Bytes', 'Bytes', 'SentBytesChart', sentBytesChartDataset, false)
 
 /*
 **
@@ -309,7 +349,7 @@ receivedBytesChartDataset.push({
 	type: 'scatter'
 })
 
-PlotlyJsLineDraw('Received Bytes','ReceivedBytesChart', receivedBytesChartDataset, false)
+PlotlyJsLineDraw('Received Bytes', 'Bytes', 'ReceivedBytesChart', receivedBytesChartDataset, false)
 </script>
 ";
 
@@ -329,8 +369,9 @@ body {
 {bodyStyle}
 </head>
 <body>
-<div id='ResponseTimeChart' style='width:99%;height:400px;'></div>
+<div id='StartedRequestsChart' style='width:99%;height:400px;'></div>
 <div id='CompletedRequestsChart' style='width:99%;height:400px;'></div>
+<div id='ResponseTimeChart' style='width:99%;height:400px;'></div>
 <div id='SentTimeChart' style='width:99%;height:400px;'></div>
 <div id='WaitTimeChart' style='width:99%;height:400px;'></div>
 <div id='ReceivedTimeChart' style='width:99%;height:400px;'></div>

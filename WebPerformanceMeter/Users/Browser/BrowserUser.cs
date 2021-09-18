@@ -5,16 +5,17 @@
     using WebPerformanceMeter.Interfaces;
     using WebPerformanceMeter.Logger;
     using WebPerformanceMeter.Tools.BrowserTool;
+    using WebPerformanceMeter.Logger.BrowserLog;
 
     public abstract class BrowserUser : User, IDisposable
     {
         protected readonly BrowserTool BrowserTool;
 
-        public BrowserUser(ILogger logger, string userName = "")
-            : base(logger)
+        public BrowserUser(ILogger? logger = null, string userName = "")
+            : base(logger ?? new BrowserLogger("browser_report.txt"))
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
-            this.BrowserTool = new();
+            this.BrowserTool = new(this.Logger, this.UserName);
         }
 
         public void Dispose()

@@ -16,7 +16,8 @@ namespace GrpcWebApplication
 
         protected readonly ReadableDataAccess readableDataAccess;
 
-        public UserMessagerService(ILogger<UserMessagerService> logger,
+        public UserMessagerService(
+            ILogger<UserMessagerService> logger,
             WritableDataAccess writableDataAccess,
             ReadableDataAccess readableDataAccess)
         {

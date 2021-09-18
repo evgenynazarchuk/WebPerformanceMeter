@@ -1,14 +1,16 @@
-﻿namespace WebPerformanceMeter.Logger.HttpClientLog
+﻿namespace WebPerformanceMeter.Logger.BrowserLog
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
     using System.Collections.Concurrent;
     using System.IO;
-    using System.Text;
     using System.Text.Json;
     using System.Threading;
-    using System.Threading.Tasks;
 
-    public class HttpClientLogger : ILogger
+    public class BrowserLogger : ILogger
     {
         public readonly ConcurrentQueue<string> LogQueue;
 
@@ -25,7 +27,7 @@
             PropertyNameCaseInsensitive = true
         };
 
-        public HttpClientLogger(string httpClientLogFileName)
+        public BrowserLogger(string httpClientLogFileName)
         {
             this.HttpClientLogFileName = httpClientLogFileName;
             this.TokenSource = new();
@@ -48,9 +50,11 @@
             ////}
         }
 
-        public virtual void AddMessageLog(string message)
+        public void Finish()
         {
-            this.LogQueue.Enqueue(message);
+            this.FileWriter.Flush();
+            this.FileWriter.Close();
+            //this.GenerateHtmlReport();
         }
 
         public virtual async Task StartProcessingAsync()
@@ -69,7 +73,7 @@
 
                     if (message is not null)
                     {
-                        var logMesageEntity = this.GetHttpClientLogMessage(message);
+                        var logMesageEntity = this.GetBrowserLogMessage(message);
                         var logMessageJsonString = JsonSerializer.Serialize(logMesageEntity, this.JsonSerializerOptions);
                         this.FileWriter.WriteLine(logMessageJsonString);
                     }
@@ -77,41 +81,33 @@
             });
         }
 
-        public virtual void StopProcessing()
+        private BrowserLogMessage GetBrowserLogMessage(string message)
+        {
+            var splittedMessage = message.Split(',');
+
+            BrowserLogMessage log = new(splittedMessage[0],
+                splittedMessage[1],
+                splittedMessage[2],
+                Int64.Parse(splittedMessage[3]),
+                Int64.Parse(splittedMessage[4]));
+            
+            return log;
+        }
+
+        public void StopProcessing()
         {
             this.TokenSource.Cancel();
         }
 
-        public virtual void Finish()
+        public void AddMessageLog(string message)
         {
-            this.FileWriter.Flush();
-            this.FileWriter.Close();
-            this.GenerateHtmlReport();
+            this.LogQueue.Enqueue(message);
         }
 
-        private HttpClientLogMessage GetHttpClientLogMessage(string message)
-        {
-            var splittedMessage = message.Split(',');
-
-            HttpClientLogMessage log = new(splittedMessage[0],
-                splittedMessage[1],
-                splittedMessage[2],
-                splittedMessage[3],
-                Int32.Parse(splittedMessage[4]),
-                Int64.Parse(splittedMessage[5]),
-                Int64.Parse(splittedMessage[6]),
-                Int64.Parse(splittedMessage[7]),
-                Int64.Parse(splittedMessage[8]),
-                Int32.Parse(splittedMessage[9]),
-                Int32.Parse(splittedMessage[10]));
-
-            return log;
-        }
-
-        public virtual void GenerateHtmlReport()
-        {
-            var htmlGenerate = new HttpClientHtmlReportGenerator(this.HttpClientLogFileName, "httpclient_report.html");
-            htmlGenerate.GenerateReport();
-        }
+        //public virtual void GenerateHtmlReport()
+        //{
+        //    var htmlGenerate = new HttpClientHtmlReportGenerator(this.HttpClientLogFileName, "httpclient_report.html");
+        //    htmlGenerate.GenerateReport();
+        //}
     }
 }

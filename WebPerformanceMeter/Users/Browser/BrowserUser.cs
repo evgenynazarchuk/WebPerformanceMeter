@@ -33,7 +33,6 @@
 
             pageContext.Page.RequestFinished += (_, request) =>
             {
-                request.Timing.
                 Logger.AppendUserLogMessage($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)}," +
                     $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)}," +
                     $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}," +

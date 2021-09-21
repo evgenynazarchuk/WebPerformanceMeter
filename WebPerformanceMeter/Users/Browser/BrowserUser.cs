@@ -11,8 +11,8 @@
     {
         protected readonly BrowserTool BrowserTool;
 
-        public BrowserUser(ILogger? logger = null, string userName = "")
-            : base(logger ?? new BrowserLogger("browser_report.txt"))
+        public BrowserUser(IPerformanceLogger? logger = null, string userName = "")
+            : base(logger ?? new BrowserLogger("user_browser_report.txt", "tool_browser_report.txt"))
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.BrowserTool = new(this.Logger, this.UserName);
@@ -30,6 +30,18 @@
             )
         {
             var pageContext = await this.BrowserTool.GetNewPageContextAsync();
+
+            pageContext.Page.RequestFinished += (_, request) =>
+            {
+                request.Timing.
+                Logger.AppendUserLogMessage($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)}," +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)}," +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}," +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}," +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}," +
+                    $"{request.Method}," +
+                    $"{request.Url}");
+            };
 
             object? entity = null;
 

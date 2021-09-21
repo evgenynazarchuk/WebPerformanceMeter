@@ -6,15 +6,15 @@
     using System.Text;
     using System.Text.Json;
 
-    public class HttpClientHtmlReportGenerator
+    public class HttpClientToolLogHtmlReportGenerator
     {
         private readonly StreamReader rawLogReader;
 
         private readonly StreamWriter reportHtmlWriter;
 
-        private readonly List<HttpClientLogMessage> rawLogMessages;
+        private readonly List<HttpClientToolLogMessage> rawLogMessages;
 
-        public HttpClientHtmlReportGenerator(
+        public HttpClientToolLogHtmlReportGenerator(
             string rawLogPath,
             string outputHtmlPath)
         {
@@ -26,11 +26,11 @@
         public void ReadRawHttpClientLogs()
         {
             string? rawLogAsString;
-            HttpClientLogMessage? rawLogMessage;
+            HttpClientToolLogMessage? rawLogMessage;
 
             while ((rawLogAsString = this.rawLogReader.ReadLine()) != null)
             {
-                rawLogMessage = JsonSerializer.Deserialize<HttpClientLogMessage>(rawLogAsString);
+                rawLogMessage = JsonSerializer.Deserialize<HttpClientToolLogMessage>(rawLogAsString);
 
                 if (rawLogMessage is null) break;
 
@@ -65,7 +65,7 @@
 
             var startedRequestLog = this.rawLogMessages
                 .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, StartRequestTime = (long)(x.StartSendRequestTime / 10000000) })
-                .Select(x => new HttpClientLogMessageByStartedRequest(
+                .Select(x => new HttpClientToolLogMessageByStartedRequest(
                     x.Key.User,
                     x.Key.RequestMethod,
                     x.Key.Request,
@@ -90,7 +90,7 @@
 
             foreach (var item in groupByRequestStatusCodeEndResponse)
             {
-                HttpClientLogMessageTimeAnalytic totalLog = new(
+                HttpClientToolLogMessageTimeAnalytic totalLog = new(
                     item.Key.User,
                     item.Key.RequestMethod,
                     item.Key.Request,
@@ -113,8 +113,8 @@
 
             foreach (var item in groupByEndResponse)
             {
-                sentStringLog.Append(JsonSerializer.Serialize(new HttpClientLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
-                receivedStringLog.Append(JsonSerializer.Serialize(new HttpClientLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
+                sentStringLog.Append(JsonSerializer.Serialize(new HttpClientToolLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
+                receivedStringLog.Append(JsonSerializer.Serialize(new HttpClientToolLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
             }
 
             //

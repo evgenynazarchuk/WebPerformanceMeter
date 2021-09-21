@@ -15,10 +15,10 @@
 
         private readonly HttpClientHandler handler = new();
 
-        public readonly ILogger Logger;
+        public readonly IPerformanceLogger Logger;
 
         public HttpTool(
-            ILogger logger,
+            IPerformanceLogger logger,
             string baseAddress,
             IDictionary<string, string>? defaultHeaders = null,
             IEnumerable<Cookie>? defaultCookies = null)
@@ -34,7 +34,7 @@
             this.SetBaseSettings(baseAddress);
         }
 
-        public HttpTool(ILogger logger, HttpClient client)
+        public HttpTool(IPerformanceLogger logger, HttpClient client)
         {
             this.Logger = logger;
             this.HttpClient = client;
@@ -124,7 +124,7 @@
             ////};
 
             //Watcher.Send("httpclient.txt", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
-            this.Logger.AddMessageLog($"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
+            this.Logger.AppendToolLogMessage($"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
 
 
             HttpResponse response = new(

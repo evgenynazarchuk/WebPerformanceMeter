@@ -17,7 +17,7 @@
 
         protected readonly IPage Page;
 
-        public JavascriptUser(ILogger logger)
+        public JavascriptUser(IPerformanceLogger logger)
             : base(logger)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();

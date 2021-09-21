@@ -10,75 +10,11 @@
     using System.Text.Json;
     using System.Threading;
 
-    public class BrowserLogger : ILogger
+    public class BrowserLogger : PerformanceLogger
     {
-        public readonly ConcurrentQueue<string> LogQueue;
-
-        public readonly StreamWriter FileWriter;
-
-        public readonly CancellationToken Token;
-
-        public readonly CancellationTokenSource TokenSource;
-
-        public readonly string HttpClientLogFileName;
-
-        private readonly JsonSerializerOptions JsonSerializerOptions = new()
+        public BrowserLogger(string userLogFileName, string toolLogFileName)
+            : base(userLogFileName, toolLogFileName)
         {
-            PropertyNameCaseInsensitive = true
-        };
-
-        public BrowserLogger(string httpClientLogFileName)
-        {
-            this.HttpClientLogFileName = httpClientLogFileName;
-            this.TokenSource = new();
-            this.Token = this.TokenSource.Token;
-
-            this.LogQueue = new();
-            this.FileWriter = new StreamWriter(httpClientLogFileName, false, Encoding.UTF8, 65535);
-
-            ////long reportNumber = DateTime.UtcNow.Ticks;
-            ////string targetFolder = $"Logs//{reportNumber}";
-            ////
-            ////if (!Directory.Exists("Logs"))
-            ////{
-            ////    Directory.CreateDirectory("Logs");
-            ////}
-            ////
-            ////if (!Directory.Exists(targetFolder))
-            ////{
-            ////    Directory.CreateDirectory(targetFolder);
-            ////}
-        }
-
-        public void Finish()
-        {
-            this.FileWriter.Flush();
-            this.FileWriter.Close();
-            //this.GenerateHtmlReport();
-        }
-
-        public virtual async Task StartProcessingAsync()
-        {
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (this.Token.IsCancellationRequested && this.LogQueue.IsEmpty)
-                    {
-                        this.Finish();
-                        break;
-                    }
-
-                    this.LogQueue.TryDequeue(out string? message);
-
-                    if (message is not null)
-                    {
-                        var logMesageEntity = this.GetBrowserLogMessage(message);
-                        var logMessageJsonString = JsonSerializer.Serialize(logMesageEntity, this.JsonSerializerOptions);
-                        this.FileWriter.WriteLine(logMessageJsonString);
-                    }
-                }
-            });
         }
 
         private BrowserLogMessage GetBrowserLogMessage(string message)
@@ -94,20 +30,18 @@
             return log;
         }
 
-        public void StopProcessing()
+        public override void PostProcessing()
         {
-            this.TokenSource.Cancel();
         }
 
-        public void AddMessageLog(string message)
+        public override void UserWriteLogSerialize(string message)
         {
-            this.LogQueue.Enqueue(message);
+            base.UserWriteLogSerialize(message);
         }
 
-        //public virtual void GenerateHtmlReport()
-        //{
-        //    var htmlGenerate = new HttpClientHtmlReportGenerator(this.HttpClientLogFileName, "httpclient_report.html");
-        //    htmlGenerate.GenerateReport();
-        //}
+        public override void ToolWriteLogSerialize(string message)
+        {
+            base.ToolWriteLogSerialize(message);
+        }
     }
 }

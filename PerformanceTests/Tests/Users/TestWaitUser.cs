@@ -7,7 +7,7 @@
 
     public class TestWaitUser : TestUserFacade
     {
-        public TestWaitUser(HttpClient client, ILogger? logger = null)
+        public TestWaitUser(HttpClient client, IPerformanceLogger? logger = null)
             : base(client, logger) { }
 
         protected override async Task PerformanceAsync()

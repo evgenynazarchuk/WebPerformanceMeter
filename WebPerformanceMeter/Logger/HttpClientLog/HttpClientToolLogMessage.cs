@@ -1,8 +1,8 @@
 ﻿namespace WebPerformanceMeter.Logger.HttpClientLog
 {
-    public class HttpClientLogMessage
+    public class HttpClientToolLogMessage
     {
-        public HttpClientLogMessage(
+        public HttpClientToolLogMessage(
             string user,
             string requestMethod,
             string request,
@@ -27,14 +27,6 @@
             this.SendBytes = sendBytes;
             this.ReceiveBytes = receiveBytes;
         }
-
-        ////public HttpClientLogMessage()
-        ////{
-        ////    this.User = string.Empty;
-        ////    this.RequestType = string.Empty;
-        ////    this.Request = string.Empty;
-        ////    this.RequestLabel = string.Empty;
-        ////}
 
         public string User { get; set; }
 

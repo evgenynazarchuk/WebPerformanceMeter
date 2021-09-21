@@ -11,11 +11,11 @@
 
         public readonly IBrowser Browser;
 
-        public readonly ILogger Logger;
+        public readonly IPerformanceLogger Logger;
 
         public readonly string UserName;
 
-        public BrowserTool(ILogger logger, string userName)
+        public BrowserTool(IPerformanceLogger logger, string userName)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Chromium.LaunchAsync(new()
@@ -34,11 +34,6 @@
 
             return new PageContext(browserContext, page, this.Logger, this.UserName);
         }
-
-        //async ValueTask IAsyncDisposable.DisposeAsync()
-        //{
-        //    await this.Browser.CloseAsync();
-        //}
 
         public void Dispose()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Logger.HttpClientLog
 {
-    public class HttpClientLogMessageByStartedRequest
+    public class HttpClientToolLogMessageByStartedRequest
     {
         public string User { get; set; }
 
@@ -22,7 +22,7 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
 
         public long CountStartedRequest { get; set; }
 
-        public HttpClientLogMessageByStartedRequest(
+        public HttpClientToolLogMessageByStartedRequest(
             string user,
             string requestMethod,
             string request,

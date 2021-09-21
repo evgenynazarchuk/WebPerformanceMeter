@@ -8,92 +8,36 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class HttpClientLogger : ILogger
+    public class HttpClientLogger : PerformanceLogger
     {
-        public readonly ConcurrentQueue<string> LogQueue;
-
-        public readonly StreamWriter FileWriter;
-
-        public readonly CancellationToken Token;
-
-        public readonly CancellationTokenSource TokenSource;
-
-        public readonly string HttpClientLogFileName;
-
-        private readonly JsonSerializerOptions JsonSerializerOptions = new()
+        public HttpClientLogger(string userLogFileName, string toolLogFileName)
+            : base(userLogFileName, toolLogFileName) { }
+        
+        public override void UserWriteLogSerialize(string message)
         {
-            PropertyNameCaseInsensitive = true
-        };
-
-        public HttpClientLogger(string httpClientLogFileName)
-        {
-            this.HttpClientLogFileName = httpClientLogFileName;
-            this.TokenSource = new();
-            this.Token = this.TokenSource.Token;
-
-            this.LogQueue = new();
-            this.FileWriter = new StreamWriter(httpClientLogFileName, false, Encoding.UTF8, 65535);
-
-            ////long reportNumber = DateTime.UtcNow.Ticks;
-            ////string targetFolder = $"Logs//{reportNumber}";
-            ////
-            ////if (!Directory.Exists("Logs"))
-            ////{
-            ////    Directory.CreateDirectory("Logs");
-            ////}
-            ////
-            ////if (!Directory.Exists(targetFolder))
-            ////{
-            ////    Directory.CreateDirectory(targetFolder);
-            ////}
+            throw new NotImplementedException();
+            //var logMesageEntity = this.GetHttpClientLogMessage(message);
+            //var logMessageJsonString = JsonSerializer.Serialize(logMesageEntity, this.JsonSerializerOptions);
+            //base.UserWriteLogSerialize(logMessageJsonString);
         }
 
-        public virtual void AddMessageLog(string message)
+        public override void ToolWriteLogSerialize(string message)
         {
-            this.LogQueue.Enqueue(message);
+            var logMesageEntity = this.GetHttpClientLogMessage(message);
+            var logMessageJsonString = JsonSerializer.Serialize(logMesageEntity, this.JsonSerializerOptions);
+            base.ToolWriteLogSerialize(logMessageJsonString);
         }
 
-        public virtual async Task StartProcessingAsync()
+        public override void PostProcessing()
         {
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (this.Token.IsCancellationRequested && this.LogQueue.IsEmpty)
-                    {
-                        this.Finish();
-                        break;
-                    }
-
-                    this.LogQueue.TryDequeue(out string? message);
-
-                    if (message is not null)
-                    {
-                        var logMesageEntity = this.GetHttpClientLogMessage(message);
-                        var logMessageJsonString = JsonSerializer.Serialize(logMesageEntity, this.JsonSerializerOptions);
-                        this.FileWriter.WriteLine(logMessageJsonString);
-                    }
-                }
-            });
+            GenerateHtmlReport();
         }
 
-        public virtual void StopProcessing()
-        {
-            this.TokenSource.Cancel();
-        }
-
-        public virtual void Finish()
-        {
-            this.FileWriter.Flush();
-            this.FileWriter.Close();
-            this.GenerateHtmlReport();
-        }
-
-        private HttpClientLogMessage GetHttpClientLogMessage(string message)
+        private HttpClientToolLogMessage GetHttpClientLogMessage(string message)
         {
             var splittedMessage = message.Split(',');
 
-            HttpClientLogMessage log = new(splittedMessage[0],
+            HttpClientToolLogMessage log = new(splittedMessage[0],
                 splittedMessage[1],
                 splittedMessage[2],
                 splittedMessage[3],
@@ -108,9 +52,9 @@
             return log;
         }
 
-        public virtual void GenerateHtmlReport()
+        public void GenerateHtmlReport()
         {
-            var htmlGenerate = new HttpClientHtmlReportGenerator(this.HttpClientLogFileName, "httpclient_report.html");
+            var htmlGenerate = new HttpClientToolLogHtmlReportGenerator(this.ToolLogFileName, "httpclient_report.html");
             htmlGenerate.GenerateReport();
         }
     }

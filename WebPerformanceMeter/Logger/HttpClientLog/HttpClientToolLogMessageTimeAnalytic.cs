@@ -1,8 +1,8 @@
 ﻿namespace WebPerformanceMeter.Logger.HttpClientLog
 {
-    public class HttpClientLogMessageTimeAnalytic
+    public class HttpClientToolLogMessageTimeAnalytic
     {
-        public HttpClientLogMessageTimeAnalytic(
+        public HttpClientToolLogMessageTimeAnalytic(
             string user,
             string requestMethod,
             string request,

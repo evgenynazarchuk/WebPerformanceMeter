@@ -13,13 +13,13 @@
 
         public readonly IBrowserContext BrowserContext;
 
-        public readonly ILogger Logger;
+        public readonly IPerformanceLogger Logger;
 
         public readonly string UserName;
 
         public string? Url { get; private set; }
 
-        public PageContext(IBrowserContext browserContext, IPage page, ILogger logger, string userName)
+        public PageContext(IBrowserContext browserContext, IPage page, IPerformanceLogger logger, string userName)
         {
             this.BrowserContext = browserContext;
             this.Page = page;
@@ -36,7 +36,7 @@
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = url;
-            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task ReloadAsync(string label = "reload")
@@ -46,7 +46,7 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task ClickAsync(string selector, string label = "click")
@@ -56,7 +56,7 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task TypeAsync(string selector, string text, string label = "type")
@@ -66,7 +66,7 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AddMessageLog($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
         }
 
         public async Task WaitAsync()

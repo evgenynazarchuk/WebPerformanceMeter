@@ -12,10 +12,19 @@
 
     public class BrowserLogger : PerformanceLogger
     {
-        public BrowserLogger(string userLogFileName, string toolLogFileName)
-            : base(userLogFileName, toolLogFileName)
+        public BrowserLogger(string fileNamePrefix)
+            : base(fileNamePrefix)
         {
+            this.BrowserRequestLogFileName = fileNamePrefix + "_browser_request.log";
+            this.BrowserRequestFileWriter = new StreamWriter(this.ToolLogFileName, false, Encoding.UTF8, 65535);
+            this.BrowserRequestLogQueue = new();
         }
+
+        public readonly StreamWriter BrowserRequestFileWriter;
+
+        public readonly ConcurrentQueue<string> BrowserRequestLogQueue;
+
+        public readonly string BrowserRequestLogFileName;
 
         private BrowserLogMessage GetBrowserLogMessage(string message)
         {
@@ -36,11 +45,13 @@
 
         public override void UserWriteLogSerialize(string message)
         {
+            // TODO serialize
             base.UserWriteLogSerialize(message);
         }
 
         public override void ToolWriteLogSerialize(string message)
         {
+            // TODO serialize
             base.ToolWriteLogSerialize(message);
         }
     }

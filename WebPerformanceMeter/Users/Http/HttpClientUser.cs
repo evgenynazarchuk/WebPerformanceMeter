@@ -15,7 +15,7 @@
         protected readonly HttpTool Tool;
 
         public HttpClientUser(HttpClient client, IPerformanceLogger? logger = null, string userName = "")
-            : base(logger ?? new HttpClientLogger("httpclient_user_report.txt", "httpclient_tool_report.txt"))
+            : base(logger ?? new HttpClientLogger("httpclient"))
         {
             this.Client = client;
             this.Tool = new(this.Logger, this.Client);

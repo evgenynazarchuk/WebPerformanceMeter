@@ -12,10 +12,10 @@ namespace WebPerformanceMeter.Logger
 {
     public abstract class PerformanceLogger : IPerformanceLogger
     {
-        public PerformanceLogger(string userLogFileName, string toolLogFileName)
+        public PerformanceLogger(string fileNamePrefix)
         {
-            this.UserLogFileName = userLogFileName;
-            this.ToolLogFileName = toolLogFileName;
+            this.UserLogFileName = fileNamePrefix + "_user.log";
+            this.ToolLogFileName = fileNamePrefix + "_tool.log";
 
             this.UserLogQueue = new();
             this.ToolLogQueue = new();

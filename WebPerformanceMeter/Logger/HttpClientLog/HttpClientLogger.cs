@@ -10,8 +10,8 @@
 
     public class HttpClientLogger : PerformanceLogger
     {
-        public HttpClientLogger(string userLogFileName, string toolLogFileName)
-            : base(userLogFileName, toolLogFileName) { }
+        public HttpClientLogger(string fileNamePrefix)
+            : base(fileNamePrefix) { }
         
         public override void UserWriteLogSerialize(string message)
         {

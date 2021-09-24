@@ -10,52 +10,67 @@ namespace WebPerformanceMeter.DataReader.CsvReader
     public sealed class CsvReader<TResult> : IEntityReader
         where TResult : class, new()
     {
-        private readonly StreamReader StreamReader;
+        private StreamReader? streamReader = null;
 
-        private readonly ConcurrentQueue<TResult> Queue;
+        private ConcurrentQueue<TResult>? queue = null;
 
-        private readonly Regex Parser;
+        public static readonly Regex RegexParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
 
-        private readonly bool CyclicalData;
+        private bool cyclicalData = false;
 
-        public CsvReader(string path, bool hasHeader = false, bool cyclicalData = false)
+        private bool hasHeader = false;
+
+        public void ProcessCsvFile(string path, bool hasHeader = false, bool cyclicalData = false)
         {
-            Parser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
-            StreamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
-            Queue = new();
-            CyclicalData = cyclicalData;
+            this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
+            this.cyclicalData = cyclicalData;
+            this.hasHeader = hasHeader;
+            this.queue = new();
 
-            if (hasHeader)
+            if (this.hasHeader)
             {
-                StreamReader.ReadLine();
+                streamReader.ReadLine();
             }
 
             string? line;
-            while ((line = StreamReader.ReadLine()) != null)
+            while ((line = this.streamReader.ReadLine()) != null)
             {
-                var row = Parser.Split(line);
-                Queue.Enqueue(InitializeFromRow(row));
+                var row = CsvReader<TResult>.RegexParser.Split(line);
+                this.queue.Enqueue(GetObjectFromCsvColumns<TResult>(row));
             }
-        }
+        } 
 
         public object? GetEntity()
         {
-            this.Queue.TryDequeue(out TResult? result);
-
-            if (this.CyclicalData && result is not null)
+            if (this.queue is null)
             {
-                this.Queue.Enqueue(result);
+                return null;
+            }
+
+            this.queue.TryDequeue(out TResult? result);
+
+            // put again
+            if (this.cyclicalData && result is not null)
+            {
+                this.queue.Enqueue(result);
             }
 
             return result;
         }
 
-        private TResult InitializeFromRow(ReadOnlySpan<string> row)
+        public static ResultObjectType GetObjectFromCsvLine<ResultObjectType>(string row)
+            where ResultObjectType : class, new()
         {
-            var entity = new TResult();
+            return GetObjectFromCsvColumns<ResultObjectType>(row.Split(','));
+        }
+
+        public static ResultObjectType GetObjectFromCsvColumns<ResultObjectType>(ReadOnlySpan<string> columns)
+            where ResultObjectType : class, new()
+        {
+            var entity = new ResultObjectType();
             var properties = entity.GetType().GetProperties();
 
-            if (row.Length != properties.Length)
+            if (columns.Length != properties.Length)
             {
                 throw new ApplicationException("Row length is not equal properties length");
             }
@@ -67,87 +82,87 @@ namespace WebPerformanceMeter.DataReader.CsvReader
                 switch (propertyTypeString)
                 {
                     case TypeString.String:
-                        properties[i].SetValue(entity, row[i], null);
+                        properties[i].SetValue(entity, columns[i], null);
                         break;
 
                     case TypeString.Integer:
-                        properties[i].SetValue(entity, IntegerIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, IntegerIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.IntegerOrNull:
-                        properties[i].SetValue(entity, IntegerIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, IntegerIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.Boolean:
-                        properties[i].SetValue(entity, BooleanIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, BooleanIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.BooleanOrNull:
-                        properties[i].SetValue(entity, BooleanIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, BooleanIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.UnsignedInteger:
-                        properties[i].SetValue(entity, UnsignedIntegerIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, UnsignedIntegerIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.UnsignedIntegerOrNull:
-                        properties[i].SetValue(entity, UnsignedIntegerIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, UnsignedIntegerIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.LongInterger:
-                        properties[i].SetValue(entity, LongIntegerIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, LongIntegerIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.LongIntergerOrNull:
-                        properties[i].SetValue(entity, LongIntegerIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, LongIntegerIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.UnsignedLongInterger:
-                        properties[i].SetValue(entity, UnsignedLongIntegerIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, UnsignedLongIntegerIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.UnsignedLongIntergerOrNull:
-                        properties[i].SetValue(entity, UnsignedLongIntegerIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, UnsignedLongIntegerIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.Float:
-                        properties[i].SetValue(entity, FloatIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, FloatIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.FloatOrNull:
-                        properties[i].SetValue(entity, FloatIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, FloatIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.Double:
-                        properties[i].SetValue(entity, DoubleIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, DoubleIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.DoubleOrNull:
-                        properties[i].SetValue(entity, DoubleIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, DoubleIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.Decimal:
-                        properties[i].SetValue(entity, DecimalIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, DecimalIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.DecimalOrNull:
-                        properties[i].SetValue(entity, DecimalIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, DecimalIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.DateTime:
-                        properties[i].SetValue(entity, DateTimeIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, DateTimeIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.DateTimeOrNull:
-                        properties[i].SetValue(entity, DateTimeIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, DateTimeIsNotRequired(columns[i]), null);
                         break;
 
                     case TypeString.TimeSpan:
-                        properties[i].SetValue(entity, TimeSpanIsRequired(row[i]), null);
+                        properties[i].SetValue(entity, TimeSpanIsRequired(columns[i]), null);
                         break;
 
                     case TypeString.TimeSpanOrNull:
-                        properties[i].SetValue(entity, TimeSpanIsNotRequired(row[i]), null);
+                        properties[i].SetValue(entity, TimeSpanIsNotRequired(columns[i]), null);
                         break;
 
                     default:
@@ -158,78 +173,78 @@ namespace WebPerformanceMeter.DataReader.CsvReader
             return entity;
         }
 
-        private static int IntegerIsRequired(ReadOnlySpan<char> column)
+        public static int IntegerIsRequired(ReadOnlySpan<char> column)
             => int.TryParse(column, out int columnValue) ? columnValue
             : throw new ApplicationException("Integer field is wrong");
 
-        private static uint UnsignedIntegerIsRequired(ReadOnlySpan<char> column)
+        public static uint UnsignedIntegerIsRequired(ReadOnlySpan<char> column)
             => uint.TryParse(column, out uint columnValue) ? columnValue
             : throw new ApplicationException("Unsigned Integer field is wrong");
 
-        private static long LongIntegerIsRequired(ReadOnlySpan<char> column)
+        public static long LongIntegerIsRequired(ReadOnlySpan<char> column)
             => long.TryParse(column, out long columnValue) ? columnValue
             : throw new ApplicationException("Long Integer field is wrong");
 
-        private static ulong UnsignedLongIntegerIsRequired(ReadOnlySpan<char> column)
+        public static ulong UnsignedLongIntegerIsRequired(ReadOnlySpan<char> column)
             => ulong.TryParse(column, out ulong columnValue) ? columnValue
             : throw new ApplicationException("Unsigned Long Integer field is wrong");
 
-        private static float FloatIsRequired(ReadOnlySpan<char> column)
+        public static float FloatIsRequired(ReadOnlySpan<char> column)
             => float.TryParse(column, out float columnValue) ? columnValue
             : throw new ApplicationException("Float field is wrong");
 
-        private static double DoubleIsRequired(ReadOnlySpan<char> column)
+        public static double DoubleIsRequired(ReadOnlySpan<char> column)
             => double.TryParse(column, out double columnValue) ? columnValue
             : throw new ApplicationException("Double field is wrong");
 
-        private static decimal DecimalIsRequired(ReadOnlySpan<char> column)
+        public static decimal DecimalIsRequired(ReadOnlySpan<char> column)
             => decimal.TryParse(column, out decimal columnValue) ? columnValue
             : throw new ApplicationException("Decimal field is wrong");
 
-        private static bool BooleanIsRequired(ReadOnlySpan<char> column)
+        public static bool BooleanIsRequired(ReadOnlySpan<char> column)
             => bool.TryParse(column, out bool columnValue) ? columnValue
             : throw new ApplicationException("Boolean field is wrong");
 
-        private static DateTime DateTimeIsRequired(ReadOnlySpan<char> column)
+        public static DateTime DateTimeIsRequired(ReadOnlySpan<char> column)
             => DateTime.TryParse(column, out DateTime columnValue) ? columnValue
             : throw new ApplicationException("DateTime field is wrong");
 
-        private static TimeSpan TimeSpanIsRequired(ReadOnlySpan<char> column)
+        public static TimeSpan TimeSpanIsRequired(ReadOnlySpan<char> column)
             => TimeSpan.TryParse(column, out TimeSpan columnValue) ? columnValue
             : throw new ApplicationException("DateTime field is wrong");
 
         //
-        private static int? IntegerIsNotRequired(ReadOnlySpan<char> column)
+        public static int? IntegerIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : IntegerIsRequired(column);
 
-        private static uint? UnsignedIntegerIsNotRequired(ReadOnlySpan<char> column)
+        public static uint? UnsignedIntegerIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : UnsignedIntegerIsRequired(column);
 
-        private static long? LongIntegerIsNotRequired(ReadOnlySpan<char> column)
+        public static long? LongIntegerIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : LongIntegerIsRequired(column);
 
-        private static ulong? UnsignedLongIntegerIsNotRequired(ReadOnlySpan<char> column)
+        public static ulong? UnsignedLongIntegerIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : UnsignedLongIntegerIsRequired(column);
 
-        private static float? FloatIsNotRequired(ReadOnlySpan<char> column)
+        public static float? FloatIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : FloatIsRequired(column);
 
-        private static double? DoubleIsNotRequired(ReadOnlySpan<char> column)
+        public static double? DoubleIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : DoubleIsRequired(column);
 
-        private static decimal? DecimalIsNotRequired(ReadOnlySpan<char> column)
+        public static decimal? DecimalIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : DecimalIsRequired(column);
 
-        private static bool? BooleanIsNotRequired(ReadOnlySpan<char> column)
+        public static bool? BooleanIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : BooleanIsRequired(column);
 
-        private static DateTime? DateTimeIsNotRequired(ReadOnlySpan<char> column)
+        public static DateTime? DateTimeIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : DateTimeIsRequired(column);
 
-        private static TimeSpan? TimeSpanIsNotRequired(ReadOnlySpan<char> column)
+        public static TimeSpan? TimeSpanIsNotRequired(ReadOnlySpan<char> column)
             => column.Length == 0 ? null : TimeSpanIsRequired(column);
 
-        private static class TypeString
+        public static class TypeString
         {
             public const string String = "System.String";
             public const string Integer = "System.Int32";

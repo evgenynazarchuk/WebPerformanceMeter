@@ -12,7 +12,7 @@
         protected readonly BrowserTool BrowserTool;
 
         public BrowserUser(IPerformanceLogger? logger = null, string userName = "")
-            : base(logger ?? new BrowserLogger("user_browser_report.txt", "tool_browser_report.txt"))
+            : base(logger ?? new BrowserLogger("browser"))
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.BrowserTool = new(this.Logger, this.UserName);

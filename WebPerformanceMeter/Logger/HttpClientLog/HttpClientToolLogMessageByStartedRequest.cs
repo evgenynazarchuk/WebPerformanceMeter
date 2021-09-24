@@ -24,7 +24,7 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
 
         public HttpClientToolLogMessageByStartedRequest(
             string user,
-            string requestMethod,
+            string httpMethod,
             string request,
             string requestLabel,
             int statusCode,
@@ -33,7 +33,7 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
             )
         {
             this.User = user;
-            this.RequestMethod= requestMethod;
+            this.RequestMethod= httpMethod;
             this.RequestLabel = requestLabel;
             this.Request = request;
             this.StatusCode = statusCode;

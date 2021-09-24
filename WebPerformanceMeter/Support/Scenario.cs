@@ -82,7 +82,7 @@
             {
                 foreach (var plan in plans)
                 {
-                    loggersProcessing.Add(Task.Run(() => plan.User.Logger.StartProcessingAsync()));
+                    loggersProcessing.Add(Task.Run(() => plan.User.Logger.ProcessStart()));
                 }
             }
         }
@@ -93,7 +93,7 @@
             {
                 foreach (var plan in plans)
                 {
-                    plan.User.Logger.StopProcessing();
+                    plan.User.Logger.ProcessStop();
                 }
             }
 

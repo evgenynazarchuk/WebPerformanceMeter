@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using WebPerformanceMeter.Support;
     using WebPerformanceMeter.Logger;
+    using WebPerformanceMeter.Logger.BrowserLog;
 
     public class PageContext
     {
@@ -36,7 +37,7 @@
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = url;
-            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
         }
 
         public async Task ReloadAsync(string label = "reload")
@@ -46,7 +47,7 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
         }
 
         public async Task ClickAsync(string selector, string label = "click")
@@ -56,7 +57,7 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
         }
 
         public async Task TypeAsync(string selector, string text, string label = "type")
@@ -66,7 +67,7 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AppendToolLogMessage($"{this.Url},{this.UserName},{label},{start},{end}");
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
         }
 
         public async Task WaitAsync()

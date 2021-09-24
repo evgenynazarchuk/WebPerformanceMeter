@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using WebPerformanceMeter.Logger;
     using WebPerformanceMeter.Support;
+    using WebPerformanceMeter.Logger.HttpClientLog;
 
     public partial class HttpTool : Tool
     {
@@ -108,24 +109,7 @@
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            ////var httpClientLog = new HttpClientLogMessage
-            ////{
-            ////    User = userName,
-            ////    RequestType = httpRequestMessage.Method.Method,
-            ////    Request = httpRequestMessage.RequestUri.ToString(),
-            ////    RequestLabel = requestLabel,
-            ////    StatusCode = (int)httpResponseMessage.StatusCode,
-            ////    StartSendRequestTime = startSendRequest,
-            ////    StartWaitResponseTime = startWaitResponse,
-            ////    StartResponseTime = startResponse,
-            ////    EndResponseTime = endResponse,
-            ////    SendBytes = requestSize,
-            ////    ReceiveBytes = responseSize
-            ////};
-
-            //Watcher.Send("httpclient.txt", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
-            this.Logger.AppendToolLogMessage($"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
-
+            this.Logger.AppendLogMessage("HttpClientLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpClientToolLogMessage));
 
             HttpResponse response = new(
                 statusCode: (int)httpResponseMessage.StatusCode,

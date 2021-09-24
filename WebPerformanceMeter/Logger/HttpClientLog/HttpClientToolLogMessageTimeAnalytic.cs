@@ -16,7 +16,7 @@
             double receiveTime)
         {
             this.User = user;
-            this.RequestMethod = requestMethod;
+            this.HttpMethod = requestMethod;
             this.Request = request;
             this.RequestLabel = requestLabel;
             this.StatusCode = statusCode;
@@ -28,11 +28,11 @@
             this.ReceivedTime = receiveTime;
         }
 
-        public string User { get; set; }
+        public string? User { get; set; }
 
-        public string RequestMethod { get; set; }
+        public string? HttpMethod { get; set; }
 
-        public string Request { get; set; }
+        public string? Request { get; set; }
 
         public string RequestLabel { get; set; }
 

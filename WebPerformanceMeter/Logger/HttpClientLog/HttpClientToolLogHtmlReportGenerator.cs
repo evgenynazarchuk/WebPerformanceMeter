@@ -1,5 +1,6 @@
 ﻿namespace WebPerformanceMeter.Logger.HttpClientLog
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -8,48 +9,48 @@
 
     public class HttpClientToolLogHtmlReportGenerator
     {
-        private readonly StreamReader rawLogReader;
-
-        private readonly StreamWriter reportHtmlWriter;
-
-        private readonly List<HttpClientToolLogMessage> rawLogMessages;
-
         public HttpClientToolLogHtmlReportGenerator(
-            string rawLogPath,
-            string outputHtmlPath)
+            string httpClientToolLogFileName,
+            string httpClientReport)
         {
-            this.rawLogReader = new(rawLogPath, Encoding.UTF8, false, 65535);
-            this.rawLogMessages = new();
-            this.reportHtmlWriter = new(outputHtmlPath, false, Encoding.UTF8, 65355);
+            this.httpClientToolLogMessageList = new();
+            this.reader = new(httpClientToolLogFileName, Encoding.UTF8, false, 65535);
+            this.writer = new(httpClientReport, false, Encoding.UTF8, 65355);
         }
 
-        public void ReadRawHttpClientLogs()
+        private readonly StreamReader reader;
+
+        private readonly StreamWriter writer;
+
+        private readonly List<HttpClientToolLogMessage> httpClientToolLogMessageList;
+
+        public void ReadJsonHttpClientLog()
         {
-            string? rawLogAsString;
-            HttpClientToolLogMessage? rawLogMessage;
+            string? jsonHttpClientToolLogMessage;
+            HttpClientToolLogMessage? httpClientToolLogMessage;
 
-            while ((rawLogAsString = this.rawLogReader.ReadLine()) != null)
+            while ((jsonHttpClientToolLogMessage = this.reader.ReadLine()) != null)
             {
-                rawLogMessage = JsonSerializer.Deserialize<HttpClientToolLogMessage>(rawLogAsString);
+                httpClientToolLogMessage = JsonSerializer.Deserialize<HttpClientToolLogMessage>(jsonHttpClientToolLogMessage);
 
-                if (rawLogMessage is null) break;
+                if (httpClientToolLogMessage is null) throw new ApplicationException("Error convertation");
 
-                this.rawLogMessages.Add(rawLogMessage);
+                this.httpClientToolLogMessageList.Add(httpClientToolLogMessage);
             }
 
-            this.rawLogReader.Close();
+            this.reader.Close();
         }
 
         public void GenerateReport()
         {
-            this.ReadRawHttpClientLogs();
+            this.ReadJsonHttpClientLog();
 
-            if (this.rawLogMessages is null)
+            if (this.httpClientToolLogMessageList is null)
             {
                 return;
             }
 
-            var groupByRequestStatusCodeEndResponse = this.rawLogMessages
+            var groupByRequestStatusCodeEndResponse = this.httpClientToolLogMessageList
                 .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, EndResponseTime = (long)(x.EndResponseTime / 10000000) })
                 .Select(x => new
                 {
@@ -63,7 +64,7 @@
                     ReceivedTime = x.Average(y => y.EndResponseTime - y.StartResponseTime)
                 }).ToList();
 
-            var startedRequestLog = this.rawLogMessages
+            var startedRequestLog = this.httpClientToolLogMessageList
                 .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, StartRequestTime = (long)(x.StartSendRequestTime / 10000000) })
                 .Select(x => new HttpClientToolLogMessageByStartedRequest(
                     x.Key.User,
@@ -74,7 +75,7 @@
                     x.Key.StartRequestTime,
                     x.LongCount())).ToList();
 
-            var groupByEndResponse = this.rawLogMessages
+            var groupByEndResponse = this.httpClientToolLogMessageList
                 .GroupBy(x => new { EndResponseTime = x.EndResponseTime / 10000000 })
                 .Select(x => new
                 {
@@ -387,9 +388,9 @@ body {
 
 
             //
-            reportHtmlWriter.WriteLine(htmlReport);
-            reportHtmlWriter.Flush();
-            reportHtmlWriter.Close();
+            writer.WriteLine(htmlReport);
+            writer.Flush();
+            writer.Close();
         }
     }
 }

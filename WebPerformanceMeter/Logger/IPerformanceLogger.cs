@@ -1,22 +1,28 @@
 ﻿namespace WebPerformanceMeter.Logger
 {
+    using System;
+    using System.IO;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Collections.Concurrent;
 
     public interface IPerformanceLogger
     {
-        void AppendToolLogMessage(string message);
+        ConcurrentQueue<(string logName, string logMessage, Type logType)> LogQueue { get; }
 
-        void AppendUserLogMessage(string message);
+        Dictionary<string, StreamWriter> Writers { get; }
 
-        void UserWriteLogSerialize(string message);
+        void AppendLogMessage(string logName, string logMessage, Type logMessageType);
 
-        void ToolWriteLogSerialize(string message);
+        Task ProcessStart();
 
-        Task StartProcessingAsync();
+        void ProcessStop();
 
-        void StopProcessing();
+        string Convert(string logMessage, Type logMessageType) => logMessage;
 
         void Finish();
+
+        void PostProcessing(string logName);
 
         void PostProcessing();
     }

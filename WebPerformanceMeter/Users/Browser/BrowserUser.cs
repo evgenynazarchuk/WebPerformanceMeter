@@ -12,7 +12,7 @@
         protected readonly BrowserTool BrowserTool;
 
         public BrowserUser(IPerformanceLogger? logger = null, string userName = "")
-            : base(logger ?? new BrowserLogger("browser"))
+            : base(logger ?? new BrowserLogger())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.BrowserTool = new(this.Logger, this.UserName);
@@ -33,13 +33,14 @@
 
             pageContext.Page.RequestFinished += (_, request) =>
             {
-                Logger.AppendUserLogMessage($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)}," +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)}," +
+                Logger.AppendLogMessage("PageRequestLog.json",
+                    $"{this.UserName}" +
+                    $"{request.Method}," +
+                    $"{request.Url}" +
                     $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}," +
                     $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}," +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}," +
-                    $"{request.Method}," +
-                    $"{request.Url}");
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}",
+                    typeof(PageRequestLogMessage));
             };
 
             object? entity = null;

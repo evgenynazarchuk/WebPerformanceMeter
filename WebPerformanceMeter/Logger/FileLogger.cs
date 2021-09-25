@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using WebPerformanceMeter.DataReader.CsvReader;
 
 namespace WebPerformanceMeter.Logger
 {
-    public abstract class FileLogger : IPerformanceLogger
+    public abstract class FileLogger : ILogger
     {
         public FileLogger()
         {
@@ -58,23 +57,19 @@ namespace WebPerformanceMeter.Logger
                         break;
                     }
 
-                    this.logQueue.TryDequeue(out (string logName, string logMessage, Type logMessageType) log);
+                    if (this.logQueue.TryDequeue(out (string logName, string logMessage, Type logMessageType) log))
+                    {
+                        if (!this.writers.TryGetValue(log.logName, out StreamWriter? logWriter))
+                        {
+                            logWriter = new StreamWriter(log.logName, false, Encoding.UTF8, 65535);
+                            this.writers.TryAdd(log.logName, logWriter);
+                        }
 
-                    var logWriter = this.writers.GetValueOrDefault(log.logName);
-                    if (logWriter is null)
-                    {
-                        logWriter = new StreamWriter(log.logName, false, Encoding.UTF8, 65535);
-                        this.writers.Add(log.logName, logWriter);
-                    }
-
-                    if (logWriter is not null)
-                    {
-                        var jsonLogMessage = this.Convert(log.logMessage, log.logMessageType);
-                        logWriter.WriteLine(jsonLogMessage);
-                    }
-                    else
-                    {
-                        throw new ApplicationException("Log Writer is not set");
+                        if (logWriter is not null)
+                        {
+                            var jsonLogMessage = this.Convert(log.logMessage, log.logMessageType);
+                            logWriter.WriteLine(jsonLogMessage);
+                        }
                     }
                 }
 

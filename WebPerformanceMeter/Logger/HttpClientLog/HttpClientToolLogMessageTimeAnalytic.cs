@@ -3,10 +3,10 @@
     public class HttpClientToolLogMessageTimeAnalytic
     {
         public HttpClientToolLogMessageTimeAnalytic(
-            string user,
-            string requestMethod,
-            string request,
-            string requestLabel,
+            string? user,
+            string? requestMethod,
+            string? request,
+            string? requestLabel,
             int statusCode,
             long endResponseTime,
             long completedRequests,
@@ -34,7 +34,7 @@
 
         public string? Request { get; set; }
 
-        public string RequestLabel { get; set; }
+        public string? RequestLabel { get; set; }
 
         public int StatusCode { get; set; }
 

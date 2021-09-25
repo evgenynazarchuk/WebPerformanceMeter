@@ -8,7 +8,7 @@
 
     public class TestUserFacade : HttpClientUser
     {
-        public TestUserFacade(HttpClient client, IPerformanceLogger? logger = null, string userName = "")
+        public TestUserFacade(HttpClient client, ILogger? logger = null, string userName = "")
             : base(client, logger, userName) { }
 
         public async Task<TestResponseContent?> TestWaitMethod(

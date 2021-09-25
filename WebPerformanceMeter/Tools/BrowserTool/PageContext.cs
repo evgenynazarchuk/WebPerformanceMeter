@@ -1,12 +1,10 @@
 ﻿namespace WebPerformanceMeter.Tools.BrowserTool
 {
     using Microsoft.Playwright;
-    using System;
-    using System.Diagnostics;
     using System.Threading.Tasks;
-    using WebPerformanceMeter.Support;
     using WebPerformanceMeter.Logger;
     using WebPerformanceMeter.Logger.BrowserLog;
+    using WebPerformanceMeter.Support;
 
     public class PageContext
     {
@@ -14,13 +12,13 @@
 
         public readonly IBrowserContext BrowserContext;
 
-        public readonly IPerformanceLogger Logger;
+        public readonly ILogger Logger;
 
         public readonly string UserName;
 
         public string? Url { get; private set; }
 
-        public PageContext(IBrowserContext browserContext, IPage page, IPerformanceLogger logger, string userName)
+        public PageContext(IBrowserContext browserContext, IPage page, ILogger logger, string userName)
         {
             this.BrowserContext = browserContext;
             this.Page = page;

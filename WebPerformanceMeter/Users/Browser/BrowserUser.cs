@@ -4,14 +4,14 @@
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
     using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Tools.BrowserTool;
     using WebPerformanceMeter.Logger.BrowserLog;
+    using WebPerformanceMeter.Tools.BrowserTool;
 
     public abstract class BrowserUser : User, IDisposable
     {
         protected readonly BrowserTool BrowserTool;
 
-        public BrowserUser(IPerformanceLogger? logger = null, string userName = "")
+        public BrowserUser(ILogger? logger = null, string userName = "")
             : base(logger ?? new BrowserLogger())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);

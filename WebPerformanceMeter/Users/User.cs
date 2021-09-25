@@ -8,9 +8,9 @@
     {
         public string UserName { get; private set; }
 
-        public readonly IPerformanceLogger Logger;
+        public readonly ILogger Logger;
 
-        public User(IPerformanceLogger logger)
+        public User(ILogger logger)
         {
             this.UserName = string.Empty;
             this.Logger = logger;

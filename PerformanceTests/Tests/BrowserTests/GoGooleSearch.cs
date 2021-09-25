@@ -1,17 +1,12 @@
 ﻿namespace PerformanceTests.Tests.BrowserTests
 {
-    using PerformanceTests.Tests.Users;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Attributes;
     using WebPerformanceMeter.Extensions;
     using WebPerformanceMeter.PerformancePlans;
     using WebPerformanceMeter.Support;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using WebPerformanceMeter.Users;
     using WebPerformanceMeter.Tools.BrowserTool;
+    using WebPerformanceMeter.Users;
 
     public class GoGooleSearch
     {

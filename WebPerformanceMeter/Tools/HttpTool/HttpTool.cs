@@ -7,8 +7,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Support;
     using WebPerformanceMeter.Logger.HttpClientLog;
+    using WebPerformanceMeter.Support;
 
     public partial class HttpTool : Tool
     {
@@ -16,10 +16,10 @@
 
         private readonly HttpClientHandler handler = new();
 
-        public readonly IPerformanceLogger Logger;
+        public readonly ILogger Logger;
 
         public HttpTool(
-            IPerformanceLogger logger,
+            ILogger logger,
             string baseAddress,
             IDictionary<string, string>? defaultHeaders = null,
             IEnumerable<Cookie>? defaultCookies = null)
@@ -35,7 +35,7 @@
             this.SetBaseSettings(baseAddress);
         }
 
-        public HttpTool(IPerformanceLogger logger, HttpClient client)
+        public HttpTool(ILogger logger, HttpClient client)
         {
             this.Logger = logger;
             this.HttpClient = client;

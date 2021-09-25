@@ -11,11 +11,11 @@
 
         public readonly IBrowser Browser;
 
-        public readonly IPerformanceLogger Logger;
+        public readonly ILogger Logger;
 
         public readonly string UserName;
 
-        public BrowserTool(IPerformanceLogger logger, string userName)
+        public BrowserTool(ILogger logger, string userName)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Chromium.LaunchAsync(new()

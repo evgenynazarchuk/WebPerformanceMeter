@@ -1,12 +1,12 @@
 ﻿namespace PerformanceTests.Tests.HttpClientTests
 {
+    using System.Net.Http;
     using System.Threading.Tasks;
+    using TestWebApiServer.Models;
     using WebPerformanceMeter.Attributes;
     using WebPerformanceMeter.Extensions;
     using WebPerformanceMeter.PerformancePlans;
     using WebPerformanceMeter.Support;
-    using System.Net.Http;
-    using TestWebApiServer.Models;
     using WebPerformanceMeter.Users;
 
     public class PostRequestWithTimeout100ms

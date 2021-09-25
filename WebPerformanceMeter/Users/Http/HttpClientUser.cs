@@ -14,7 +14,7 @@
 
         protected readonly HttpTool Tool;
 
-        public HttpClientUser(HttpClient client, IPerformanceLogger? logger = null, string userName = "")
+        public HttpClientUser(HttpClient client, ILogger? logger = null, string userName = "")
             : base(logger ?? new HttpClientLogger())
         {
             this.Client = client;
@@ -23,7 +23,7 @@
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
         }
 
-        public HttpClientUser(string host, IPerformanceLogger logger, string userName = "")
+        public HttpClientUser(string host, ILogger logger, string userName = "")
             : base(logger)
         {
             this.Client = new HttpClient() { BaseAddress = new Uri(host) };

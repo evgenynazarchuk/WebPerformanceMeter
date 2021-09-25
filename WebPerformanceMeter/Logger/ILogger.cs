@@ -1,12 +1,12 @@
 ﻿namespace WebPerformanceMeter.Logger
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using System.Collections.Concurrent;
 
-    public interface IPerformanceLogger
+    public interface ILogger
     {
         ConcurrentQueue<(string logName, string logMessage, Type logType)> LogQueue { get; }
 

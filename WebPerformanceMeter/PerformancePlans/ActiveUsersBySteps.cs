@@ -97,7 +97,7 @@
         }
 
         private static void DurationTimeValidation(
-            TimeSpan? stepPeriodDuration = null, 
+            TimeSpan? stepPeriodDuration = null,
             TimeSpan? performancePlanDuration = null)
         {
             if (stepPeriodDuration is not null && performancePlanDuration is not null)

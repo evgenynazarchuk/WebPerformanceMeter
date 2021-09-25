@@ -35,7 +35,7 @@
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = url;
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
         }
 
         public async Task ReloadAsync(string label = "reload")
@@ -45,7 +45,8 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
+            this.Url = this.Page.Url;
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
         }
 
         public async Task ClickAsync(string selector, string label = "click")
@@ -55,7 +56,8 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
+            this.Url = this.Page.Url;
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
         }
 
         public async Task TypeAsync(string selector, string text, string label = "type")
@@ -65,7 +67,8 @@
             await this.WaitAsync();
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.Url},{this.UserName},{label},{start},{end}", typeof(UserActionLogMessage));
+            this.Url = this.Page.Url;
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
         }
 
         public async Task WaitAsync()

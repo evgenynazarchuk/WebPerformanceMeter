@@ -109,7 +109,7 @@
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            this.Logger.AppendLogMessage("HttpClientLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpClientToolLogMessage));
+            this.Logger.AppendLogMessage("HttpClientToolLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpClientToolLogMessage));
 
             HttpResponse response = new(
                 statusCode: (int)httpResponseMessage.StatusCode,

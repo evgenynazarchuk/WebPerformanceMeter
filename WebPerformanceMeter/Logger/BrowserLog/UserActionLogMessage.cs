@@ -2,21 +2,6 @@
 {
     public class UserActionLogMessage
     {
-        //public UserActionLogMessage(
-        //    string url,
-        //    string userName,
-        //    string label,
-        //    long startTime,
-        //    long endTime
-        //    )
-        //{
-        //    this.Url = url;
-        //    this.UserName = userName;
-        //    this.Label = label;
-        //    this.StartTime = startTime;
-        //    this.EndTime = endTime;
-        //}
-
         public string? UserName { get; set; }
 
         public string? Url { get; set; }

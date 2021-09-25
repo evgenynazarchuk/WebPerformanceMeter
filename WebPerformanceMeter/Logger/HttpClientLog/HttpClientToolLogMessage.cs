@@ -2,32 +2,6 @@
 {
     public class HttpClientToolLogMessage
     {
-        //public HttpClientToolLogMessage(
-        //    string user,
-        //    string requestMethod,
-        //    string request,
-        //    string requestLabel,
-        //    int statusCode,
-        //    long startSendRequestTime,
-        //    long startWaitResponseTime,
-        //    long startResponseTime,
-        //    long endResponseTime,
-        //    long sendBytes,
-        //    int receiveBytes)
-        //{
-        //    this.User = user;
-        //    this.RequestMethod = requestMethod;
-        //    this.Request = request;
-        //    this.RequestLabel = requestLabel;
-        //    this.StatusCode = statusCode;
-        //    this.StartSendRequestTime = startSendRequestTime;
-        //    this.StartWaitResponseTime = startWaitResponseTime;
-        //    this.StartResponseTime = startResponseTime;
-        //    this.EndResponseTime = endResponseTime;
-        //    this.SendBytes = sendBytes;
-        //    this.ReceiveBytes = receiveBytes;
-        //}
-
         public string? User { get; set; }
 
         public string? RequestMethod { get; set; }

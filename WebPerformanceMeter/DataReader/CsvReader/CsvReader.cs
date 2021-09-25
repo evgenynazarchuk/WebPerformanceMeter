@@ -17,7 +17,7 @@
 
         private bool hasHeader = false;
 
-        public void ProcessCsvFile(string path, bool hasHeader = false, bool cyclicalData = false)
+        public void ProcessCsvFile(string path, bool hasHeader = false, bool cyclicalData = false, string separator = ",")
         {
             this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
             this.cyclicalData = cyclicalData;
@@ -32,8 +32,9 @@
             string? line;
             while ((line = this.streamReader.ReadLine()) != null)
             {
-                var row = CsvConverter.RegexParser.Split(line);
-                this.queue.Enqueue(GetObjectFromCsvColumns<TResult>(row));
+                //var row = CsvConverter.RegexParser.Split(line);
+                var columns = line.Split(separator);
+                this.queue.Enqueue(GetObjectFromCsvColumns<TResult>(columns));
             }
         }
 
@@ -55,10 +56,11 @@
             return result;
         }
 
-        public static ResultObjectType GetObjectFromCsvLine<ResultObjectType>(string line)
+        public static ResultObjectType GetObjectFromCsvLine<ResultObjectType>(string line, string separator = ",")
             where ResultObjectType : class, new()
         {
-            return GetObjectFromCsvColumns<ResultObjectType>(CsvConverter.RegexParser.Split(line));
+            //return GetObjectFromCsvColumns<ResultObjectType>(CsvConverter.RegexParser.Split(line));
+            return GetObjectFromCsvColumns<ResultObjectType>(line.Split(separator));
         }
 
         public static ResultObjectType GetObjectFromCsvColumns<ResultObjectType>(ReadOnlySpan<string> columns)

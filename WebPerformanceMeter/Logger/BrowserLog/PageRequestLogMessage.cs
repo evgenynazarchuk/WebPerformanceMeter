@@ -1,5 +1,7 @@
 ﻿namespace WebPerformanceMeter.Logger.BrowserLog
 {
+    using System;
+
     public class PageRequestLogMessage
     {
         public string? UserName { get; set; }
@@ -8,10 +10,10 @@
 
         public string? Request { get; set; }
 
-        public float? RequestStart { get; set; }
+        public TimeSpan? RequestStart { get; set; }
 
-        public float? ResponseStart { get; set; }
+        public TimeSpan? ResponseStart { get; set; }
 
-        public float? ResponseEnd { get; set; }
+        public TimeSpan? ResponseEnd { get; set; }
     }
 }

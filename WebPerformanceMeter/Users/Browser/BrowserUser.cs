@@ -33,12 +33,12 @@
 
             pageContext.Page.RequestFinished += (_, request) =>
             {
-                Logger.AppendLogMessage("PageRequestLog.json",
-                    $"{this.UserName}" +
-                    $"{request.Method}," +
-                    $"{request.Url}" +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}," +
-                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}," +
+                this.Logger.AppendLogMessage("PageRequestLog.json",
+                    $"{this.UserName}\t" +
+                    $"{request.Method}\t" +
+                    $"{request.Url}\t" + // how to parse url, error parse csv
+                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}\t" +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}\t" +
                     $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}",
                     typeof(PageRequestLogMessage));
             };

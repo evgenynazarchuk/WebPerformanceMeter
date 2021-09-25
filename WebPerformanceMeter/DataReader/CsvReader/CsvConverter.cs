@@ -12,11 +12,12 @@ namespace WebPerformanceMeter.DataReader.CsvReader
         // (?:^"|,")(""|[\w\W]*?)(?=",|"$)|(?:^(?!")|,(?!"))([^,]*?)(?=$|,)|(\r\n|\n)
         // @"(?:^""|,"")(""""|[\w\W]*?)(?="",|""$)|(?:^(?!"")|,(?!""))([^,]*?)(?=$|,)|(\r\n|\n)"
         // ("([^"]*)"|[^,]*)(,|$)
-        public static readonly Regex RegexParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
+        //",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))" - default
+        //public static readonly Regex RegexParser = new Regex("(?<=^|,)(\"(?:[^\"]|\"\")*\"|[^,]*)", RegexOptions.Compiled);
 
-        public static object GetObjectFromCsvLine(string line, Type resultObjectType)
+        public static object GetObjectFromCsvLine(string line, Type resultObjectType, string separator = ",")
         {
-            return GetObjectFromCsvColumns(CsvConverter.RegexParser.Split(line), resultObjectType);
+            return GetObjectFromCsvColumns(line.Split(separator), resultObjectType);
         }
 
         public static object GetObjectFromCsvColumns(ReadOnlySpan<string> columns, Type resultObjectType)

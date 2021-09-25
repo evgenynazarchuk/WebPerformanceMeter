@@ -20,7 +20,7 @@
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Chromium.LaunchAsync(new()
             {
-                Headless = false
+                Headless = true
             }).GetAwaiter().GetResult();
 
             this.Logger = logger;

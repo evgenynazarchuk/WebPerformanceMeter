@@ -1,11 +1,11 @@
-﻿namespace WebPerformanceMeter.Tools.BrowserTool
-{
-    using Microsoft.Playwright;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Logger.BrowserLog;
-    using WebPerformanceMeter.Support;
+﻿using Microsoft.Playwright;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Logger.BrowserLog;
+using WebPerformanceMeter.Support;
 
+namespace WebPerformanceMeter.Tools.BrowserTool
+{
     public class PageContext
     {
         public readonly IPage Page;

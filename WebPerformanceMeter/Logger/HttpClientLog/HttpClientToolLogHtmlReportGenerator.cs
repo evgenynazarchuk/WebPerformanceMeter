@@ -1,12 +1,12 @@
-﻿namespace WebPerformanceMeter.Logger.HttpClientLog
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 
+namespace WebPerformanceMeter.Logger.HttpClientLog
+{
     public class HttpClientToolLogHtmlReportGenerator
     {
         public HttpClientToolLogHtmlReportGenerator(

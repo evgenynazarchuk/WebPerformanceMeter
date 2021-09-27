@@ -15,7 +15,7 @@
         protected readonly HttpTool Tool;
 
         public HttpClientUser(HttpClient client, ILogger? logger = null, string userName = "")
-            : base(logger ?? new HttpClientLogger())
+            : base(logger ?? HttpClientLoggerSingleton.GetInstance())
         {
             this.Client = client;
             this.Tool = new(this.Logger, this.Client);

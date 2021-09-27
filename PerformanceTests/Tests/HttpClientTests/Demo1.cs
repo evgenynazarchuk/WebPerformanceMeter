@@ -1,22 +1,19 @@
-﻿namespace PerformanceTests.Tests.HttpClientTests
-{
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using TestWebApiServer.Models;
-    using WebPerformanceMeter.Attributes;
-    using WebPerformanceMeter.Extensions;
-    using WebPerformanceMeter.PerformancePlans;
-    using WebPerformanceMeter.Support;
-    using WebPerformanceMeter.Users;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using TestWebApiServer.Models;
+using WebPerformanceMeter.Attributes;
+using WebPerformanceMeter.Extensions;
+using WebPerformanceMeter.PerformancePlans;
+using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Users;
 
-    public class PostRequestWithTimeout100msAnd200ms
+namespace PerformanceTests.Tests.HttpClientTests
+{
+    public class Demo1
     {
         [PerformanceTest(1, 200)]
         [PerformanceTest(10, 200)]
-        [PerformanceTest(20, 200)]
-        [PerformanceTest(60, 200)]
-        [PerformanceTest(90, 200)]
-        public async Task Test(int minutes, int usersCount)
+        public async Task ActiveUsersOnPeriodTest(int minutes, int usersCount)
         {
             var app = new WebApplication();
             var user = new UserRequest(app.HttpClient);
@@ -39,12 +36,6 @@
                     "/Test/TestWaitMethod",
                     new TestRequestContent { Timeout = 100 },
                     "100ms");
-
-                await this.RequestAsJsonAsync(
-                    HttpMethod.Post,
-                    "/Test/TestWaitMethod",
-                    new TestRequestContent { Timeout = 200 },
-                    "200ms");
             }
         }
     }

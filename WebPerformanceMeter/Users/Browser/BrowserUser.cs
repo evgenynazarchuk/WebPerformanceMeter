@@ -12,7 +12,7 @@
         protected readonly BrowserTool BrowserTool;
 
         public BrowserUser(ILogger? logger = null, string userName = "")
-            : base(logger ?? new BrowserLogger())
+            : base(logger ?? BrowserLoggerSingleton.GetInstance())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.BrowserTool = new(this.Logger, this.UserName);

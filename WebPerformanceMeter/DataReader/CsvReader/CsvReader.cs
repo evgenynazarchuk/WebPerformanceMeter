@@ -1,11 +1,11 @@
-﻿namespace WebPerformanceMeter.DataReader.CsvReader
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.IO;
-    using System.Text;
-    using WebPerformanceMeter.Interfaces;
+﻿using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Text;
+using WebPerformanceMeter.Interfaces;
 
+namespace WebPerformanceMeter.DataReader.CsvReader
+{
     public sealed class CsvReader<TResult> : IEntityReader
         where TResult : class, new()
     {

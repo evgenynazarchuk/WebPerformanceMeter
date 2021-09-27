@@ -1,10 +1,10 @@
-﻿namespace WebPerformanceMeter.Tools.BrowserTool
-{
-    using Microsoft.Playwright;
-    using System;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Logger;
+﻿using Microsoft.Playwright;
+using System;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
 
+namespace WebPerformanceMeter.Tools.BrowserTool
+{
     public class BrowserTool : IDisposable
     {
         public readonly IPlaywright Playwright;

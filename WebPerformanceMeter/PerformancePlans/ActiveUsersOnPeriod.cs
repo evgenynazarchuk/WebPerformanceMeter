@@ -1,24 +1,24 @@
-﻿namespace WebPerformanceMeter.PerformancePlans
-{
-    using System;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Interfaces;
-    using WebPerformanceMeter.Support;
-    using WebPerformanceMeter.Users;
+﻿using System;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Users;
 
+namespace WebPerformanceMeter.PerformancePlans
+{
     public sealed class ActiveUsersOnPeriod : PerformancePlan
     {
-        private readonly int ActiveUsersCount;
+        private readonly int _activeUsersCount;
 
-        private readonly TimeSpan PerformancePlanDuration;
+        private readonly TimeSpan _performancePlanDuration;
 
-        private readonly Task[] ActiveUsers;
+        private readonly Task[] _activeUsers;
 
-        private readonly int UserLoopCount;
+        private readonly int _userLoopCount;
 
-        private readonly IEntityReader? DataReader;
+        private readonly IEntityReader? _dataReader;
 
-        private readonly bool ReuseDataInLoop;
+        private readonly bool _reuseDataInLoop;
 
         public ActiveUsersOnPeriod(
             User user,
@@ -29,25 +29,25 @@
             bool reuseDataInLoop = true)
             : base(user)
         {
-            this.ActiveUsersCount = activeUsersCount;
-            this.ActiveUsers = new Task[this.ActiveUsersCount];
-            this.PerformancePlanDuration = performancePlanDuration;
-            this.UserLoopCount = userLoopCount;
-            this.DataReader = dataReader;
-            this.ReuseDataInLoop = reuseDataInLoop;
+            this._activeUsersCount = activeUsersCount;
+            this._activeUsers = new Task[this._activeUsersCount];
+            this._performancePlanDuration = performancePlanDuration;
+            this._userLoopCount = userLoopCount;
+            this._dataReader = dataReader;
+            this._reuseDataInLoop = reuseDataInLoop;
         }
 
         public override async Task StartAsync()
         {
-            double endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this.PerformancePlanDuration.TotalSeconds;
+            double endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this._performancePlanDuration.TotalSeconds;
 
             while (ScenarioTimer.Time.Elapsed.TotalSeconds < endTime)
             {
-                for (int i = 0; i < this.ActiveUsersCount; i++)
+                for (int i = 0; i < this._activeUsersCount; i++)
                 {
-                    if (this.ActiveUsers[i] is null || this.ActiveUsers[i].IsCompleted)
+                    if (this._activeUsers[i] is null || this._activeUsers[i].IsCompleted)
                     {
-                        this.ActiveUsers[i] = this.User.InvokeAsync(this.UserLoopCount, this.DataReader, this.ReuseDataInLoop);
+                        this._activeUsers[i] = this.User.InvokeAsync(this._userLoopCount, this._dataReader, this._reuseDataInLoop);
                     }
                 }
             }
@@ -57,7 +57,7 @@
 
         private async Task WaitUserTerminationAsync()
         {
-            foreach (var user in this.ActiveUsers)
+            foreach (var user in this._activeUsers)
             {
                 if (user is not null)
                 {

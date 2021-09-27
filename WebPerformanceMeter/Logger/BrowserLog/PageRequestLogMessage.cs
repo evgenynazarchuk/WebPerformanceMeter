@@ -1,7 +1,7 @@
-﻿namespace WebPerformanceMeter.Logger.BrowserLog
-{
-    using System;
+﻿using System;
 
+namespace WebPerformanceMeter.Logger.BrowserLog
+{
     public class PageRequestLogMessage
     {
         public string? UserName { get; set; }

@@ -1,8 +1,8 @@
-﻿namespace WebPerformanceMeter.PerformancePlans
-{
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Users;
+﻿using System.Threading.Tasks;
+using WebPerformanceMeter.Users;
 
+namespace WebPerformanceMeter.PerformancePlans
+{
     public abstract class PerformancePlan
     {
         public readonly User User;

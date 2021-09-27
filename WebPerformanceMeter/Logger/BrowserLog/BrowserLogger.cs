@@ -1,8 +1,8 @@
-﻿namespace WebPerformanceMeter.Logger.BrowserLog
-{
-    using System;
-    using WebPerformanceMeter.DataReader.CsvReader;
+﻿using System;
+using WebPerformanceMeter.DataReader.CsvReader;
 
+namespace WebPerformanceMeter.Logger.BrowserLog
+{
     public class BrowserLogger : FileLogger
     {
         public BrowserLogger() { }

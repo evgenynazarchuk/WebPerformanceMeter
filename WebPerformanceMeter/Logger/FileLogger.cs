@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -40,15 +39,31 @@ namespace WebPerformanceMeter.Logger
 
         protected readonly ConcurrentQueue<(string logName, string logMessage, Type logType)> logQueue;
 
-        protected readonly Dictionary<string, StreamWriter> writers;
+        protected readonly ConcurrentDictionary<string, StreamWriter> writers;
 
         public ConcurrentQueue<(string logName, string logMessage, Type logType)> LogQueue { get => this.logQueue; }
 
-        public Dictionary<string, StreamWriter> Writers { get => this.writers; }
+        public ConcurrentDictionary<string, StreamWriter> Writers { get => this.writers; }
 
-        public virtual async Task ProcessStart()
+        private readonly object _lock = new object();
+
+        private bool _processStart = false;
+
+        public virtual Task ProcessStart()
         {
-            await Task.Run(() =>
+            lock (this._lock)
+            {
+                if (_processStart)
+                {
+                    return Task.CompletedTask;
+                }
+                else
+                {
+                    _processStart = true;
+                }
+            }
+
+            return Task.Run(() =>
             {
                 while (true)
                 {
@@ -61,7 +76,11 @@ namespace WebPerformanceMeter.Logger
                     {
                         if (!this.writers.TryGetValue(log.logName, out StreamWriter? logWriter))
                         {
-                            logWriter = new StreamWriter(log.logName, false, Encoding.UTF8, 65535);
+                            if (logWriter is null)
+                            {
+                                logWriter = new StreamWriter(log.logName, false, Encoding.UTF8, 65535);
+                            }
+
                             this.writers.TryAdd(log.logName, logWriter);
                         }
 

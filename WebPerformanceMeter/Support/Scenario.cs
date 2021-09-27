@@ -1,9 +1,9 @@
-﻿namespace WebPerformanceMeter.Support
-{
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.PerformancePlans;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using WebPerformanceMeter.PerformancePlans;
 
+namespace WebPerformanceMeter.Support
+{
     public sealed class Scenario
     {
         private readonly List<KeyValuePair<ActType, PerformancePlan[]>> acts;

@@ -8,13 +8,10 @@
     using WebPerformanceMeter.Tools.BrowserTool;
     using WebPerformanceMeter.Users;
 
-    public class GoGooleSearch
+    public class Demo1
     {
         [PerformanceTest(1, 5)]
         [PerformanceTest(10, 5)]
-        [PerformanceTest(30, 5)]
-        [PerformanceTest(60, 10)]
-        [PerformanceTest(90, 10)]
         public async Task GoSearch(int minutes, int usersCount)
         {
             var user = new SearchGoogleUser();

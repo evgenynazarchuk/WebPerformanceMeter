@@ -1,15 +1,15 @@
-﻿namespace WebPerformanceMeter.Tools.HttpTool
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Logger.HttpClientLog;
-    using WebPerformanceMeter.Support;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Logger.HttpClientLog;
+using WebPerformanceMeter.Support;
 
+namespace WebPerformanceMeter.Tools.HttpTool
+{
     public partial class HttpTool : Tool
     {
         public readonly HttpClient HttpClient;

@@ -1,6 +1,5 @@
 ﻿namespace PerformanceTests
 {
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
     using System.Net.Http;
     using TestWebApiServer;
@@ -14,8 +13,8 @@
 
         public HttpClient HttpClient { get; set; }
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-        }
+        //protected override void ConfigureWebHost(IWebHostBuilder builder)
+        //{
+        //}
     }
 }

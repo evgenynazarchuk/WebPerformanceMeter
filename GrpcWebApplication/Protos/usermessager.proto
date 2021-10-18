@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcWebApplication";
+
+package usermessager;
+
+import "google/protobuf/empty.proto";
+
+service UserMessager {
+  rpc SendMessage (MessageCreateDto) returns (MessageIdentityDto);
+  rpc SendMessages (stream MessageCreateDto) returns (google.protobuf.Empty);
+
+  rpc GetMessages (google.protobuf.Empty) returns (stream MessageSimpleDto);
+  rpc GetMessage (MessageIdentityDto) returns (MessageSimpleDto);
+
+  rpc Messages (stream MessageCreateDto) returns (stream MessageSimpleDto);
+}
+
+message MessageCreateDto {
+	string text = 1;
+}
+
+message MessageSimpleDto {
+	int32 id = 1;
+	string text = 2;
+}
+
+message MessageIdentityDto {
+	int32 id = 1;
+}

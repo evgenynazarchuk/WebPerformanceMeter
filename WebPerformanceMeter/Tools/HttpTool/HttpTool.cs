@@ -4,6 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Logger.HttpClientLog;
 using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools.HttpTool
@@ -11,26 +13,32 @@ namespace WebPerformanceMeter.Tools.HttpTool
     public partial class HttpTool : Tool
     {
         public readonly HttpClient HttpClient;
+
         private readonly HttpClientHandler _handler = new();
 
+        public readonly ILogger Logger;
+
         public HttpTool(
+            ILogger logger,
             string baseAddress,
             IDictionary<string, string>? defaultHeaders = null,
-            IEnumerable<Cookie>? defaultCookies = null
-            )
+            IEnumerable<Cookie>? defaultCookies = null)
         {
-            _handler = new();
-            SetDefaultCookie(defaultCookies);
+            this.Logger = logger;
 
-            HttpClient = new(_handler);
-            SetDefaultHeaders(defaultHeaders);
+            this._handler = new();
+            this.SetDefaultCookie(defaultCookies);
 
-            SetBaseSettings(baseAddress);
+            this.HttpClient = new(_handler);
+            this.SetDefaultHeaders(defaultHeaders);
+
+            this.SetBaseSettings(baseAddress);
         }
 
-        public HttpTool(HttpClient client)
+        public HttpTool(ILogger logger, HttpClient client)
         {
-            HttpClient = client;
+            this.Logger = logger;
+            this.HttpClient = client;
         }
 
         private void SetDefaultHeaders(IDictionary<string, string>? headers)
@@ -79,31 +87,32 @@ namespace WebPerformanceMeter.Tools.HttpTool
             long startWaitResponse;
             long startResponse;
             long endResponse;
+            long requestSize = 0;
 
             Task<HttpResponseMessage>? httpResponseMessageTask = null;
             HttpResponseMessage httpResponseMessage;
             byte[] content;
 
-            startSendRequest = Scenario.ScenarioWatchTime.Elapsed.Ticks;
+            startSendRequest = ScenarioTimer.Time.Elapsed.Ticks;
             httpResponseMessageTask = HttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
 
-            startWaitResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
+            startWaitResponse = ScenarioTimer.Time.Elapsed.Ticks;
             httpResponseMessage = await httpResponseMessageTask;
 
-            startResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
+            startResponse = ScenarioTimer.Time.Elapsed.Ticks;
             content = await httpResponseMessage.Content.ReadAsByteArrayAsync();
-            endResponse = Scenario.ScenarioWatchTime.Elapsed.Ticks;
+            endResponse = ScenarioTimer.Time.Elapsed.Ticks;
 
             int responseSize = content.Length;
-            long requestSize = 0;
+
             if (httpRequestMessage.Content is not null && httpRequestMessage.Content.Headers.ContentLength.HasValue)
             {
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            Watcher.SendFromHttpClient($"{userName},http,{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}");
+            this.Logger.AppendLogMessage("HttpClientToolLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpClientToolLogMessage));
 
-            HttpResponse response = new(
+            var response = new HttpResponse(
                 statusCode: (int)httpResponseMessage.StatusCode,
                 content: content,
                 filename: httpResponseMessage.Content.Headers.ContentDisposition?.FileName

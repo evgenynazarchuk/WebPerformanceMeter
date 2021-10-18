@@ -1,35 +1,26 @@
 ﻿namespace WebPerformanceMeter.Users
 {
-    using Microsoft.Playwright;
     using System;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Logger;
+    using WebPerformanceMeter.Logger.BrowserLog;
     using WebPerformanceMeter.Tools.BrowserTool;
 
     public abstract class BrowserUser : User, IDisposable
     {
-        //protected readonly IPlaywright Playwright;
-        //
-        //protected readonly IBrowser Browser;
-
         protected readonly BrowserTool BrowserTool;
 
-        public BrowserUser(string userName = "")
+        public BrowserUser(ILogger? logger = null, string userName = "")
+            : base(logger ?? BrowserLoggerSingleton.GetInstance())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
-            this.BrowserTool = new();
-            //this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
-            //this.Browser = Playwright.Chromium.LaunchAsync(new ()
-            //{
-            //    Headless = true
-            //}).GetAwaiter().GetResult();
+            this.BrowserTool = new(this.Logger, this.UserName);
         }
 
         public void Dispose()
         {
             this.BrowserTool.Dispose();
-            //this.Browser.CloseAsync().GetAwaiter().GetResult();
-            //this.BrowserTool.Browser.CloseAsync().GetAwaiter().GetResult();
         }
 
         public override async Task InvokeAsync(
@@ -38,22 +29,19 @@
             bool reuseDataInLoop = true
             )
         {
-            //IBrowserContext browserContext = await Browser.NewContextAsync();
-            //IPage page = await browserContext.NewPageAsync();
-
-            //page.RequestFinished += (_, request) =>
-            //{
-            //    Console.WriteLine($"{TimeSpan.FromMilliseconds(request.Timing.ConnectStart)} " +
-            //        $"{TimeSpan.FromMilliseconds(request.Timing.ConnectEnd)} " +
-            //        $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)} " +
-            //        $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)} " +
-            //        $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)} " +
-            //        $"{request.Method} " +
-            //        $"{request.Url}");
-            //};
-
-            //PageContext pageContext = new(page);
             var pageContext = await this.BrowserTool.GetNewPageContextAsync();
+
+            pageContext.Page.RequestFinished += (_, request) =>
+            {
+                this.Logger.AppendLogMessage("PageRequestLog.json",
+                    $"{this.UserName}\t" +
+                    $"{request.Method}\t" +
+                    $"{request.Url}\t" + // how to parse url, error parse csv
+                    $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}\t" +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}\t" +
+                    $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}",
+                    typeof(PageRequestLogMessage));
+            };
 
             object? entity = null;
 
@@ -89,8 +77,6 @@
                 }
             }
 
-            //await page.CloseAsync();
-            //await browserContext.CloseAsync();
             await pageContext.CloseAsync();
         }
 

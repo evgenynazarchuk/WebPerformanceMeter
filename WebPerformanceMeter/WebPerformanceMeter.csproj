@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Logger\HttpClientLogger\" />
     <Folder Include="Logger\GrpcLogger\" />
-    <Folder Include="Logger\HttpLogger\" />
+    <Folder Include="Logger\JavascriptRequestLogger\" />
     <Folder Include="Logger\WebSocketLogger\" />
-    <Folder Include="Runner\" />
+    <Folder Include="Tools\JavascriptTool\" />
+    <Folder Include="Tools\GrpcTool\" />
+    <Folder Include="Tools\WebSocketTool\" />
+    <Folder Include="Users\Grpc\" />
+    <Folder Include="Users\WebSocket\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,9 +2,11 @@
 {
     using System;
     using System.Net.Http;
-    using WebPerformanceMeter.Tools.HttpTool;
     using System.Threading.Tasks;
     using WebPerformanceMeter.Interfaces;
+    using WebPerformanceMeter.Logger;
+    using WebPerformanceMeter.Logger.HttpClientLog;
+    using WebPerformanceMeter.Tools.HttpTool;
 
     public abstract partial class HttpClientUser : User
     {
@@ -12,21 +14,22 @@
 
         protected readonly HttpTool Tool;
 
-        public HttpClientUser(HttpClient client, string userName = "")
+        public HttpClientUser(HttpClient client, ILogger? logger = null, string userName = "")
+            : base(logger ?? HttpClientLoggerSingleton.GetInstance())
         {
             this.Client = client;
-            this.Tool = new(Client);
-            SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
+            this.Tool = new(this.Logger, this.Client);
+
+            this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
         }
 
-        public HttpClientUser(string host, string userName = "")
+        public HttpClientUser(string host, ILogger logger, string userName = "")
+            : base(logger)
         {
-            this.Client = new HttpClient()
-            {
-                BaseAddress = new Uri(host)
-            };
-            this.Tool = new(this.Client);
-            SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
+            this.Client = new HttpClient() { BaseAddress = new Uri(host) };
+            this.Tool = new(this.Logger, this.Client);
+
+            this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
         }
 
         public override async Task InvokeAsync(

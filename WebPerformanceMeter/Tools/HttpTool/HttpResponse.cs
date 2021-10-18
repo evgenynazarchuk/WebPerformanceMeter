@@ -1,7 +1,7 @@
-﻿namespace WebPerformanceMeter.Tools.HttpTool
-{
-    using System.Text;
+﻿using System.Text;
 
+namespace WebPerformanceMeter.Tools.HttpTool
+{
     public sealed class HttpResponse
     {
         public HttpResponse(

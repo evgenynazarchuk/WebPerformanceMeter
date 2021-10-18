@@ -1,101 +1,111 @@
+using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using GrpcWebApplication.Models;
+using GrpcWebApplication.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+
 namespace GrpcWebApplication
 {
-    using Google.Protobuf.WellKnownTypes;
-    using Grpc.Core;
-    using GrpcWebApplication.Models;
-    using GrpcWebApplication.Services;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
-    using System.Threading.Tasks;
-
     public class UserMessagerService : UserMessager.UserMessagerBase
     {
         protected readonly ILogger<UserMessagerService> logger;
 
-        protected readonly WritableDataAccess writableDataAccess;
-
-        protected readonly ReadableDataAccess readableDataAccess;
+        protected readonly DataContext dataContext;
 
         public UserMessagerService(
             ILogger<UserMessagerService> logger,
-            WritableDataAccess writableDataAccess,
-            ReadableDataAccess readableDataAccess)
+            DataContext dataContext)
         {
             this.logger = logger;
-            this.writableDataAccess = writableDataAccess;
-            this.readableDataAccess = readableDataAccess;
+            this.dataContext = dataContext;
         }
 
-        public override async Task<Empty> SendMessage(
-            MessageRequest request,
+        public override async Task<MessageIdentityDto> SendMessage(
+            MessageCreateDto request,
             ServerCallContext context)
         {
-            await this.writableDataAccess.Set<Message>().AddAsync(new Message
-            {
-                Text = request.Text
-            });
-            await this.writableDataAccess.SaveChangesAsync();
+            var message = await this.dataContext.Set<Message>().AddAsync(new Message { Text = request.Text  });
+            await this.dataContext.SaveChangesAsync();
+            var messageIdentityDto = new MessageIdentityDto { Id = message.Entity.Id };
 
-            return new Empty();
+            return messageIdentityDto;
         }
 
         public override async Task<Empty> SendMessages(
-            IAsyncStreamReader<MessageRequest> requestStream,
+            IAsyncStreamReader<MessageCreateDto> requestStream,
             ServerCallContext context)
         {
+            // read stream
             while (await requestStream.MoveNext())
             {
-                await this.writableDataAccess.Set<Message>().AddAsync(new Message
+                await this.dataContext.Set<Message>().AddAsync(new Message
                 {
                     Text = requestStream.Current.Text
                 });
-
-
             }
-            await this.writableDataAccess.SaveChangesAsync();
+
+            // save
+            await this.dataContext.SaveChangesAsync();
 
             return new Empty();
+        }
+
+        public override async Task<MessageSimpleDto> GetMessage(
+            MessageIdentityDto request, 
+            ServerCallContext context)
+        {
+            var message = await this.dataContext.Set<Message>().FindAsync(request.Id);
+            var simpleDto = new MessageSimpleDto
+            {
+                Id = message.Id,
+                Text = message.Text
+            };
+
+            return simpleDto;
         }
 
         public override async Task GetMessages(
             Empty request,
-            IServerStreamWriter<MessageReply> responseStream,
+            IServerStreamWriter<MessageSimpleDto> responseStream,
             ServerCallContext context)
         {
-            var messages = await this.readableDataAccess.Set<Message>().ToListAsync();
+            var messages = await this.dataContext.Set<Message>().ToListAsync();
 
             foreach (var message in messages)
             {
-                await responseStream.WriteAsync(new MessageReply
+                await responseStream.WriteAsync(new MessageSimpleDto
                 {
+                    Id = message.Id,
                     Text = message.Text
                 });
             }
         }
 
         public override async Task Messages(
-            IAsyncStreamReader<MessageRequest> requestStream,
-            IServerStreamWriter<MessageReply> responseStream,
+            IAsyncStreamReader<MessageCreateDto> requestStream,
+            IServerStreamWriter<MessageSimpleDto> responseStream,
             ServerCallContext context)
         {
             while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)
             {
-                await this.writableDataAccess.Set<Message>().AddAsync(new Message
+                await this.dataContext.Set<Message>().AddAsync(new Message
                 {
                     Text = requestStream.Current.Text
                 });
-
-                await this.writableDataAccess.SaveChangesAsync();
             }
+            await this.dataContext.SaveChangesAsync();
 
             if (!context.CancellationToken.IsCancellationRequested)
             {
-                var messagesTask = await this.readableDataAccess.Set<Message>().ToListAsync();
+                var messagesTask = await this.dataContext.Set<Message>().ToListAsync();
 
                 foreach (var message in messagesTask)
                 {
-                    await responseStream.WriteAsync(new MessageReply
+                    await responseStream.WriteAsync(new MessageSimpleDto
                     {
+                        Id = message.Id,
                         Text = message.Text
                     });
                 }

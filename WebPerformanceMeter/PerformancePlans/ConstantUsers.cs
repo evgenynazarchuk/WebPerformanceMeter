@@ -4,6 +4,9 @@ using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class ConstantUsers : PerformancePlan
     {
         private readonly int _usersCount;
@@ -16,6 +19,14 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly bool _reuseDataInLoop;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="usersCount"></param>
+        /// <param name="userLoopCount"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="reuseDataInLoop"></param>
         public ConstantUsers(
             User user,
             int usersCount,

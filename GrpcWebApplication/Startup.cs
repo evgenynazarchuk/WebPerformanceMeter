@@ -11,8 +11,11 @@
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<WritableDataAccess>();
-            services.AddTransient<ReadableDataAccess>();
+            services.AddTransient<DataContext>();
+
+            using var db = new DataContext();
+            db.Database.EnsureCreated();
+
             services.AddGrpc();
             services.AddGrpcReflection();
         }

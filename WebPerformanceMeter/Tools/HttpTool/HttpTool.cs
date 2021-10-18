@@ -14,7 +14,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
     {
         public readonly HttpClient HttpClient;
 
-        private readonly HttpClientHandler handler = new();
+        private readonly HttpClientHandler _handler = new();
 
         public readonly ILogger Logger;
 
@@ -26,10 +26,10 @@ namespace WebPerformanceMeter.Tools.HttpTool
         {
             this.Logger = logger;
 
-            this.handler = new();
+            this._handler = new();
             this.SetDefaultCookie(defaultCookies);
 
-            this.HttpClient = new(handler);
+            this.HttpClient = new(_handler);
             this.SetDefaultHeaders(defaultHeaders);
 
             this.SetBaseSettings(baseAddress);
@@ -54,7 +54,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
 
         private void SetDefaultCookie(IEnumerable<Cookie>? cookies)
         {
-            if (cookies is not null && handler is not null)
+            if (cookies is not null && _handler is not null)
             {
                 CookieContainer cookieContainer = new();
                 foreach (var cookie in cookies)
@@ -62,8 +62,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
                     cookieContainer.Add(cookie);
                 }
 
-                handler.CookieContainer = cookieContainer;
-                handler.UseCookies = true;
+                _handler.CookieContainer = cookieContainer;
+                _handler.UseCookies = true;
             }
         }
 
@@ -87,6 +87,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             long startWaitResponse;
             long startResponse;
             long endResponse;
+            long requestSize = 0;
 
             Task<HttpResponseMessage>? httpResponseMessageTask = null;
             HttpResponseMessage httpResponseMessage;
@@ -103,7 +104,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
             endResponse = ScenarioTimer.Time.Elapsed.Ticks;
 
             int responseSize = content.Length;
-            long requestSize = 0;
+
             if (httpRequestMessage.Content is not null && httpRequestMessage.Content.Headers.ContentLength.HasValue)
             {
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
@@ -111,7 +112,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
 
             this.Logger.AppendLogMessage("HttpClientToolLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpClientToolLogMessage));
 
-            HttpResponse response = new(
+            var response = new HttpResponse(
                 statusCode: (int)httpResponseMessage.StatusCode,
                 content: content,
                 filename: httpResponseMessage.Content.Headers.ContentDisposition?.FileName

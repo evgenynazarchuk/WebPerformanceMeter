@@ -49,7 +49,7 @@ namespace WebPerformanceMeter.Logger
 
         private bool _processStart = false;
 
-        public virtual Task ProcessStart()
+        public virtual Task Start()
         {
             lock (this._lock)
             {

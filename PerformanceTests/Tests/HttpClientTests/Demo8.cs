@@ -17,7 +17,7 @@ namespace PerformanceTests.Tests.HttpClientTests
         {
             var app = new WebApplication();
             var user = new UserRequest(app.HttpClient);
-            var plan = new ActiveUsersBySteps(user, fromUsersCount, toUsersCount, usersStep: 10, performancePlanDuration: minutes.Minutes());
+            var plan = new ActiveUsersBySteps(user, fromUsersCount, toUsersCount, usersStep: 100, performancePlanDuration: minutes.Minutes());
 
             await new Scenario()
                 .AddSequentialPlans(plan)

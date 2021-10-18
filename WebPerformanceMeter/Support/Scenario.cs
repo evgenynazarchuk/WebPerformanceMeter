@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebPerformanceMeter.PerformancePlans;
+using System;
 
 namespace WebPerformanceMeter.Support
 {
     public sealed class Scenario
     {
-        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> acts;
+        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> _acts;
 
-        private readonly List<Task> loggersProcessing;
+        private readonly List<Task> _loggers;
 
         public Scenario()
         {
-            this.acts = new();
-            this.loggersProcessing = new();
+            this._acts = new();
+            this._loggers = new();
         }
 
         public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
@@ -32,7 +33,7 @@ namespace WebPerformanceMeter.Support
 
         private Scenario AddActs(ActType launchType, params PerformancePlan[] performancePlan)
         {
-            this.acts.Add(new(launchType, performancePlan));
+            this._acts.Add(new(launchType, performancePlan));
 
             return this;
         }
@@ -43,32 +44,68 @@ namespace WebPerformanceMeter.Support
 
             ScenarioTimer.Time.Start();
 
-            foreach (var act in this.acts)
+            // TODO: (launchType, plans)
+            foreach (var (launchType, plans) in this._acts)
+            //foreach (var act in this.acts)
             {
-                var launchType = act.Key;
-                var plans = act.Value;
+                //var launchType = act.Key;
+                //var plans = act.Value;
 
-                if (launchType == ActType.Sequential)
+                switch (launchType)
                 {
-                    foreach (var plan in plans)
-                    {
-                        await plan.StartAsync();
-                    }
-                }
-                else if (launchType == ActType.Parallel)
-                {
-                    var plansWaiter = new List<Task>();
+                    case ActType.Parallel:
+                
+                        var tasks = new List<Task>();
 
-                    foreach (var plan in plans)
-                    {
-                        plansWaiter.Add(Task.Run(async () =>
+                        foreach (var plan in plans)
+                        {
+                            tasks.Add(Task.Run(async () =>
+                            {
+                                await plan.StartAsync();
+                            }));
+
+                            // TODO: check
+                            //tasks.Add(plan.StartAsync());
+                        }
+
+                        Task.WaitAll(tasks.ToArray());
+
+                        break;
+
+                    case ActType.Sequential:
+                        
+                        foreach (var plan in plans)
                         {
                             await plan.StartAsync();
-                        }));
-                    }
+                        }
 
-                    Task.WaitAll(plansWaiter.ToArray());
+                        break;
+
+                    default:
+                        throw new ApplicationException("Not Implement ActType");
                 }
+
+                //if (launchType == ActType.Sequential)
+                //{
+                //    foreach (var plan in plans)
+                //    {
+                //        await plan.StartPerformanceAsync();
+                //    }
+                //}
+                //else if (launchType == ActType.Parallel)
+                //{
+                //    var plansWaiter = new List<Task>();
+                //
+                //    foreach (var plan in plans)
+                //    {
+                //        plansWaiter.Add(Task.Run(async () =>
+                //        {
+                //            await plan.StartPerformanceAsync();
+                //        }));
+                //    }
+                //
+                //    Task.WaitAll(plansWaiter.ToArray());
+                //}
             }
 
             ScenarioTimer.Time.Stop();
@@ -76,20 +113,25 @@ namespace WebPerformanceMeter.Support
             this.WaitLoggers();
         }
 
-        public void StartLoggers()
+        private void StartLoggers()
         {
-            foreach (var (_, plans) in this.acts)
+            foreach (var (_, plans) in this._acts)
             {
                 foreach (var plan in plans)
                 {
-                    loggersProcessing.Add(Task.Run(() => plan.User.Logger.ProcessStart()));
+                    var task = Task.Run(() => plan.User.Logger.Start());
+                    this._loggers.Add(task);
+
+                    // TODO: check
+                    //var task2 = plan.User.Logger.Start();
+                    //_loggers.Add(task2);
                 }
             }
         }
 
-        public void WaitLoggers()
+        private void WaitLoggers()
         {
-            foreach (var (_, plans) in this.acts)
+            foreach (var (_, plans) in this._acts)
             {
                 foreach (var plan in plans)
                 {
@@ -97,7 +139,7 @@ namespace WebPerformanceMeter.Support
                 }
             }
 
-            Task.WaitAll(loggersProcessing.ToArray());
+            Task.WaitAll(_loggers.ToArray());
         }
     }
 }

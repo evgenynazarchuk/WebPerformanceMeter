@@ -7,6 +7,9 @@ using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class UsersPerPeriod : PerformancePlan
     {
         private readonly int _totalUsersPerPeriod;
@@ -29,6 +32,17 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly bool _reuseDataInLoop;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="usersCountPerPeriod"></param>
+        /// <param name="performancePlanDuration"></param>
+        /// <param name="perPeriod"></param>
+        /// <param name="sizePeriodBuffer"></param>
+        /// <param name="userLoopCount"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="reuseDataInLoop"></param>
         public UsersPerPeriod(
             User user,
             int usersCountPerPeriod,

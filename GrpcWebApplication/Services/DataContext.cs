@@ -3,7 +3,7 @@
     using GrpcWebApplication.Models;
     using Microsoft.EntityFrameworkCore;
 
-    public class ReadableDataAccess : DbContext
+    public class DataContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

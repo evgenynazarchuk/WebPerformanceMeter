@@ -1,15 +1,15 @@
+using FluentAssertions;
+using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using GrpcWebApplication.IntegrationTest.Support;
+using GrpcWebApplication.Models;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace GrpcWebApplication.IntegrationTest
 {
-    using FluentAssertions;
-    using Google.Protobuf.WellKnownTypes;
-    using Grpc.Core;
-    using GrpcWebApplication.IntegrationTest.Support;
-    using GrpcWebApplication.Models;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     public class Tests
     {
         [SetUp]
@@ -18,23 +18,57 @@ namespace GrpcWebApplication.IntegrationTest
         }
 
         [Test]
-        public async Task GetMessage()
+        public async Task SendMessage()
         {
             // Arrange
             using var env = new TestEnvironment();
-            env.Repository.Set<Message>().Add(new Message
+            var text = "text text text";
+
+            // Act
+            var identity = await env.UserMessagerClient.SendMessageAsync(new MessageCreateDto { Text = text });
+
+            // Assert
+            identity.Id.Should().NotBe(0);
+            
+            var resultMessage = env.Repository.Set<Message>().Find(identity.Id);
+            resultMessage.Text.Should().Be(text);
+        }
+
+        [Test]
+        public async Task SendMessages()
+        {
+            // Arrange
+            using var env = new TestEnvironment();
+        
+            // Act
+            using var requestMethod = env.UserMessagerClient.SendMessages();
+            await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 1" });
+            await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 2" });
+            await requestMethod.RequestStream.CompleteAsync();
+        
+            await Task.Delay(1000);
+        
+            // Assert
+            var actualMessage = env.Repository.Set<Message>().ToList();
+            actualMessage.Select(x => x.Text).Should().BeEquivalentTo("test 1", "test 2");
+        }
+
+        [Test]
+        public void GetMessage()
+        {
+            // Arrange
+            using var env = new TestEnvironment();
+            var message = env.Repository.Set<Message>().Add(new Message
             {
                 Text = "test 1"
             });
             env.Repository.SaveChanges();
 
             // Act
-            using var call = env.UserMessagerClient.GetMessages(new Empty());
-            await call.ResponseStream.MoveNext();
-            var result = call.ResponseStream.Current.Text;
+            var response = env.UserMessagerClient.GetMessage(new MessageIdentityDto { Id = message.Entity.Id });
 
             // Assert
-            result.Should().Be("test 1");
+            response.Text.Should().Be("test 1");
         }
 
         [Test]
@@ -52,50 +86,17 @@ namespace GrpcWebApplication.IntegrationTest
                 Text = "test 2"
             });
             env.Repository.SaveChanges();
-
-
+        
+        
             // Act
             using var call = env.UserMessagerClient.GetMessages(new Empty());
             while (await call.ResponseStream.MoveNext())
             {
                 expectedText.Add(call.ResponseStream.Current.Text);
             }
-
+        
             // Arrange
             expectedText.Should().BeEquivalentTo("test 1", "test 2");
-        }
-
-        [Test]
-        public async Task SendMessage()
-        {
-            // Arrange
-            using var env = new TestEnvironment();
-
-            // Act
-            await env.UserMessagerClient.SendMessageAsync(new MessageRequest { Text = "test 1" });
-
-            // Assert
-            var actualMessage = env.Repository.Set<Message>().Single();
-            actualMessage.Text.Should().Be("test 1");
-        }
-
-        [Test]
-        public async Task SendMessages()
-        {
-            // Arrange
-            using var env = new TestEnvironment();
-
-            // Act
-            using var requestCall = env.UserMessagerClient.SendMessages();
-            await requestCall.RequestStream.WriteAsync(new MessageRequest { Text = "test 1" });
-            await requestCall.RequestStream.WriteAsync(new MessageRequest { Text = "test 2" });
-            await requestCall.RequestStream.CompleteAsync();
-
-            await Task.Delay(1000);
-
-            // Assert
-            var actualMessage = env.Repository.Set<Message>().ToList();
-            actualMessage.Select(x => x.Text).Should().BeEquivalentTo("test 1", "test 2");
         }
 
         [Test]
@@ -104,23 +105,21 @@ namespace GrpcWebApplication.IntegrationTest
             // Arrange
             var expectedText = new List<string>();
             using var env = new TestEnvironment();
-
+        
             // Act
-            using var call = env.UserMessagerClient.Messages();
+            using var requestMethod = env.UserMessagerClient.Messages();
+        
+            await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 1" });
+            await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 2" });
+        
+            await requestMethod.RequestStream.CompleteAsync();
 
-            var reader = Task.Run(async () =>
+            while (await requestMethod.ResponseStream.MoveNext())
             {
-                while (await call.ResponseStream.MoveNext())
-                {
-                    expectedText.Add(call.ResponseStream.Current.Text);
-                }
-            });
+                expectedText.Add(requestMethod.ResponseStream.Current.Text);
+            }
 
-            await call.RequestStream.WriteAsync(new MessageRequest { Text = "test 1" });
-            await call.RequestStream.WriteAsync(new MessageRequest { Text = "test 2" });
-
-            await call.RequestStream.CompleteAsync();
-            await reader;
+            //await reader;
 
             // Arrange
             expectedText.Should().BeEquivalentTo("test 1", "test 2");

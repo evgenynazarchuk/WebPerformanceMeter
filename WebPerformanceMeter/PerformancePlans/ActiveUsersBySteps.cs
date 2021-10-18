@@ -6,6 +6,9 @@ using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class ActiveUsersBySteps : PerformancePlan
     {
         private readonly int _fromActiveUsersCount;
@@ -26,6 +29,18 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly bool _reuseDataInLoop;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="fromActiveUsersCount"></param>
+        /// <param name="toActiveUsersCount"></param>
+        /// <param name="usersStep"></param>
+        /// <param name="stepPeriodDuration"></param>
+        /// <param name="performancePlanDuration"></param>
+        /// <param name="userLoopCount"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="reuseDataInLoop"></param>
         public ActiveUsersBySteps(
             User user,
             int fromActiveUsersCount,
@@ -38,9 +53,9 @@ namespace WebPerformanceMeter.PerformancePlans
             bool reuseDataInLoop = true)
             : base(user)
         {
-            UsersCountValidation(fromActiveUsersCount, toActiveUsersCount);
-            UsersStepValidation(usersStep, toActiveUsersCount);
-            DurationTimeValidation(stepPeriodDuration, performancePlanDuration);
+            this.UsersCountValidation(fromActiveUsersCount, toActiveUsersCount);
+            this.UsersStepValidation(usersStep, toActiveUsersCount);
+            this.DurationTimeValidation(stepPeriodDuration, performancePlanDuration);
             
             int maximumActiveUsersCount = Math.Max(fromActiveUsersCount, toActiveUsersCount);
             int minimumActiveUsersCount = Math.Min(fromActiveUsersCount, toActiveUsersCount);
@@ -50,7 +65,7 @@ namespace WebPerformanceMeter.PerformancePlans
             this._usersStep = usersStep;
             this._periodsCount = ((maximumActiveUsersCount - minimumActiveUsersCount) / usersStep) + 1;
             this._activeUsers = new Task[maximumActiveUsersCount];
-            this._stepPeriodDuration = CalculateStepPeriodDuration(stepPeriodDuration, performancePlanDuration, this._periodsCount);
+            this._stepPeriodDuration = this.CalculateStepPeriodDuration(stepPeriodDuration, performancePlanDuration, this._periodsCount);
 
             this._UserLoopCount = userLoopCount;
             this._dataReader = dataReader;
@@ -87,7 +102,7 @@ namespace WebPerformanceMeter.PerformancePlans
             await Task.CompletedTask;
         }
 
-        private static void UsersStepValidation(int step, int end)
+        private void UsersStepValidation(int step, int end)
         {
             if (step < 1)
                 throw new ApplicationException("StepValueMustBeGreaterThanZero");
@@ -96,7 +111,7 @@ namespace WebPerformanceMeter.PerformancePlans
                 throw new ApplicationException("StepValueMustBeLessOrEqualEndUserCount");
         }
 
-        private static void DurationTimeValidation(
+        private void DurationTimeValidation(
             TimeSpan? stepPeriodDuration = null,
             TimeSpan? performancePlanDuration = null)
         {
@@ -111,13 +126,13 @@ namespace WebPerformanceMeter.PerformancePlans
             }
         }
 
-        private static void UsersCountValidation(int fromActiveUsersCount, int toActiveUsersCount)
+        private void UsersCountValidation(int fromActiveUsersCount, int toActiveUsersCount)
         {
             if (fromActiveUsersCount < 0 || toActiveUsersCount < 0)
                 throw new ApplicationException("ErrorUsersCount");
         }
 
-        private static TimeSpan CalculateStepPeriodDuration(
+        private TimeSpan CalculateStepPeriodDuration(
             TimeSpan? stepPeriodDuration,
             TimeSpan? performancePlanDuration,
             int periodsCount)

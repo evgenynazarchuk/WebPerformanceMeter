@@ -13,7 +13,7 @@ namespace WebPerformanceMeter.Logger
 
         void AppendLogMessage(string logName, string logMessage, Type logMessageType);
 
-        Task ProcessStart();
+        Task Start();
 
         void ProcessStop();
 

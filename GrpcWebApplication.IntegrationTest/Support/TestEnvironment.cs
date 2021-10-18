@@ -1,11 +1,11 @@
-﻿namespace GrpcWebApplication.IntegrationTest.Support
-{
-    using Grpc.Net.Client;
-    using GrpcWebApplication.Services;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
-    using System.Net.Http;
+﻿using Grpc.Net.Client;
+using GrpcWebApplication.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
 
+namespace GrpcWebApplication.IntegrationTest.Support
+{
     public class TestEnvironment : IDisposable
     {
         public readonly TestApplication TestApplication;
@@ -16,7 +16,7 @@
 
         public readonly UserMessager.UserMessagerClient UserMessagerClient;
 
-        public readonly WritableDataAccess Repository;
+        public readonly DataContext Repository;
 
         public TestEnvironment()
         {
@@ -29,7 +29,7 @@
             });
             this.UserMessagerClient = new UserMessager.UserMessagerClient(this.GrpcChannel);
 
-            this.Repository = this.TestApplication.Services.GetRequiredService<WritableDataAccess>();
+            this.Repository = new DataContext();
             this.Repository.Database.EnsureCreated();
         }
 

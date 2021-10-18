@@ -38,8 +38,8 @@ namespace WebPerformanceMeter.Support
             {
                 var methodParameters = test.Value.Item2.GetParameters();
                 var methodParametersName = methodParameters.Select(x => x.Name).ToList();
+                var args = new StringBuilder();
 
-                StringBuilder args = new();
                 for (int i = 0; i < test.Value.Item3?.Length; i++)
                 {
                     args.Append($"{methodParametersName[i]}: {test.Value.Item3[i]}, ");

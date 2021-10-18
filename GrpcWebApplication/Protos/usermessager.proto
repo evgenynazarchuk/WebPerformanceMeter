@@ -7,18 +7,24 @@ package usermessager;
 import "google/protobuf/empty.proto";
 
 service UserMessager {
-  rpc SendMessage (MessageRequest) returns (google.protobuf.Empty);
-  rpc SendMessages (stream MessageRequest) returns (google.protobuf.Empty);
+  rpc SendMessage (MessageCreateDto) returns (MessageIdentityDto);
+  rpc SendMessages (stream MessageCreateDto) returns (google.protobuf.Empty);
 
-  rpc GetMessages (google.protobuf.Empty) returns (stream MessageReply);
-  rpc Messages (stream MessageRequest) returns (stream MessageReply);
+  rpc GetMessages (google.protobuf.Empty) returns (stream MessageSimpleDto);
+  rpc GetMessage (MessageIdentityDto) returns (MessageSimpleDto);
+
+  rpc Messages (stream MessageCreateDto) returns (stream MessageSimpleDto);
 }
 
-message MessageRequest {
-  string text = 1;
+message MessageCreateDto {
+	string text = 1;
 }
 
-message MessageReply {
-  int32 id = 1;
-  string text = 2;
+message MessageSimpleDto {
+	int32 id = 1;
+	string text = 2;
+}
+
+message MessageIdentityDto {
+	int32 id = 1;
 }

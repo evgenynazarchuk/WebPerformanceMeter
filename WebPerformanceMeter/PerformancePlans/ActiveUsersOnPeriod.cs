@@ -8,6 +8,9 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public sealed class ActiveUsersOnPeriod : PerformancePlan
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly int _activeUsersCount;
 
         private readonly TimeSpan _performancePlanDuration;
@@ -20,6 +23,15 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly bool _reuseDataInLoop;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="activeUsersCount"></param>
+        /// <param name="performancePlanDuration"></param>
+        /// <param name="userLoopCount"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="reuseDataInLoop"></param>
         public ActiveUsersOnPeriod(
             User user,
             int activeUsersCount,

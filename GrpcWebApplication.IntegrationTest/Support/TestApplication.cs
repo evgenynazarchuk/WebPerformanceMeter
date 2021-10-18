@@ -1,8 +1,8 @@
-﻿namespace GrpcWebApplication.IntegrationTest.Support
-{
-    using GrpcWebApplication;
-    using Microsoft.AspNetCore.Mvc.Testing;
+﻿using GrpcWebApplication;
+using Microsoft.AspNetCore.Mvc.Testing;
 
+namespace GrpcWebApplication.IntegrationTest.Support
+{
     public class TestApplication : WebApplicationFactory<Startup>
     {
         public TestApplication()

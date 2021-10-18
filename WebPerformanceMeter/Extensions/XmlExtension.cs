@@ -11,11 +11,11 @@ namespace WebPerformanceMeter.Extensions
             XmlWriterSettings xmlSettings)
             where T : class
         {
-            XmlSerializerNamespaces? namespaces = new(new[] { XmlQualifiedName.Empty });
-
-            using StringWriter stringWriter = new();
-            using XmlWriter xmlWriter = XmlWriter.Create(stringWriter, xmlSettings);
-            XmlSerializer serializer = new(typeof(T));
+            var namespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
+            var serializer = new XmlSerializer(typeof(T));
+            using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, xmlSettings);
+            
             serializer.Serialize(xmlWriter, value, namespaces);
 
             return stringWriter.ToString();

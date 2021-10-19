@@ -2,31 +2,32 @@
 using GrpcWebApplication.Services;
 using System;
 using System.Net.Http;
+using GrpcWebApplication.IntegrationTest.Support.Tool;
 
 namespace GrpcWebApplication.IntegrationTest.Support
 {
     public class TestEnvironment : IDisposable
     {
-        public readonly TestApplication TestApplication;
+        public readonly TestApplication App;
 
         public readonly HttpClient HttpClient;
 
         public readonly GrpcChannel GrpcChannel;
 
-        public readonly UserMessager.UserMessagerClient UserMessagerClient;
+        public readonly UserMessagerService.UserMessagerServiceClient UserMessagerClient;
+
+        public readonly GrpcClientTool GrpcClient;
 
         public readonly DataContext Repository;
 
         public TestEnvironment()
         {
-            this.TestApplication = new();
+            this.App = new();
 
-            this.HttpClient = this.TestApplication.CreateDefaultClient();
-            this.GrpcChannel = GrpcChannel.ForAddress(this.HttpClient.BaseAddress, new GrpcChannelOptions
-            {
-                HttpClient = this.HttpClient
-            });
-            this.UserMessagerClient = new UserMessager.UserMessagerClient(this.GrpcChannel);
+            this.HttpClient = this.App.CreateDefaultClient();
+            this.GrpcChannel = GrpcChannel.ForAddress(this.HttpClient.BaseAddress, new GrpcChannelOptions { HttpClient = this.HttpClient  });
+            this.UserMessagerClient = new UserMessagerService.UserMessagerServiceClient(this.GrpcChannel);
+            this.GrpcClient = new GrpcClientTool(this.HttpClient, typeof(UserMessagerService.UserMessagerServiceClient));
 
             this.Repository = new DataContext();
             this.Repository.Database.EnsureCreated();
@@ -34,6 +35,7 @@ namespace GrpcWebApplication.IntegrationTest.Support
 
         public void Dispose()
         {
+            this.GrpcChannel.Dispose();
             this.Repository.Database.EnsureDeleted();
         }
     }

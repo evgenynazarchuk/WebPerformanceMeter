@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GrpcWebApplication.IntegrationTest
 {
-    public class Tests
+    public class Tests : TestEnvironment
     {
         [SetUp]
         public void Setup()
@@ -21,16 +21,15 @@ namespace GrpcWebApplication.IntegrationTest
         public async Task SendMessage()
         {
             // Arrange
-            using var env = new TestEnvironment();
             var text = "text text text";
 
             // Act
-            var identity = await env.UserMessagerClient.SendMessageAsync(new MessageCreateDto { Text = text });
+            var identity = await this.UserMessagerClient.SendMessageAsync(new MessageCreateDto { Text = text });
 
             // Assert
             identity.Id.Should().NotBe(0);
 
-            var resultMessage = env.Repository.Set<Message>().Find(identity.Id);
+            var resultMessage = this.Repository.Set<Message>().Find(identity.Id);
             resultMessage.Text.Should().Be(text);
         }
 
@@ -38,10 +37,9 @@ namespace GrpcWebApplication.IntegrationTest
         public async Task SendMessages()
         {
             // Arrange
-            using var env = new TestEnvironment();
 
             // Act
-            using var requestMethod = env.UserMessagerClient.SendMessages();
+            using var requestMethod = this.UserMessagerClient.SendMessages();
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 1" });
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 2" });
             await requestMethod.RequestStream.CompleteAsync();
@@ -49,7 +47,7 @@ namespace GrpcWebApplication.IntegrationTest
             await Task.Delay(1000);
 
             // Assert
-            var actualMessage = env.Repository.Set<Message>().ToList();
+            var actualMessage = this.Repository.Set<Message>().ToList();
             actualMessage.Select(x => x.Text).Should().BeEquivalentTo("test 1", "test 2");
         }
 
@@ -57,15 +55,11 @@ namespace GrpcWebApplication.IntegrationTest
         public void GetMessage()
         {
             // Arrange
-            using var env = new TestEnvironment();
-            var message = env.Repository.Set<Message>().Add(new Message
-            {
-                Text = "test 1"
-            });
-            env.Repository.SaveChanges();
+            var message = this.Repository.Set<Message>().Add(new Message { Text = "test 1" });
+
 
             // Act
-            var response = env.UserMessagerClient.GetMessage(new MessageIdentityDto { Id = message.Entity.Id });
+            var response = this.UserMessagerClient.GetMessage(new MessageIdentityDto { Id = message.Entity.Id });
 
             // Assert
             response.Text.Should().Be("test 1");
@@ -75,21 +69,14 @@ namespace GrpcWebApplication.IntegrationTest
         public async Task GetMessages()
         {
             // Arrange
-            using var env = new TestEnvironment();
+            this.Repository.Set<Message>().Add(new Message { Text = "test 1" });
+            this.Repository.Set<Message>().Add(new Message { Text = "test 2" });
+            this.Repository.SaveChanges();
             List<string> expectedText = new();
-            env.Repository.Set<Message>().Add(new Message
-            {
-                Text = "test 1"
-            });
-            env.Repository.Set<Message>().Add(new Message
-            {
-                Text = "test 2"
-            });
-            env.Repository.SaveChanges();
 
 
             // Act
-            using var call = env.UserMessagerClient.GetMessages(new Empty());
+            using var call = this.UserMessagerClient.GetMessages(new Empty());
             while (await call.ResponseStream.MoveNext())
             {
                 expectedText.Add(call.ResponseStream.Current.Text);
@@ -104,10 +91,9 @@ namespace GrpcWebApplication.IntegrationTest
         {
             // Arrange
             var expectedText = new List<string>();
-            using var env = new TestEnvironment();
 
             // Act
-            using var requestMethod = env.UserMessagerClient.Messages();
+            using var requestMethod = this.UserMessagerClient.Messages();
 
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 1" });
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 2" });

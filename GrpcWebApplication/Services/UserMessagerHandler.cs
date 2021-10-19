@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace GrpcWebApplication
 {
-    public class UserMessagerService : UserMessager.UserMessagerBase
+    public class UserMessagerHandler : UserMessagerService.UserMessagerServiceBase
     {
-        protected readonly ILogger<UserMessagerService> logger;
+        protected readonly ILogger<UserMessagerHandler> logger;
 
         protected readonly DataContext dataContext;
 
-        public UserMessagerService(
-            ILogger<UserMessagerService> logger,
+        public UserMessagerHandler(
+            ILogger<UserMessagerHandler> logger,
             DataContext dataContext)
         {
             this.logger = logger;

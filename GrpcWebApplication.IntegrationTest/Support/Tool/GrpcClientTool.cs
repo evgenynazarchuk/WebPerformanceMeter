@@ -14,13 +14,13 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
 
         protected readonly object _grpcClient;
 
-        public GrpcClientTool(Type grpcClient, string address)
+        public GrpcClientTool(string address, Type grpcClient)
         {
             this._grpcChannel = GrpcChannel.ForAddress(address);
             this._grpcClient = Activator.CreateInstance(type: grpcClient, args: this._grpcChannel);
         }
 
-        public GrpcClientTool(Type grpcClient, HttpClient httpClient)
+        public GrpcClientTool(HttpClient httpClient, Type grpcClient)
         {
             this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
             this._grpcClient = Activator.CreateInstance(type: grpcClient, args: this._grpcChannel);

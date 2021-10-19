@@ -33,7 +33,7 @@
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<UserMessagerService>();
+                endpoints.MapGrpcService<UserMessagerHandler>();
 
                 if (env.IsDevelopment())
                 {

@@ -6,7 +6,7 @@ package usermessager;
 
 import "google/protobuf/empty.proto";
 
-service UserMessager {
+service UserMessagerService {
   rpc SendMessage (MessageCreateDto) returns (MessageIdentityDto);
   rpc SendMessages (stream MessageCreateDto) returns (google.protobuf.Empty);
 

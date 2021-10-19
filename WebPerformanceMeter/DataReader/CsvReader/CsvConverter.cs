@@ -21,6 +21,9 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 
         public static object GetObjectFromCsvColumns(ReadOnlySpan<string> columns, Type resultObjectType)
         {
+            //var ctor = resultObjectType.GetConstructor(new Type[] { });
+            //var entity = ctor.Invoke(new object[] { });
+
             var entity = Activator.CreateInstance(resultObjectType);
             if (entity is null)
             {

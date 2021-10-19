@@ -1,8 +1,8 @@
 ﻿using Grpc.Net.Client;
+using GrpcWebApplication.IntegrationTest.Support.Tool;
 using GrpcWebApplication.Services;
 using System;
 using System.Net.Http;
-using GrpcWebApplication.IntegrationTest.Support.Tool;
 
 namespace GrpcWebApplication.IntegrationTest.Support
 {
@@ -25,7 +25,7 @@ namespace GrpcWebApplication.IntegrationTest.Support
             this.App = new();
 
             this.HttpClient = this.App.CreateDefaultClient();
-            this.GrpcChannel = GrpcChannel.ForAddress(this.HttpClient.BaseAddress, new GrpcChannelOptions { HttpClient = this.HttpClient  });
+            this.GrpcChannel = GrpcChannel.ForAddress(this.HttpClient.BaseAddress, new GrpcChannelOptions { HttpClient = this.HttpClient });
             this.UserMessagerClient = new UserMessagerService.UserMessagerServiceClient(this.GrpcChannel);
             this.GrpcClient = new GrpcClientTool(this.HttpClient, typeof(UserMessagerService.UserMessagerServiceClient));
 

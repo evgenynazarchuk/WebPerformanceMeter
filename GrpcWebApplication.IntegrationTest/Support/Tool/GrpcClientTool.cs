@@ -8,22 +8,39 @@ using System.Threading.Tasks;
 
 namespace GrpcWebApplication.IntegrationTest.Support.Tool
 {
-    public class GrpcClientTool : IGrpcClientTool, IDisposable
+    public sealed class GrpcClientTool : IGrpcClientTool, IDisposable
     {
-        protected readonly GrpcChannel _grpcChannel;
+        private readonly GrpcChannel _grpcChannel;
 
-        protected readonly object _grpcClient;
+        private readonly object _grpcClient;
 
-        public GrpcClientTool(string address, Type grpcClient)
+        public GrpcClientTool(string address, Type serviceClientType)
         {
             this._grpcChannel = GrpcChannel.ForAddress(address);
-            this._grpcClient = Activator.CreateInstance(type: grpcClient, args: this._grpcChannel);
+
+            var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
+
+            this._grpcClient = ctor is not null 
+                ? ctor.Invoke(new[] { this._grpcChannel }) 
+                : throw new ApplicationException("gRpc client is not create");
+
+            if (this._grpcClient is null)
+            {
+                throw new ApplicationException("gRpc client is not create");
+            }
         }
 
-        public GrpcClientTool(HttpClient httpClient, Type grpcClient)
+        public GrpcClientTool(HttpClient httpClient, Type serviceClientType)
         {
-            this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
-            this._grpcClient = Activator.CreateInstance(type: grpcClient, args: this._grpcChannel);
+            this._grpcChannel = httpClient.BaseAddress is not null
+                ? GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient })
+                : throw new ApplicationException("Base address is not set");
+
+            var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
+
+            this._grpcClient = ctor is not null
+                ? ctor.Invoke(new[] { this._grpcChannel })
+                : throw new ApplicationException("gRpc client is not create");
         }
 
         public async ValueTask<TResponse> UnaryCallAsync<TResponse, TRequest>(string methodCall, TRequest requestBody)

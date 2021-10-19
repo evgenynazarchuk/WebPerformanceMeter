@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using GrpcWebApplication.IntegrationTest.Support;
-using GrpcWebApplication.IntegrationTest.Support.Tool;
 using GrpcWebApplication.Models;
 using NUnit.Framework;
 using System.Collections.Generic;

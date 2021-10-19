@@ -9,23 +9,23 @@ namespace WebSocketWebApplication.Services
 {
     public abstract class WebSocketHandler : IWebSocketHandler
     {
-        protected readonly ConnectionHandler connectionManager;
+        protected readonly IConnectionHandler connectionHandler;
 
-        public WebSocketHandler(ConnectionHandler connectionManager)
+        public WebSocketHandler(ConnectionHandler connectionHandler)
         {
-            this.connectionManager = connectionManager;
+            this.connectionHandler = connectionHandler;
         }
 
         public virtual Task OnConnected(WebSocket socket)
         {
-            this.connectionManager.AddSocket(socket);
+            this.connectionHandler.AddSocket(socket);
             return Task.CompletedTask;
         }
 
         public virtual async Task OnDisconnected(WebSocket socket)
         {
-            var socketId = this.connectionManager.GetSocketId(socket);
-            await this.connectionManager.RemoveSocket(socketId);
+            var socketId = this.connectionHandler.GetSocketId(socket);
+            await this.connectionHandler.RemoveSocket(socketId);
         }
 
         public async Task SendMessageAsync(WebSocket socket, string message)
@@ -47,25 +47,25 @@ namespace WebSocketWebApplication.Services
 
         public async Task SendMessageAsync(Guid socketId, string message)
         {
-            await SendMessageAsync(this.connectionManager.GetSocketById(socketId), message);
+            await SendMessageAsync(this.connectionHandler.GetSocketById(socketId), message);
         }
 
         public Task SendMessageToAllAsync(string message)
         {
-            var sendTasks = new List<Task>();
+            var tasks = new List<Task>();
 
-            foreach (var socket in this.connectionManager.GetAllSocket())
+            foreach (var toWebSocket in this.connectionHandler.GetAllSocket())
             {
-                if (socket.State == WebSocketState.Open)
+                if (toWebSocket.State == WebSocketState.Open)
                 {
-                    sendTasks.Add(Task.Run(async () =>
+                    tasks.Add(Task.Run(async () =>
                     {
-                        await this.SendMessageAsync(socket, message);
+                        await this.SendMessageAsync(toWebSocket, message);
                     }));
                 }
             }
 
-            Task.WaitAll(sendTasks.ToArray());
+            Task.WaitAll(tasks.ToArray());
 
             return Task.CompletedTask;
         }

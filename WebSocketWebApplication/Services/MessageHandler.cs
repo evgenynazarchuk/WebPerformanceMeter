@@ -4,9 +4,9 @@ using System.Text;
 
 namespace WebSocketWebApplication.Services
 {
-    public class ChatHandler : WebSocketHandler
+    public class MessageHandler : WebSocketHandler
     {
-        public ChatHandler(ConnectionHandler connectionHandler) : base(connectionHandler) { }
+        public MessageHandler(ConnectionHandler connectionHandler) : base(connectionHandler) { }
 
         public override async Task OnConnected(WebSocket socket)
         {
@@ -14,13 +14,13 @@ namespace WebSocketWebApplication.Services
             await base.OnConnected(socket);
 
             // send message
-            var socketId = this.connectionManager.GetSocketId(socket);
+            var socketId = this.connectionHandler.GetSocketId(socket);
             await SendMessageToAllAsync($"{socketId} is now connected");
         }
 
         public override async Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer)
         {
-            var socketId = this.connectionManager.GetSocketId(socket);
+            var socketId = this.connectionHandler.GetSocketId(socket);
             var message = $"{socketId} said: {Encoding.UTF8.GetString(buffer, 0, result.Count)}";
 
             await SendMessageToAllAsync(message);

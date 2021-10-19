@@ -28,7 +28,7 @@ namespace WebSocketWebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ConnectionHandler>();
-            services.AddSingleton<ChatHandler>();
+            services.AddSingleton<MessageHandler>();
 
             //services.AddControllers();
             //services.AddSwaggerGen(c =>
@@ -41,7 +41,7 @@ namespace WebSocketWebApplication
         {
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
-            var chatHandler = serviceProvider.GetService<ChatHandler>();
+            var chatHandler = serviceProvider.GetService<MessageHandler>();
 
             //app.UseHsts();
             //app.UseHttpsRedirection();

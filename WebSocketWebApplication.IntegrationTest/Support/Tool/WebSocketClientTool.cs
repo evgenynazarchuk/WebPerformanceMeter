@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.AspNetCore.TestHost;
-using System.Net;
-using System.Net.Http;
-using System.Net.WebSockets;
 using System.Diagnostics;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WebSocketWebApplication.IntegrationTest.Support.Tool
 {
@@ -30,12 +25,12 @@ namespace WebSocketWebApplication.IntegrationTest.Support.Tool
             this.SendBufferSize = sendBufferSize;
         }
 
-        public async Task ConnectAsync()
+        public async ValueTask ConnectAsync()
         {
             await this.ClientWebSocket.ConnectAsync(this.Uri, CancellationToken.None);
         }
 
-        public async Task DisconnectAsync()
+        public async ValueTask DisconnectAsync()
         {
             if (this.ClientWebSocket.State == WebSocketState.Open)
             {
@@ -77,8 +72,8 @@ namespace WebSocketWebApplication.IntegrationTest.Support.Tool
 
         // send
         public async ValueTask SendAsync(
-            ReadOnlyMemory<byte> buffer, 
-            WebSocketMessageType messageType = WebSocketMessageType.Binary, 
+            ReadOnlyMemory<byte> buffer,
+            WebSocketMessageType messageType = WebSocketMessageType.Binary,
             bool endOfMessage = true)
         {
             // log

@@ -26,7 +26,7 @@ namespace GrpcWebApplication
             MessageCreateDto request,
             ServerCallContext context)
         {
-            var message = await this.dataContext.Set<Message>().AddAsync(new Message { Text = request.Text  });
+            var message = await this.dataContext.Set<Message>().AddAsync(new Message { Text = request.Text });
             await this.dataContext.SaveChangesAsync();
             var messageIdentityDto = new MessageIdentityDto { Id = message.Entity.Id };
 
@@ -53,7 +53,7 @@ namespace GrpcWebApplication
         }
 
         public override async Task<MessageSimpleDto> GetMessage(
-            MessageIdentityDto request, 
+            MessageIdentityDto request,
             ServerCallContext context)
         {
             var message = await this.dataContext.Set<Message>().FindAsync(request.Id);

@@ -29,7 +29,7 @@ namespace GrpcWebApplication.IntegrationTest
 
             // Assert
             identity.Id.Should().NotBe(0);
-            
+
             var resultMessage = env.Repository.Set<Message>().Find(identity.Id);
             resultMessage.Text.Should().Be(text);
         }
@@ -39,15 +39,15 @@ namespace GrpcWebApplication.IntegrationTest
         {
             // Arrange
             using var env = new TestEnvironment();
-        
+
             // Act
             using var requestMethod = env.UserMessagerClient.SendMessages();
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 1" });
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 2" });
             await requestMethod.RequestStream.CompleteAsync();
-        
+
             await Task.Delay(1000);
-        
+
             // Assert
             var actualMessage = env.Repository.Set<Message>().ToList();
             actualMessage.Select(x => x.Text).Should().BeEquivalentTo("test 1", "test 2");
@@ -86,15 +86,15 @@ namespace GrpcWebApplication.IntegrationTest
                 Text = "test 2"
             });
             env.Repository.SaveChanges();
-        
-        
+
+
             // Act
             using var call = env.UserMessagerClient.GetMessages(new Empty());
             while (await call.ResponseStream.MoveNext())
             {
                 expectedText.Add(call.ResponseStream.Current.Text);
             }
-        
+
             // Arrange
             expectedText.Should().BeEquivalentTo("test 1", "test 2");
         }
@@ -105,13 +105,13 @@ namespace GrpcWebApplication.IntegrationTest
             // Arrange
             var expectedText = new List<string>();
             using var env = new TestEnvironment();
-        
+
             // Act
             using var requestMethod = env.UserMessagerClient.Messages();
-        
+
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 1" });
             await requestMethod.RequestStream.WriteAsync(new MessageCreateDto { Text = "test 2" });
-        
+
             await requestMethod.RequestStream.CompleteAsync();
 
             while (await requestMethod.ResponseStream.MoveNext())

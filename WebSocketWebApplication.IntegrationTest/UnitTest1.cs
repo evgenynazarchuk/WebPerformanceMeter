@@ -1,11 +1,11 @@
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Net.WebSockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 using WebSocketWebApplication.IntegrationTest.Support;
-using FluentAssertions;
 using WebSocketWebApplication.IntegrationTest.Support.Tool;
 
 namespace WebSocketWebApplication.IntegrationTest
@@ -25,7 +25,7 @@ namespace WebSocketWebApplication.IntegrationTest
                 Scheme = "ws",
                 Path = "ws"
             }.Uri;
-            
+
             var ws = await wsClient.ConnectAsync(wsUri, CancellationToken.None);
 
             // Act

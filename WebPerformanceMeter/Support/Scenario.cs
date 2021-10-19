@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebPerformanceMeter.PerformancePlans;
-using System;
 
 namespace WebPerformanceMeter.Support
 {
@@ -54,7 +54,7 @@ namespace WebPerformanceMeter.Support
                 switch (launchType)
                 {
                     case ActType.Parallel:
-                
+
                         var tasks = new List<Task>();
 
                         foreach (var plan in plans)
@@ -73,7 +73,7 @@ namespace WebPerformanceMeter.Support
                         break;
 
                     case ActType.Sequential:
-                        
+
                         foreach (var plan in plans)
                         {
                             await plan.StartAsync();

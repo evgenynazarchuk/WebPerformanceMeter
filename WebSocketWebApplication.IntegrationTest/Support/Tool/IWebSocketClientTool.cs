@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 namespace WebSocketWebApplication.IntegrationTest.Support.Tool
 {
     public interface IWebSocketClientTool
     {
-        Task ConnectAsync();
+        ValueTask ConnectAsync();
 
-        Task DisconnectAsync();
+        ValueTask DisconnectAsync();
 
         ValueTask SendMessageAsync(string message);
 

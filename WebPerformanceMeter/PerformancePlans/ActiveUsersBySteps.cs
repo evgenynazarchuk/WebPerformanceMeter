@@ -56,7 +56,7 @@ namespace WebPerformanceMeter.PerformancePlans
             this.UsersCountValidation(fromActiveUsersCount, toActiveUsersCount);
             this.UsersStepValidation(usersStep, toActiveUsersCount);
             this.DurationTimeValidation(stepPeriodDuration, performancePlanDuration);
-            
+
             int maximumActiveUsersCount = Math.Max(fromActiveUsersCount, toActiveUsersCount);
             int minimumActiveUsersCount = Math.Min(fromActiveUsersCount, toActiveUsersCount);
 

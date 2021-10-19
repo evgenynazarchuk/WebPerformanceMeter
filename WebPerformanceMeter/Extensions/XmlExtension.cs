@@ -15,7 +15,7 @@ namespace WebPerformanceMeter.Extensions
             var serializer = new XmlSerializer(typeof(T));
             using var stringWriter = new StringWriter();
             using var xmlWriter = XmlWriter.Create(stringWriter, xmlSettings);
-            
+
             serializer.Serialize(xmlWriter, value, namespaces);
 
             return stringWriter.ToString();

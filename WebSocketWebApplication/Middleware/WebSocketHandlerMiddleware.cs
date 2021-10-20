@@ -11,23 +11,23 @@ namespace WebSocketWebApplication.Middleware
     {
         private readonly RequestDelegate _next;
 
-        private readonly WebSocketHandler _webSocketHandler;
+        private readonly IWebSocketHandler _webSocketHandler;
 
-        public WebSocketHandlerMiddleware(RequestDelegate next, WebSocketHandler webSocketHandler)
+        public WebSocketHandlerMiddleware(RequestDelegate next, IWebSocketHandler webSocketHandler)
         {
             this._next = next;
             this._webSocketHandler = webSocketHandler;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             if (!context.WebSockets.IsWebSocketRequest)
             {
                 return;
             }
 
-            var socket = await context.WebSockets.AcceptWebSocketAsync();
-            await this._webSocketHandler.OnConnected(socket);
+            using var socket = await context.WebSockets.AcceptWebSocketAsync();
+            await this._webSocketHandler.OnConnectedAsync(socket);
 
             var buffer = new byte[1024];
 
@@ -38,21 +38,20 @@ namespace WebSocketWebApplication.Middleware
                     buffer: new ArraySegment<byte>(buffer),
                     cancellationToken: CancellationToken.None);
 
-
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    // отправить прочитанное сообщение
+                    // отправить всем клиентам полученное сообщение
                     await _webSocketHandler.ReceiveAsync(socket, result, buffer);
                 }
                 else if (result.MessageType == WebSocketMessageType.Close)
                 {
                     // закрыть соединение с клиентом
-                    await _webSocketHandler.OnDisconnected(socket);
+                    await _webSocketHandler.OnDisconnectedAsync(socket);
                 }
             }
 
             // TODO
-            // await this._next(context);
+            //await this._next(context);
         }
     }
 }

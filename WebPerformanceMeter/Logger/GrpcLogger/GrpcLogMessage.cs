@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebPerformanceMeter.Logger.GrpcLogger
+﻿namespace WebPerformanceMeter.Logger
 {
-    public class GrpcBaseLogMessage
+    public class GrpcLogMessage
     {
         public string? UserName { get; set; }
 

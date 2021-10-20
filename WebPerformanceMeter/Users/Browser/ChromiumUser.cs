@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
-using WebPerformanceMeter.Logger.BrowserLog;
 using WebPerformanceMeter.Tools.BrowserTool;
 
 namespace WebPerformanceMeter.Users
@@ -12,7 +11,7 @@ namespace WebPerformanceMeter.Users
         protected readonly BrowserTool BrowserTool;
 
         public ChromiumUser(ILogger? logger = null, string userName = "")
-            : base(logger ?? BrowserLoggerSingleton.GetInstance())
+            : base(logger ?? ChromiumLoggerSingleton.GetInstance())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.BrowserTool = new(this.Logger, this.UserName);
@@ -40,7 +39,7 @@ namespace WebPerformanceMeter.Users
                     $"{TimeSpan.FromMilliseconds(request.Timing.RequestStart)}\t" +
                     $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}\t" +
                     $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}",
-                    typeof(PageRequestLogMessage));
+                    typeof(ChromiumPageRequestLogMessage));
             };
 
             object? entity = null;

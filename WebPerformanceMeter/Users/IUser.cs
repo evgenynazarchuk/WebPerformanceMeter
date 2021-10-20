@@ -1,12 +1,15 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Logger;
 
 namespace WebPerformanceMeter.Users
 {
     public interface IUser
     {
-        public string UserName { get; }
+        string UserName { get; }
 
-        Task InvokeAsync(int userLoopCount, IDataReader? dataSource, bool reuseDataValueInLoop);
+        ILogger Logger { get; }
+
+        Task InvokeAsync(int userLoopCount, IDataReader? dataReader, bool reuseDataValueInLoop);
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace WebPerformanceMeter.Logger.HttpClientLog
+﻿namespace WebPerformanceMeter.Logger
 {
-    public class HttpClientToolLogMessage
+    public class HttpLogMessage
     {
         public string? User { get; set; }
 

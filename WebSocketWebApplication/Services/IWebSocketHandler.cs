@@ -6,13 +6,11 @@ namespace WebSocketWebApplication.Services
 {
     public interface IWebSocketHandler
     {
-        Task OnConnected(WebSocket socket);
+        Task OnConnectedAsync(WebSocket socket);
 
-        Task OnDisconnected(WebSocket socket);
+        Task OnDisconnectedAsync(WebSocket socket);
 
         Task SendMessageAsync(WebSocket socket, string message);
-
-        Task SendMessageAsync(Guid socketId, string message);
 
         Task SendMessageToAllAsync(string message);
 

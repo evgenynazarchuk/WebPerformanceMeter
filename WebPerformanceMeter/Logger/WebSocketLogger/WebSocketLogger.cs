@@ -1,6 +1,6 @@
 ﻿namespace WebPerformanceMeter.Logger
 {
-    public class GrpcLogger : FileLogger
+    public class WebSocketLogger : FileLogger
     {
     }
 }

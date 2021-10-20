@@ -1,11 +1,11 @@
 ﻿using System;
 using WebPerformanceMeter.DataReader.CsvReader;
 
-namespace WebPerformanceMeter.Logger.BrowserLog
+namespace WebPerformanceMeter.Logger
 {
-    public class BrowserLogger : FileLogger
+    public class ChromiumLogger : FileLogger
     {
-        public BrowserLogger() { }
+        public ChromiumLogger() { }
 
         public override object? GetObjectFromRawCsvLogMessage(string logMessage, Type logMessageType)
         {

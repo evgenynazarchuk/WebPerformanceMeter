@@ -11,31 +11,26 @@ namespace WebSocketWebApplication.Services
     {
         protected readonly IConnectionHandler connectionHandler;
 
-        public WebSocketHandler(ConnectionHandler connectionHandler)
+        public WebSocketHandler(IConnectionHandler connectionHandler)
         {
             this.connectionHandler = connectionHandler;
         }
 
-        public virtual Task OnConnected(WebSocket socket)
+        public virtual Task OnConnectedAsync(WebSocket socket)
         {
             this.connectionHandler.AddSocket(socket);
             return Task.CompletedTask;
         }
 
-        public virtual async Task OnDisconnected(WebSocket socket)
+        public virtual Task OnDisconnectedAsync(WebSocket socket)
         {
             var socketId = this.connectionHandler.GetSocketId(socket);
-            await this.connectionHandler.RemoveSocket(socketId);
+            return this.connectionHandler.RemoveSocketAsync(socketId);
         }
 
-        public async Task SendMessageAsync(WebSocket socket, string message)
+        public Task SendMessageAsync(WebSocket socket, string message)
         {
-            if (socket.State != WebSocketState.Open)
-            {
-                return;
-            }
-
-            await socket.SendAsync(
+            return socket.SendAsync(
                 buffer: new ArraySegment<byte>(
                     array: Encoding.UTF8.GetBytes(message),
                     offset: 0,
@@ -45,29 +40,22 @@ namespace WebSocketWebApplication.Services
                 cancellationToken: CancellationToken.None);
         }
 
-        public async Task SendMessageAsync(Guid socketId, string message)
+        public async Task SendMessageToAllAsync(string message)
         {
-            await SendMessageAsync(this.connectionHandler.GetSocketById(socketId), message);
-        }
-
-        public Task SendMessageToAllAsync(string message)
-        {
-            var tasks = new List<Task>();
-
             foreach (var toWebSocket in this.connectionHandler.GetAllSocket())
             {
                 if (toWebSocket.State == WebSocketState.Open)
                 {
-                    tasks.Add(Task.Run(async () =>
+                    try
                     {
                         await this.SendMessageAsync(toWebSocket, message);
-                    }));
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Error send message, to {toWebSocket.State.ToString()}");
+                    }
                 }
             }
-
-            Task.WaitAll(tasks.ToArray());
-
-            return Task.CompletedTask;
         }
 
         public abstract Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer);

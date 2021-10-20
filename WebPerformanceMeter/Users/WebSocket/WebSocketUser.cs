@@ -1,17 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Tools.WebSocketTool;
 
 namespace WebPerformanceMeter.Users.WebSocket
 {
-    public abstract class WebSocketUser : User, IWebSocketUser
+    public abstract partial class WebSocketUser : User, IWebSocketUser
     {
-        public WebSocketUser(ILogger logger)
-            : base(logger) { }
-
-        protected readonly string address;
+        protected readonly string host;
 
         protected readonly int port;
 
@@ -22,15 +18,15 @@ namespace WebPerformanceMeter.Users.WebSocket
         protected int sendBufferSize = 1024;
 
         public WebSocketUser(
-            string address, 
-            int port, 
-            string path, 
-            ILogger? logger = null, 
+            string host,
+            int port,
+            string path,
+            ILogger? logger = null,
             string userName = "")
-            : base(logger)
+            : base(logger ?? WebSocketLoggerSingleton.GetInstance())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
-            this.address = address;
+            this.host = host;
             this.port = port;
             this.path = path;
         }
@@ -38,7 +34,7 @@ namespace WebPerformanceMeter.Users.WebSocket
         public void SetClientBuffer(
             int receiveBufferSize = 1024,
             int sendBufferSize = 1024)
-        { 
+        {
             this.sendBufferSize = sendBufferSize;
             this.receiveBufferSize = receiveBufferSize;
         }
@@ -49,7 +45,13 @@ namespace WebPerformanceMeter.Users.WebSocket
             bool reuseDataInLoop = true
             )
         {
-            var client = WebSocketClientTool.Create(this.address, this.port, this.path, this.sendBufferSize, this.receiveBufferSize);
+            var client = new WebSocketClientTool(
+                this.host,
+                this.port,
+                this.path,
+                this.Logger,
+                this.sendBufferSize,
+                this.receiveBufferSize);
 
             object? entity = null;
 
@@ -65,6 +67,7 @@ namespace WebPerformanceMeter.Users.WebSocket
 
             for (int i = 0; i < loopCount; i++)
             {
+                await client.ConnectAsync(this.UserName);
                 if (entity is null)
                 {
                     await PerformanceAsync(client);
@@ -73,6 +76,7 @@ namespace WebPerformanceMeter.Users.WebSocket
                 {
                     await PerformanceAsync(client, entity);
                 }
+                await client.DisconnectAsync();
 
                 if (dataReader is not null && !reuseDataInLoop)
                 {

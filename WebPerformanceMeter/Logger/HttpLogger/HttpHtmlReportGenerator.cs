@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace WebPerformanceMeter.Logger.HttpClientLog
+namespace WebPerformanceMeter.Logger
 {
-    public class HttpClientToolLogHtmlReportGenerator
+    public class HttpHtmlReportGenerator
     {
-        public HttpClientToolLogHtmlReportGenerator(
+        public HttpHtmlReportGenerator(
             string httpClientToolLogFileName,
             string httpClientReport)
         {
@@ -22,16 +22,16 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
 
         private readonly StreamWriter writer;
 
-        private readonly List<HttpClientToolLogMessage> httpClientToolLogMessageList;
+        private readonly List<HttpLogMessage> httpClientToolLogMessageList;
 
         public void ReadJsonHttpClientLog()
         {
             string? jsonHttpClientToolLogMessage;
-            HttpClientToolLogMessage? httpClientToolLogMessage;
+            HttpLogMessage? httpClientToolLogMessage;
 
             while ((jsonHttpClientToolLogMessage = this.reader.ReadLine()) != null)
             {
-                httpClientToolLogMessage = JsonSerializer.Deserialize<HttpClientToolLogMessage>(jsonHttpClientToolLogMessage);
+                httpClientToolLogMessage = JsonSerializer.Deserialize<HttpLogMessage>(jsonHttpClientToolLogMessage);
 
                 if (httpClientToolLogMessage is null) throw new ApplicationException("Error convertation");
 
@@ -66,7 +66,7 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
 
             var startedRequestLog = this.httpClientToolLogMessageList
                 .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, StartRequestTime = (long)(x.StartSendRequestTime / 10000000) })
-                .Select(x => new HttpClientToolLogMessageByStartedRequest(
+                .Select(x => new HttpLogMessageByStartedRequest(
                     x.Key.User,
                     x.Key.RequestMethod,
                     x.Key.Request,
@@ -91,7 +91,7 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
 
             foreach (var item in groupByRequestStatusCodeEndResponse)
             {
-                HttpClientToolLogMessageTimeAnalytic totalLog = new(
+                HttpLogMessageTimeAnalytic totalLog = new(
                     item.Key.User,
                     item.Key.RequestMethod,
                     item.Key.Request,
@@ -114,8 +114,8 @@ namespace WebPerformanceMeter.Logger.HttpClientLog
 
             foreach (var item in groupByEndResponse)
             {
-                sentStringLog.Append(JsonSerializer.Serialize(new HttpClientToolLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
-                receivedStringLog.Append(JsonSerializer.Serialize(new HttpClientToolLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
+                sentStringLog.Append(JsonSerializer.Serialize(new HttpLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
+                receivedStringLog.Append(JsonSerializer.Serialize(new HttpLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
             }
 
             //

@@ -20,8 +20,8 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
 
-            this._grpcClient = ctor is not null 
-                ? ctor.Invoke(new[] { this._grpcChannel }) 
+            this._grpcClient = ctor is not null
+                ? ctor.Invoke(new[] { this._grpcChannel })
                 : throw new ApplicationException("gRpc client is not create");
 
             if (this._grpcClient is null)

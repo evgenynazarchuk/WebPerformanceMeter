@@ -6,20 +6,20 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
 {
     public interface IWebSocketClientTool
     {
-        ValueTask ConnectAsync();
+        ValueTask ConnectAsync(string userName = "");
 
         ValueTask DisconnectAsync();
 
-        ValueTask SendMessageAsync(string message);
+        ValueTask SendMessageAsync(string message, string userName = "", string label = "");
 
-        ValueTask<string> ReceiveMessageAsync();
+        ValueTask<string> ReceiveMessageAsync(string userName = "", string label = "");
 
-        ValueTask<ValueWebSocketReceiveResult> ReceiveBytesAsync(Memory<byte> buffer);
+        ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, string userName = "", string label = "");
 
-        ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync();
+        ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync(string userName = "", string label = "");
 
-        ValueTask SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage = true);
+        ValueTask SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage = true, string userName = "", string label = "");
 
-        ValueTask SendBytesAsync(ReadOnlyMemory<byte> buffer);
+        ValueTask SendBytesAsync(ReadOnlyMemory<byte> buffer, string userName = "", string label = "");
     }
 }

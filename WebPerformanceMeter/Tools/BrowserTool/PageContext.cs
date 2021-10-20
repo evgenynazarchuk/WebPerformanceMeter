@@ -1,7 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
-using WebPerformanceMeter.Logger.BrowserLog;
 using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools.BrowserTool
@@ -35,7 +34,7 @@ namespace WebPerformanceMeter.Tools.BrowserTool
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = url;
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
         }
 
         public async Task ReloadAsync(string label = "reload")
@@ -46,7 +45,7 @@ namespace WebPerformanceMeter.Tools.BrowserTool
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = this.Page.Url;
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
         }
 
         public async Task ClickAsync(string selector, string label = "click")
@@ -57,7 +56,7 @@ namespace WebPerformanceMeter.Tools.BrowserTool
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = this.Page.Url;
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
         }
 
         public async Task TypeAsync(string selector, string text, string label = "type")
@@ -68,7 +67,7 @@ namespace WebPerformanceMeter.Tools.BrowserTool
             var end = ScenarioTimer.Time.Elapsed.Ticks;
 
             this.Url = this.Page.Url;
-            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(UserActionLogMessage));
+            this.Logger.AppendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
         }
 
         public async Task WaitAsync()

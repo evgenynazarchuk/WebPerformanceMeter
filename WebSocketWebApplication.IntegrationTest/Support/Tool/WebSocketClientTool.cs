@@ -25,32 +25,39 @@ namespace WebSocketWebApplication.IntegrationTest.Support.Tool
             this.SendBufferSize = sendBufferSize;
         }
 
-        public async ValueTask ConnectAsync()
+        public Task ConnectAsync()
         {
-            await this.ClientWebSocket.ConnectAsync(this.Uri, CancellationToken.None);
+            return this.ClientWebSocket.ConnectAsync(this.Uri, CancellationToken.None);
         }
 
         public async ValueTask DisconnectAsync()
         {
             if (this.ClientWebSocket.State == WebSocketState.Open)
             {
-                await this.ClientWebSocket.CloseAsync(
+                try
+                {
+                    await this.ClientWebSocket.CloseAsync(
                     WebSocketCloseStatus.NormalClosure,
                     "Close from web socket client tool",
                     CancellationToken.None);
+                }
+                catch
+                {
+                    return;
+                }
+                
+
+                //await this.ClientWebSocket.CloseOutputAsync(
+                //    WebSocketCloseStatus.NormalClosure, 
+                //    "closing websocket", 
+                //    CancellationToken.None);
             }
         }
 
         // read
-        public async ValueTask<ValueWebSocketReceiveResult> ReceiveBytesAsync(Memory<byte> buffer)
+        public ValueTask<ValueWebSocketReceiveResult> ReceiveBytesAsync(Memory<byte> buffer)
         {
-            var watch = new Stopwatch();
-
-            watch.Start();
-            var result = await this.ClientWebSocket.ReceiveAsync(buffer, CancellationToken.None);
-            watch.Stop();
-
-            return result;
+            return this.ClientWebSocket.ReceiveAsync(buffer, CancellationToken.None);
         }
 
         public async ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync()
@@ -71,32 +78,27 @@ namespace WebSocketWebApplication.IntegrationTest.Support.Tool
         }
 
         // send
-        public async ValueTask SendAsync(
+        public ValueTask SendAsync(
             ReadOnlyMemory<byte> buffer,
             WebSocketMessageType messageType = WebSocketMessageType.Binary,
             bool endOfMessage = true)
         {
-            // log
-            var watch = new Stopwatch();
-
-            watch.Start();
-            await this.ClientWebSocket.SendAsync(buffer, messageType, endOfMessage, CancellationToken.None);
-            watch.Stop();
+            return this.ClientWebSocket.SendAsync(buffer, messageType, endOfMessage, CancellationToken.None);
         }
 
-        public async ValueTask SendMessageAsync(string message)
+        public ValueTask SendMessageAsync(string message)
         {
             var buffer = new ReadOnlyMemory<byte>(
                 array: Encoding.UTF8.GetBytes(message),
                 start: 0,
                 length: message.Length);
 
-            await this.SendAsync(buffer: buffer, messageType: WebSocketMessageType.Text);
+            return this.SendAsync(buffer: buffer, messageType: WebSocketMessageType.Text);
         }
 
-        public async ValueTask SendBytesAsync(ReadOnlyMemory<byte> buffer)
+        public ValueTask SendBytesAsync(ReadOnlyMemory<byte> buffer)
         {
-            await this.SendAsync(buffer: buffer, messageType: WebSocketMessageType.Binary);
+            return this.SendAsync(buffer: buffer, messageType: WebSocketMessageType.Binary);
         }
 
         // TODO

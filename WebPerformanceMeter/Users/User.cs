@@ -8,7 +8,7 @@ namespace WebPerformanceMeter.Users
     {
         public string UserName { get; private set; }
 
-        public readonly ILogger Logger;
+        public ILogger Logger { get; private set; }
 
         public User(ILogger logger)
         {
@@ -19,6 +19,11 @@ namespace WebPerformanceMeter.Users
         protected void SetUserName(string userName)
         {
             this.UserName = userName;
+        }
+
+        protected void SetLogger(ILogger logger)
+        {
+            this.Logger = logger;
         }
 
         public abstract Task InvokeAsync(int userLoopCount, IDataReader? dataSource, bool reuseDataInLoop);

@@ -6,7 +6,7 @@ namespace WebSocketWebApplication.IntegrationTest.Support.Tool
 {
     public interface IWebSocketClientTool
     {
-        ValueTask ConnectAsync();
+        Task ConnectAsync();
 
         ValueTask DisconnectAsync();
 

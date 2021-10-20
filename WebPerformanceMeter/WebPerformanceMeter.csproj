@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Logger\JavascriptLogger\" />
-    <Folder Include="Logger\WebSocketLogger\" />
     <Folder Include="Tools\JavascriptTool\" />
   </ItemGroup>
 

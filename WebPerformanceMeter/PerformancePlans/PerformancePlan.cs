@@ -3,7 +3,7 @@ using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
-    public abstract class PerformancePlan
+    public abstract class PerformancePlan : IPerformancePlan
     {
         public readonly User User;
 

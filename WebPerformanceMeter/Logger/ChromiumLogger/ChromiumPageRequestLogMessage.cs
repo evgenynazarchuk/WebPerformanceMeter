@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WebPerformanceMeter.Logger.BrowserLog
+namespace WebPerformanceMeter.Logger
 {
-    public class PageRequestLogMessage
+    public class ChromiumPageRequestLogMessage
     {
         public string? UserName { get; set; }
 

@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
-using WebPerformanceMeter.Logger.HttpClientLog;
 using WebPerformanceMeter.Tools.HttpTool;
 
 namespace WebPerformanceMeter.Users
@@ -15,7 +14,7 @@ namespace WebPerformanceMeter.Users
         protected readonly HttpTool Tool;
 
         public HttpUser(HttpClient client, ILogger? logger = null, string userName = "")
-            : base(logger ?? HttpClientLoggerSingleton.GetInstance())
+            : base(logger ?? HttpLoggerSingleton.GetInstance())
         {
             this.Client = client;
             this.Tool = new(this.Logger, this.Client);

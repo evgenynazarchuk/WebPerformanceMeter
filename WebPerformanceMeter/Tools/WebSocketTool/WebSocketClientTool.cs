@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools.WebSocketTool
 {
@@ -17,11 +18,14 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
 
         public readonly int SendBufferSize;
 
+        private readonly ILogger _logger;
+
         public WebSocketClientTool(
             string host,
             int port,
             string path,
-            int receiveBufferSize = 1024, 
+            ILogger logger,
+            int receiveBufferSize = 1024,
             int sendBufferSize = 1024)
         {
             this.ClientWebSocket = new ClientWebSocket();
@@ -32,21 +36,25 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
                 Port = port,
                 Path = path
             }.Uri;
+
             this.ReceiveBufferSize = receiveBufferSize;
             this.SendBufferSize = sendBufferSize;
+            this._logger = logger;
         }
 
-        public static WebSocketClientTool Create(
-            string host,
-            int port,
-            string path,
-            int receiveBufferSize = 1024,
-            int sendBufferSize = 1024)
-            => new WebSocketClientTool(host, port, path, receiveBufferSize, sendBufferSize);
-
-        public async ValueTask ConnectAsync()
+        public async ValueTask ConnectAsync(string userName = "")
         {
+            long startConnect;
+            long endConnect;
+
+            startConnect = ScenarioTimer.Time.Elapsed.Ticks;
             await this.ClientWebSocket.ConnectAsync(this.Uri, CancellationToken.None);
+            endConnect = ScenarioTimer.Time.Elapsed.Ticks;
+
+            this._logger.AppendLogMessage(
+                "WebSocketLogMessage.json",
+                $"{userName},,connect,{startConnect},{endConnect}",
+                typeof(WebSocketLogMessage));
         }
 
         public async ValueTask DisconnectAsync()
@@ -60,69 +68,95 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
             }
         }
 
-        // read
-        public async ValueTask<ValueWebSocketReceiveResult> ReceiveBytesAsync(Memory<byte> buffer)
-        {
-            // TODO logging
-            var watch = new Stopwatch();
 
-            watch.Start();
+        // base
+        public async ValueTask SendAsync(
+            ReadOnlyMemory<byte> buffer,
+            WebSocketMessageType messageType = WebSocketMessageType.Binary,
+            bool endOfMessage = true,
+            string userName = "",
+            string label = "")
+        {
+            long startRequest;
+            long finishRequest;
+
+            startRequest = ScenarioTimer.Time.Elapsed.Ticks;
+            await this.ClientWebSocket.SendAsync(buffer, messageType, endOfMessage, CancellationToken.None);
+            finishRequest = ScenarioTimer.Time.Elapsed.Ticks;
+
+            this._logger.AppendLogMessage(
+                "WebSocketLogMessage.json",
+                $"{userName},{label},send,{startRequest},{finishRequest}",
+                typeof(WebSocketLogMessage));
+        }
+
+        public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(
+            Memory<byte> buffer,
+            string userName = "",
+            string label = "")
+        {
+            long startReceive;
+            long endReceive;
+
+            startReceive = ScenarioTimer.Time.Elapsed.Ticks;
             var result = await this.ClientWebSocket.ReceiveAsync(buffer, CancellationToken.None);
-            watch.Stop();
+            endReceive = ScenarioTimer.Time.Elapsed.Ticks;
+
+            this._logger.AppendLogMessage(
+                $"WebSocketLogMessage.json",
+                $"{userName},{label},receive,{startReceive},{endReceive}",
+                typeof(WebSocketLogMessage));
 
             return result;
         }
 
-        public async ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync()
-        {
-            var buffer = WebSocket.CreateClientBuffer(this.ReceiveBufferSize, this.SendBufferSize);
-            var result = await this.ReceiveBytesAsync(buffer);
-
-            return (buffer: buffer, bufferInfo: result);
-        }
-
-        public async ValueTask<string> ReceiveMessageAsync()
-        {
-            var buffer = WebSocket.CreateClientBuffer(1024, 1024);
-            var result = await this.ReceiveBytesAsync(buffer);
-            var message = Encoding.UTF8.GetString(buffer.ToArray(), 0, result.Count);
-
-            return message;
-        }
-
-        // send
-        public async ValueTask SendAsync(
-            ReadOnlyMemory<byte> buffer,
-            WebSocketMessageType messageType = WebSocketMessageType.Binary,
-            bool endOfMessage = true)
-        {
-            // log
-            var watch = new Stopwatch();
-
-            watch.Start();
-            await this.ClientWebSocket.SendAsync(buffer, messageType, endOfMessage, CancellationToken.None);
-            watch.Stop();
-        }
-
-        public async ValueTask SendMessageAsync(string message)
+        // message
+        public async ValueTask SendMessageAsync(string message, string userName = "", string label = "")
         {
             var buffer = new ReadOnlyMemory<byte>(
                 array: Encoding.UTF8.GetBytes(message),
                 start: 0,
                 length: message.Length);
 
-            await this.SendAsync(buffer: buffer, messageType: WebSocketMessageType.Text);
+            await this.SendAsync(
+                buffer: buffer,
+                messageType: WebSocketMessageType.Text,
+                userName: userName,
+                label: label);
         }
 
-        public async ValueTask SendBytesAsync(ReadOnlyMemory<byte> buffer)
+        public async ValueTask<string> ReceiveMessageAsync(string userName = "", string label = "")
         {
-            await this.SendAsync(buffer: buffer, messageType: WebSocketMessageType.Binary);
+            var buffer = WebSocket.CreateClientBuffer(1024, 1024);
+            var result = await this.ReceiveAsync(buffer, userName, label);
+            var message = Encoding.UTF8.GetString(buffer.ToArray(), 0, result.Count);
+
+            return message;
         }
 
-        // TODO
-        // wait and receive for time
-        // wait for n message
-        // 
+
+        // bytes
+        public async ValueTask SendBytesAsync(
+            ReadOnlyMemory<byte> buffer,
+            string userName = "",
+            string label = "")
+        {
+            await this.SendAsync(
+                buffer: buffer,
+                messageType: WebSocketMessageType.Binary,
+                userName: userName,
+                label: label);
+        }
+
+        public async ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync(
+            string userName = "",
+            string label = "")
+        {
+            var buffer = WebSocket.CreateClientBuffer(this.ReceiveBufferSize, this.SendBufferSize);
+            var result = await this.ReceiveAsync(buffer, userName, label);
+
+            return (buffer: buffer, bufferInfo: result);
+        }
 
         // dispose
         public async ValueTask DisposeAsync()

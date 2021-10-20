@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools.GrpcTool
 {
@@ -14,23 +16,33 @@ namespace WebPerformanceMeter.Tools.GrpcTool
 
         private readonly object _grpcClient;
 
-        public GrpcClientTool(string address, Type serviceClientType)
+        private readonly ILogger _logger;
+
+        public GrpcClientTool(
+            string address,
+            ILogger logger,
+            Type serviceClientType)
         {
             this._grpcChannel = GrpcChannel.ForAddress(address);
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
 
-            this._grpcClient = ctor is not null 
-                ? ctor.Invoke(new[] { this._grpcChannel }) 
+            this._grpcClient = ctor is not null
+                ? ctor.Invoke(new[] { this._grpcChannel })
                 : throw new ApplicationException("gRpc client is not create");
 
             if (this._grpcClient is null)
             {
                 throw new ApplicationException("gRpc client is not create");
             }
+
+            this._logger = logger;
         }
 
-        public GrpcClientTool(HttpClient httpClient, Type serviceClientType)
+        public GrpcClientTool(
+            HttpClient httpClient,
+            ILogger logger,
+            Type serviceClientType)
         {
             this._grpcChannel = httpClient.BaseAddress is not null
                 ? GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient })
@@ -41,12 +53,15 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             this._grpcClient = ctor is not null
                 ? ctor.Invoke(new[] { this._grpcChannel })
                 : throw new ApplicationException("gRpc client is not create");
+
+            this._logger = logger;
         }
 
-        public static GrpcClientTool Create(string address, Type serviceClientType)
-            => new GrpcClientTool(address, serviceClientType);
-
-        public async ValueTask<TResponse> UnaryCallAsync<TResponse, TRequest>(string methodCall, TRequest requestBody)
+        public async ValueTask<TResponse> UnaryCallAsync<TResponse, TRequest>(
+            string methodCall,
+            TRequest requestBody,
+            string userName = "",
+            string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
         {
@@ -56,14 +71,25 @@ namespace WebPerformanceMeter.Tools.GrpcTool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 4);
 
-            // TODO logging
+            long startMethodCall;
+            long endMethodCall;
+            startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+
+            //
             var response = await (AsyncUnaryCall<TResponse>)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
             //
+
+            endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
             return response;
         }
 
-        public async ValueTask<TResponse> ClientStreamAsync<TResponse, TRequest>(string methodCall, ICollection<TRequest> requestBodyList)
+        public async ValueTask<TResponse> ClientStreamAsync<TResponse, TRequest>(
+            string methodCall,
+            ICollection<TRequest> requestBodyList,
+            string userName = "",
+            string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
         {
@@ -73,20 +99,32 @@ namespace WebPerformanceMeter.Tools.GrpcTool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 3);
 
+            long startMethodCall;
+            long endMethodCall;
+            startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+
+            //
             using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>)method.Invoke(this._grpcClient, new object[] { null, null, null });
 
-            // TODO logging
             foreach (var requestBody in requestBodyList)
             {
                 await grpcConnect.RequestStream.WriteAsync(requestBody);
             }
 
             await grpcConnect.RequestStream.CompleteAsync();
+            //
+
+            endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
             return grpcConnect.ResponseAsync.Result;
         }
 
-        public async ValueTask<IReadOnlyCollection<TResponse>> ServerStreamAsync<TResponse, TRequest>(string methodCall, TRequest requestBody)
+        public async ValueTask<IReadOnlyCollection<TResponse>> ServerStreamAsync<TResponse, TRequest>(
+            string methodCall,
+            TRequest requestBody,
+            string userName = "",
+            string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
         {
@@ -96,19 +134,31 @@ namespace WebPerformanceMeter.Tools.GrpcTool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 4);
 
+            long startMethodCall;
+            long endMethodCall;
+            startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+
+            //
             using var grpcConnect = (AsyncServerStreamingCall<TResponse>)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
             var messages = new List<TResponse>();
 
-            // TODO logging
             while (await grpcConnect.ResponseStream.MoveNext())
             {
                 messages.Add(grpcConnect.ResponseStream.Current);
             }
+            //
+
+            endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
             return messages;
         }
 
-        public async ValueTask<IReadOnlyCollection<TResponse>> BidirectionalStreamAsync<TResponse, TRequest>(string methodCall, ICollection<TRequest> requestBodyList)
+        public async ValueTask<IReadOnlyCollection<TResponse>> BidirectionalStreamAsync<TResponse, TRequest>(
+            string methodCall,
+            ICollection<TRequest> requestBodyList,
+            string userName = "",
+            string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
         {
@@ -118,6 +168,11 @@ namespace WebPerformanceMeter.Tools.GrpcTool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 3);
 
+            long startMethodCall;
+            long endMethodCall;
+            startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+
+            //
             using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>)method.Invoke(this._grpcClient, new object[] { null, null, null });
             var responseMessages = new List<TResponse>();
 
@@ -129,6 +184,7 @@ namespace WebPerformanceMeter.Tools.GrpcTool
                 }
             });
 
+
             foreach (var requestBody in requestBodyList)
             {
                 await grpcConnect.RequestStream.WriteAsync(requestBody);
@@ -136,6 +192,10 @@ namespace WebPerformanceMeter.Tools.GrpcTool
 
             await grpcConnect.RequestStream.CompleteAsync();
             await readMessageTask;
+            //
+
+            endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
             return responseMessages;
         }

@@ -1,12 +1,12 @@
-﻿namespace WebPerformanceMeter.Logger.HttpClientLog
+﻿namespace WebPerformanceMeter.Logger
 {
-    public class HttpClientToolLogMessageByteAnalytic
+    public class HttpLogMessageByteAnalytic
     {
         public long EndResponseTime { get; set; }
 
         public long Count { get; set; }
 
-        public HttpClientToolLogMessageByteAnalytic(
+        public HttpLogMessageByteAnalytic(
             long endResponseTime,
             long count)
         {

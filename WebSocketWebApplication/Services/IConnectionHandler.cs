@@ -15,6 +15,6 @@ namespace WebSocketWebApplication.Services
 
         void AddSocket(WebSocket socket);
 
-        Task RemoveSocket(Guid id);
+        Task RemoveSocketAsync(Guid id);
     }
 }

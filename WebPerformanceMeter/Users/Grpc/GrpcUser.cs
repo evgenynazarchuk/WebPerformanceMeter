@@ -6,14 +6,14 @@ using WebPerformanceMeter.Tools.GrpcTool;
 
 namespace WebPerformanceMeter.Users.Grpc
 {
-    public class GrpcUser : User, IGrpcUser
+    public abstract partial class GrpcUser : User, IGrpcUser
     {
         protected readonly string address;
 
-        protected object grpcClientType;
+        protected Type? grpcClientType = null;
 
         public GrpcUser(string address, ILogger? logger = null, string userName = "")
-            : base(logger) 
+            : base(logger ?? GrpcLoggerSingleton.GetInstance())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
             this.address = address;
@@ -30,7 +30,12 @@ namespace WebPerformanceMeter.Users.Grpc
             bool reuseDataInLoop = true
             )
         {
-            using var client = GrpcClientTool.Create(this.address, this.grpcClientType.GetType());
+            if (grpcClientType is null)
+            {
+                throw new ApplicationException("Grpc Client Type is not set. Try UseGrpcClient()");
+            }
+
+            using var client = new GrpcClientTool(this.address, this.Logger, this.grpcClientType.GetType());
 
             object? entity = null;
 

@@ -1,6 +1,6 @@
-﻿namespace WebPerformanceMeter.Logger.HttpClientLog
+﻿namespace WebPerformanceMeter.Logger
 {
-    public class HttpClientToolLogMessageByStartedRequest
+    public class HttpLogMessageByStartedRequest
     {
         public string? User { get; set; }
 
@@ -16,7 +16,7 @@
 
         public long CountStartedRequest { get; set; }
 
-        public HttpClientToolLogMessageByStartedRequest(
+        public HttpLogMessageByStartedRequest(
             string? user,
             string? httpMethod,
             string? request,

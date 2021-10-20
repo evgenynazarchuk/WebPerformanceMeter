@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
-using WebPerformanceMeter.Logger.HttpClientLog;
 using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools.HttpTool
@@ -110,7 +109,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            this.Logger.AppendLogMessage("HttpClientToolLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpClientToolLogMessage));
+            this.Logger.AppendLogMessage("HttpClientToolLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpLogMessage));
 
             var response = new HttpResponse(
                 statusCode: (int)httpResponseMessage.StatusCode,

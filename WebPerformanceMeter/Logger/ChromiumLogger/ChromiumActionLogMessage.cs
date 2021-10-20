@@ -1,6 +1,6 @@
-﻿namespace WebPerformanceMeter.Logger.BrowserLog
+﻿namespace WebPerformanceMeter.Logger
 {
-    public class UserActionLogMessage
+    public class ChromiumActionLogMessage
     {
         public string? UserName { get; set; }
 

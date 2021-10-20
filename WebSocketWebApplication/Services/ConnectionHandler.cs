@@ -34,22 +34,19 @@ namespace WebSocketWebApplication.Services
 
         public void AddSocket(WebSocket socket)
         {
-            this._sockets.TryAdd(CreateConnectionId(), socket);
+            this._sockets.TryAdd(Guid.NewGuid(), socket);
         }
 
-        public async Task RemoveSocket(Guid id)
+        public Task RemoveSocketAsync(Guid id)
         {
             if (this._sockets.TryRemove(id, out WebSocket socket))
             {
-                await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
+                return socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
                                     statusDescription: "Closed by the Connection Manager",
                                     cancellationToken: CancellationToken.None);
             }
-        }
 
-        private Guid CreateConnectionId()
-        {
-            return Guid.NewGuid();
+            return Task.CompletedTask;
         }
     }
 }

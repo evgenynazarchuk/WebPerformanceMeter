@@ -18,8 +18,8 @@ namespace WebSocketWebApplication
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<ConnectionHandler>();
-            services.AddSingleton<MessageHandler>();
+            services.AddTransient<IConnectionHandler, ConnectionHandler>();
+            services.AddSingleton<IWebSocketHandler, MessageHandler>();
 
             //services.AddControllers();
             //services.AddSwaggerGen(c =>
@@ -32,13 +32,13 @@ namespace WebSocketWebApplication
         {
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
-            var chatHandler = serviceProvider.GetService<MessageHandler>();
+            var webSocketHandler = serviceProvider.GetService<IWebSocketHandler>();
 
             //app.UseHsts();
             //app.UseHttpsRedirection();
 
             app.UseWebSockets();
-            app.MapWebSocketManager("/ws", chatHandler);
+            app.MapWebSocketManager("/ws", webSocketHandler);
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

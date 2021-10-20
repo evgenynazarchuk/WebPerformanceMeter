@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestWebApplication.WebPerfo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcWebApplication.IntegrationTest", "GrpcWebApplication.IntegrationTest\GrpcWebApplication.IntegrationTest.csproj", "{250C7178-677D-4DBB-AE6A-F028795FA749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketWebApplication.IntegrationTest", "WebSocketWebApplication.IntegrationTest\WebSocketWebApplication.IntegrationTest.csproj", "{C72AEB1E-24F7-4593-977D-2FDD469132B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketWebApplication.IntegrationTest", "WebSocketWebApplication.IntegrationTest\WebSocketWebApplication.IntegrationTest.csproj", "{C72AEB1E-24F7-4593-977D-2FDD469132B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketWebApplication.PerformanceTest", "WebSocketWebApplication.PerformanceTest\WebSocketWebApplication.PerformanceTest.csproj", "{832D9E71-550A-4BB5-B5F7-5413E64831E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{C72AEB1E-24F7-4593-977D-2FDD469132B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C72AEB1E-24F7-4593-977D-2FDD469132B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C72AEB1E-24F7-4593-977D-2FDD469132B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{FEA77B96-8D41-4A30-8040-A50BA208FE7B} = {EED1249E-7FB0-4DBF-B3C6-9CF7FDB71C10}
 		{250C7178-677D-4DBB-AE6A-F028795FA749} = {35A5B2A4-0CA8-454B-B319-70AE53F9BA7B}
 		{C72AEB1E-24F7-4593-977D-2FDD469132B8} = {C8E46B5B-AEB0-4470-8278-3DD2C8B56386}
+		{832D9E71-550A-4BB5-B5F7-5413E64831E2} = {C8E46B5B-AEB0-4470-8278-3DD2C8B56386}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4E79BCD-B7BE-4429-B6A7-3E4D90282668}

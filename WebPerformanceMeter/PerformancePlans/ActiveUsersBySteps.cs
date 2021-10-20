@@ -97,9 +97,7 @@ namespace WebPerformanceMeter.PerformancePlans
                     currentMaximumActiveUsersCountPerPeriod -= this._usersStep;
             }
 
-            Task.WaitAll(this._activeUsers);
-
-            await Task.CompletedTask;
+            await Task.WhenAll(this._activeUsers);
         }
 
         private void UsersStepValidation(int step, int end)

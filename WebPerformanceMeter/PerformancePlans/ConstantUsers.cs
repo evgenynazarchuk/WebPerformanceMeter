@@ -49,9 +49,7 @@ namespace WebPerformanceMeter.PerformancePlans
                 this._invokedUsers[i] = this.User.InvokeAsync(this._userLoopCount, this._dataReader, this._reuseDataInLoop);
             }
 
-            Task.WaitAll(this._invokedUsers);
-
-            await Task.CompletedTask;
+            await Task.WhenAll(this._invokedUsers);
         }
     }
 }

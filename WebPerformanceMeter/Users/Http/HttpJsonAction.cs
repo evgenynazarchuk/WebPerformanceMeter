@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using WebPerformanceMeter.Tools.HttpTool;
 
-    public abstract partial class HttpClientUser : User
+    public abstract partial class HttpUser : User
     {
         public Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
             HttpMethod httpMethod,

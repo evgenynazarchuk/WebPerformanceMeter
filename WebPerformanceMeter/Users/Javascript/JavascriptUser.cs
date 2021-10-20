@@ -1,12 +1,12 @@
-﻿namespace WebPerformanceMeter.Users.Javascript
-{
-    using Microsoft.Playwright;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Interfaces;
-    using WebPerformanceMeter.Logger;
+﻿using Microsoft.Playwright;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Logger;
 
+namespace WebPerformanceMeter.Users.Javascript
+{
     public abstract partial class JavascriptUser : User, IDisposable
     {
         protected readonly IPlaywright Playwright;
@@ -42,7 +42,7 @@
 
         public override async Task InvokeAsync(
             int loopCount = 1,
-            IEntityReader? dataReader = null,
+            IDataReader? dataReader = null,
             bool reuseDataInLoop = true
             )
         {

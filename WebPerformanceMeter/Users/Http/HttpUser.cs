@@ -1,20 +1,20 @@
-﻿namespace WebPerformanceMeter.Users
-{
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Interfaces;
-    using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Logger.HttpClientLog;
-    using WebPerformanceMeter.Tools.HttpTool;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Logger.HttpClientLog;
+using WebPerformanceMeter.Tools.HttpTool;
 
-    public abstract partial class HttpClientUser : User
+namespace WebPerformanceMeter.Users
+{
+    public abstract partial class HttpUser : User
     {
         protected readonly HttpClient Client;
 
         protected readonly HttpTool Tool;
 
-        public HttpClientUser(HttpClient client, ILogger? logger = null, string userName = "")
+        public HttpUser(HttpClient client, ILogger? logger = null, string userName = "")
             : base(logger ?? HttpClientLoggerSingleton.GetInstance())
         {
             this.Client = client;
@@ -23,7 +23,7 @@
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
         }
 
-        public HttpClientUser(string host, ILogger logger, string userName = "")
+        public HttpUser(string host, ILogger logger, string userName = "")
             : base(logger)
         {
             this.Client = new HttpClient() { BaseAddress = new Uri(host) };
@@ -34,7 +34,7 @@
 
         public override async Task InvokeAsync(
             int loopCount = 1,
-            IEntityReader? dataReader = null,
+            IDataReader? dataReader = null,
             bool reuseDataInLoop = true
             )
         {

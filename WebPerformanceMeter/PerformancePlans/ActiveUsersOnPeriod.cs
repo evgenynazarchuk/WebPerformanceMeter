@@ -19,7 +19,7 @@ namespace WebPerformanceMeter.PerformancePlans
 
         private readonly int _userLoopCount;
 
-        private readonly IEntityReader? _dataReader;
+        private readonly IDataReader? _dataReader;
 
         private readonly bool _reuseDataInLoop;
 
@@ -37,7 +37,7 @@ namespace WebPerformanceMeter.PerformancePlans
             int activeUsersCount,
             TimeSpan performancePlanDuration,
             int userLoopCount = 1,
-            IEntityReader? dataReader = null,
+            IDataReader? dataReader = null,
             bool reuseDataInLoop = true)
             : base(user)
         {

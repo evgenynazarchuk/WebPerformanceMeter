@@ -23,7 +23,7 @@
         }
     }
 
-    public class SearchGoogleUser : BrowserUser
+    public class SearchGoogleUser : ChromiumUser
     {
         protected override async Task PerformanceAsync(PageContext pageContext)
         {

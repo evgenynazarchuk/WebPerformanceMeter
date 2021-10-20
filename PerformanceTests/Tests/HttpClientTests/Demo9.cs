@@ -23,7 +23,7 @@ namespace PerformanceTests.Tests.HttpClientTests
                 .StartAsync();
         }
 
-        public class UserRequest : HttpClientUser
+        public class UserRequest : HttpUser
         {
             public UserRequest(HttpClient client)
                 : base(client) { }

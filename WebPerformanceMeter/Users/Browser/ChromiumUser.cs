@@ -1,17 +1,17 @@
-﻿namespace WebPerformanceMeter.Users
-{
-    using System;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Interfaces;
-    using WebPerformanceMeter.Logger;
-    using WebPerformanceMeter.Logger.BrowserLog;
-    using WebPerformanceMeter.Tools.BrowserTool;
+﻿using System;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Logger.BrowserLog;
+using WebPerformanceMeter.Tools.BrowserTool;
 
-    public abstract class BrowserUser : User, IDisposable
+namespace WebPerformanceMeter.Users
+{
+    public abstract class ChromiumUser : User, IDisposable
     {
         protected readonly BrowserTool BrowserTool;
 
-        public BrowserUser(ILogger? logger = null, string userName = "")
+        public ChromiumUser(ILogger? logger = null, string userName = "")
             : base(logger ?? BrowserLoggerSingleton.GetInstance())
         {
             this.SetUserName(string.IsNullOrEmpty(userName) ? this.GetType().Name : userName);
@@ -25,7 +25,7 @@
 
         public override async Task InvokeAsync(
             int loopCount = 1,
-            IEntityReader? dataReader = null,
+            IDataReader? dataReader = null,
             bool reuseDataInLoop = true
             )
         {

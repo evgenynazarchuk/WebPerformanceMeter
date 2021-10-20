@@ -6,7 +6,7 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
-    public sealed class CsvReader<TResult> : IEntityReader
+    public sealed class CsvReader<TResult> : IDataReader
         where TResult : class, new()
     {
         private StreamReader? streamReader = null;
@@ -17,7 +17,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 
         private bool hasHeader = false;
 
-        public void ProcessCsvFile(string path, bool hasHeader = false, bool cyclicalData = false, string separator = ",")
+        public void ProcessFile(string path, bool hasHeader = false, bool cyclicalData = false, string separator = ",")
         {
             this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
             this.cyclicalData = cyclicalData;

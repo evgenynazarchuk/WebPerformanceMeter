@@ -46,7 +46,7 @@ namespace PerformanceTests.Tests.HttpClientTests
                 .StartAsync();
         }
 
-        public class User1 : HttpClientUser
+        public class User1 : HttpUser
         {
             public User1(HttpClient client)
                 : base(client) { }
@@ -61,7 +61,7 @@ namespace PerformanceTests.Tests.HttpClientTests
             }
         }
 
-        public class User2 : HttpClientUser
+        public class User2 : HttpUser
         {
             public User2(HttpClient client)
                 : base(client) { }

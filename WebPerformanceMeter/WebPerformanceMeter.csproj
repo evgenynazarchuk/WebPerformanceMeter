@@ -7,17 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Logger\GrpcLogger\" />
-    <Folder Include="Logger\JavascriptRequestLogger\" />
+    <Folder Include="Logger\JavascriptLogger\" />
     <Folder Include="Logger\WebSocketLogger\" />
     <Folder Include="Tools\JavascriptTool\" />
-    <Folder Include="Tools\GrpcTool\" />
-    <Folder Include="Tools\WebSocketTool\" />
-    <Folder Include="Users\Grpc\" />
-    <Folder Include="Users\WebSocket\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.Core" Version="2.41.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
+    <PackageReference Include="Grpc.Net.Common" Version="2.40.0" />
     <PackageReference Include="Microsoft.Playwright" Version="1.14.0" />
   </ItemGroup>
 

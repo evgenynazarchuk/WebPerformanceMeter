@@ -1,10 +1,10 @@
-﻿namespace WebPerformanceMeter.Users
-{
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Interfaces;
-    using WebPerformanceMeter.Logger;
+﻿using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Logger;
 
-    public abstract class User
+namespace WebPerformanceMeter.Users
+{
+    public abstract class User : IUser
     {
         public string UserName { get; private set; }
 
@@ -21,6 +21,6 @@
             this.UserName = userName;
         }
 
-        public abstract Task InvokeAsync(int loopCount, IEntityReader? dataReader, bool reuseDataInLoop);
+        public abstract Task InvokeAsync(int userLoopCount, IDataReader? dataSource, bool reuseDataInLoop);
     }
 }

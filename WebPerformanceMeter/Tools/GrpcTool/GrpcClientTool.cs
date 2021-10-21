@@ -26,10 +26,14 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             this._grpcChannel = GrpcChannel.ForAddress(address);
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
-
-            this._grpcClient = ctor is not null
-                ? ctor.Invoke(new[] { this._grpcChannel })
-                : throw new ApplicationException("gRpc client is not create");
+            if (ctor is not null)
+            {
+                this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+            }
+            else
+            {
+                throw new ApplicationException("gRpc client is not create");
+            }
 
             if (this._grpcClient is null)
             {
@@ -44,15 +48,29 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             ILogger logger,
             Type serviceClientType)
         {
-            this._grpcChannel = httpClient.BaseAddress is not null
-                ? GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient })
-                : throw new ApplicationException("Base address is not set");
+            if (httpClient.BaseAddress is not null)
+            {
+                this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
+            }
+            else
+            {
+                throw new ApplicationException("Base address is not set");
+            }
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
+            if (ctor is not null)
+            {
+                this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+            }
+            else
+            {
+                throw new ApplicationException("gRpc client is not create");
+            }
 
-            this._grpcClient = ctor is not null
-                ? ctor.Invoke(new[] { this._grpcChannel })
-                : throw new ApplicationException("gRpc client is not create");
+            if (this._grpcClient is null)
+            {
+                throw new ApplicationException("gRpc client is not create");
+            }
 
             this._logger = logger;
         }
@@ -76,7 +94,13 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
             //
-            var response = await (AsyncUnaryCall<TResponse>)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            var grpcCall = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            if (grpcCall is null)
+            {
+                throw new ApplicationException("gRPC connect error");
+            }
+
+            var response = await grpcCall;
             //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
@@ -104,20 +128,24 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
             //
-            using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            using var grpcCall = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            if (grpcCall is null)
+            {
+                throw new ApplicationException("gRPC call error");
+            }
 
             foreach (var requestBody in requestBodyList)
             {
-                await grpcConnect.RequestStream.WriteAsync(requestBody);
+                await grpcCall.RequestStream.WriteAsync(requestBody);
             }
 
-            await grpcConnect.RequestStream.CompleteAsync();
+            await grpcCall.RequestStream.CompleteAsync();
             //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
             this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
-            return grpcConnect.ResponseAsync.Result;
+            return grpcCall.ResponseAsync.Result;
         }
 
         public async ValueTask<IReadOnlyCollection<TResponse>> ServerStreamAsync<TResponse, TRequest>(
@@ -139,12 +167,17 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
             //
-            using var grpcConnect = (AsyncServerStreamingCall<TResponse>)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            using var grpcCall = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            if (grpcCall is null)
+            {
+                throw new ApplicationException("gRPC call error");
+            }
+
             var messages = new List<TResponse>();
 
-            while (await grpcConnect.ResponseStream.MoveNext())
+            while (await grpcCall.ResponseStream.MoveNext())
             {
-                messages.Add(grpcConnect.ResponseStream.Current);
+                messages.Add(grpcCall.ResponseStream.Current);
             }
             //
 
@@ -170,15 +203,21 @@ namespace WebPerformanceMeter.Tools.GrpcTool
 
             long startMethodCall;
             long endMethodCall;
-            startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
+            startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
+            
             //
-            using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            using var grpcCall = (AsyncDuplexStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            if (grpcCall is null)
+            {
+                throw new ApplicationException("gRPC call error");
+            }
+
             var responseMessages = new List<TResponse>();
 
             var readMessageTask = Task.Run(async () =>
             {
-                await foreach (var responseMessage in grpcConnect.ResponseStream.ReadAllAsync())
+                await foreach (var responseMessage in grpcCall.ResponseStream.ReadAllAsync())
                 {
                     responseMessages.Add(responseMessage);
                 }
@@ -187,10 +226,10 @@ namespace WebPerformanceMeter.Tools.GrpcTool
 
             foreach (var requestBody in requestBodyList)
             {
-                await grpcConnect.RequestStream.WriteAsync(requestBody);
+                await grpcCall.RequestStream.WriteAsync(requestBody);
             }
 
-            await grpcConnect.RequestStream.CompleteAsync();
+            await grpcCall.RequestStream.CompleteAsync();
             await readMessageTask;
             //
 

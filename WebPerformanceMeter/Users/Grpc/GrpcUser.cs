@@ -30,7 +30,7 @@ namespace WebPerformanceMeter.Users.Grpc
             bool reuseDataInLoop = true
             )
         {
-            if (grpcClientType is null)
+            if (this.grpcClientType is null)
             {
                 throw new ApplicationException("Grpc Client Type is not set. Try UseGrpcClient()");
             }

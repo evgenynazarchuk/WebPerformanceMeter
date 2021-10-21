@@ -26,6 +26,6 @@ namespace WebPerformanceMeter.Users
             this.Logger = logger;
         }
 
-        public abstract Task InvokeAsync(int userLoopCount, IDataReader? dataSource, bool reuseDataInLoop);
+        public abstract Task InvokeAsync(int userLoopCount, IDataReader? dataReader, bool reuseDataInLoop);
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace WebPerformanceMeter.Tools.GrpcTool
+namespace WebPerformanceMeter.Interfaces
 {
-    public interface IGrpcClientTool
+    public interface IGrpcClientTool : ITool
     {
         ValueTask<TResponse> UnaryCallAsync<TResponse, TRequest>(
             string methodCall,

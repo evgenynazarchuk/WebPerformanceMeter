@@ -1,11 +1,12 @@
-﻿namespace WebPerformanceMeter.Users
-{
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Tools.HttpTool;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using WebPerformanceMeter.Tools.HttpTool;
+using WebPerformanceMeter.Interfaces;
 
-    public abstract partial class HttpUser : User
+namespace WebPerformanceMeter
+{
+    public partial class BaseHttpUser : BaseUser, IBaseHttpUser, IBaseHttpJsonUser
     {
         public Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
             HttpMethod httpMethod,

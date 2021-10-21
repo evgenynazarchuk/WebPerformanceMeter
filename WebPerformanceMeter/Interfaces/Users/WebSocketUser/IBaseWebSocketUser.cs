@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Net.WebSockets;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Tools.WebSocketTool;
+using WebPerformanceMeter.Users.WebSocket;
+using System.Net.WebSockets;
 
-namespace WebPerformanceMeter.Users.WebSocket
+namespace WebPerformanceMeter.Interfaces
 {
-    public interface IWebSocketUser : IUser
+    public interface IBaseWebSocketUser : IBaseUser
     {
+        IWebSocketTool Tool { get; set; }
+
         void SetClientBuffer(
             int receiveBufferSize = 1024,
             int sendBufferSize = 1024);

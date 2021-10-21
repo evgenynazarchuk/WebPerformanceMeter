@@ -2,9 +2,9 @@
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
-namespace WebPerformanceMeter.Tools.WebSocketTool
+namespace WebPerformanceMeter.Interfaces
 {
-    public interface IWebSocketClientTool
+    public interface IWebSocketTool : ITool
     {
         ValueTask ConnectAsync(string userName = "");
 

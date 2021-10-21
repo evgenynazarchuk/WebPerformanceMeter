@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Tools.WebSocketTool;
 
 namespace WebPerformanceMeter.Users.WebSocket
 {
-    public abstract partial class WebSocketUser : User, IWebSocketUser
+    public abstract partial class WebSocketUser : BaseUser, IWebSocketUser
     {
         public virtual ValueTask SendMessageAsync(
-            WebSocketClientTool client,
+            WebSocketTool client,
             string message,
             string label = "")
         {
             return client.SendMessageAsync(message, this.UserName, label);
         }
 
-        public virtual ValueTask<string> ReceiveMessageAsync(WebSocketClientTool client, string label = "")
+        public virtual ValueTask<string> ReceiveMessageAsync(WebSocketTool client, string label = "")
         {
             return client.ReceiveMessageAsync(this.UserName, label);
         }
 
         public virtual ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(
-            WebSocketClientTool client,
+            WebSocketTool client,
             Memory<byte> buffer,
             string label = "")
         {
@@ -29,14 +28,14 @@ namespace WebPerformanceMeter.Users.WebSocket
         }
 
         public virtual ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync(
-            WebSocketClientTool client,
+            WebSocketTool client,
             string label = "")
         {
             return client.ReceiveBytesAsync(this.UserName, label);
         }
 
         public virtual ValueTask SendAsync(
-            WebSocketClientTool client,
+            WebSocketTool client,
             ReadOnlyMemory<byte> buffer,
             WebSocketMessageType messageType,
             bool endOfMessage = true,
@@ -46,7 +45,7 @@ namespace WebPerformanceMeter.Users.WebSocket
         }
 
         public virtual ValueTask SendBytesAsync(
-            WebSocketClientTool client,
+            WebSocketTool client,
             ReadOnlyMemory<byte> buffer,
             string label = "")
         {

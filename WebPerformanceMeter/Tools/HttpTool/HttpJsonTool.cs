@@ -3,10 +3,11 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Tools.HttpTool
 {
-    public static class HttpJsonTool
+    public partial class HttpTool : IHttpJsonTool
     {
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
@@ -14,8 +15,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
         };
 
         // request: send, receive
-        public static async Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
-            this HttpTool tool,
+        public async Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -27,9 +27,9 @@ namespace WebPerformanceMeter.Tools.HttpTool
         {
             string requestContent = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
 
-            var response = await tool.RequestAsync(
+            var response = await this.RequestAsync(
                 httpMethod: httpMethod,
-                requestUri: requestUri,
+                path: requestUri,
                 requestContent: new StringContent(requestContent, Encoding.UTF8, "application/json"),
                 requestHeaders: requestHeaders,
                 userName: userName,
@@ -41,8 +41,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
         }
 
         // request: send
-        public static async Task<int> RequestAsJsonAsync<RequestObjectType>(
-            this HttpTool tool,
+        public async Task<int> RequestAsJsonAsync<RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -53,9 +52,9 @@ namespace WebPerformanceMeter.Tools.HttpTool
         {
             string requestContentString = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
 
-            HttpResponse response = await tool.RequestAsync(
+            HttpResponse response = await this.RequestAsync(
                 httpMethod: httpMethod,
-                requestUri: requestUri,
+                path: requestUri,
                 requestContent: new StringContent(requestContentString, Encoding.UTF8, "application/json"),
                 requestHeaders: requestHeaders,
                 userName: userName,
@@ -65,8 +64,7 @@ namespace WebPerformanceMeter.Tools.HttpTool
         }
 
         // request: receive
-        public static async Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType>(
-            this HttpTool tool,
+        public async Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             Dictionary<string, string>? requestHeaders = null,
@@ -74,9 +72,9 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string requestLabel = "")
             where ResponseObjectType : class, new()
         {
-            HttpResponse response = await tool.RequestAsync(
+            HttpResponse response = await this.RequestAsync(
                 httpMethod: httpMethod,
-                requestUri: requestUri,
+                path: requestUri,
                 requestHeaders: requestHeaders,
                 userName: user,
                 requestLabel: requestLabel);

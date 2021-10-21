@@ -7,21 +7,22 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Interfaces;
 
-namespace WebPerformanceMeter.Tools.GrpcTool
+namespace WebPerformanceMeter
 {
-    public sealed class GrpcClientTool : IGrpcClientTool, IDisposable
+    public sealed class GrpcClientTool : Tool, IGrpcClientTool, IDisposable
     {
         private readonly GrpcChannel _grpcChannel;
 
         private readonly object _grpcClient;
 
-        private readonly ILogger _logger;
-
         public GrpcClientTool(
             string address,
-            ILogger logger,
-            Type serviceClientType)
+            Type serviceClientType,
+            ILogger? logger = null)
+            : base(logger)
+
         {
             this._grpcChannel = GrpcChannel.ForAddress(address);
 
@@ -39,14 +40,13 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             {
                 throw new ApplicationException("gRpc client is not create");
             }
-
-            this._logger = logger;
         }
 
         public GrpcClientTool(
             HttpClient httpClient,
-            ILogger logger,
-            Type serviceClientType)
+            Type serviceClientType,
+            ILogger? logger = null)
+            : base(logger)
         {
             if (httpClient.BaseAddress is not null)
             {
@@ -71,8 +71,6 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             {
                 throw new ApplicationException("gRpc client is not create");
             }
-
-            this._logger = logger;
         }
 
         public async ValueTask<TResponse> UnaryCallAsync<TResponse, TRequest>(
@@ -104,8 +102,15 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
-            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    "GrpcLogMessage.json", 
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    typeof(GrpcLogMessage));
+            }
+            
             return response;
         }
 
@@ -143,8 +148,15 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
-            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
 
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    "GrpcLogMessage.json", 
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    typeof(GrpcLogMessage));
+            }
+            
             return grpcCall.ResponseAsync.Result;
         }
 
@@ -182,7 +194,14 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
-            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
+
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    "GrpcLogMessage.json", 
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    typeof(GrpcLogMessage));
+            }
 
             return messages;
         }
@@ -234,7 +253,14 @@ namespace WebPerformanceMeter.Tools.GrpcTool
             //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
-            this._logger.AppendLogMessage("GrpcLogMessage.json", $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", typeof(GrpcLogMessage));
+
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    "GrpcLogMessage.json", 
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    typeof(GrpcLogMessage));
+            }
 
             return responseMessages;
         }

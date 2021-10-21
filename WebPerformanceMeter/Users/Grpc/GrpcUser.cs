@@ -6,7 +6,7 @@ using WebPerformanceMeter.Tools.GrpcTool;
 
 namespace WebPerformanceMeter.Users.Grpc
 {
-    public abstract partial class GrpcUser : User, IGrpcUser
+    public abstract partial class GrpcUser : BaseUser, IGrpcUser
     {
         protected readonly string address;
 

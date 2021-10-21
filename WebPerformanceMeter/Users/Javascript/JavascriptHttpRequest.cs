@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public abstract partial class JavascriptUser : User
+    public abstract partial class JavascriptUser : BaseUser
     {
         public async Task PostRequestAsync()
         {

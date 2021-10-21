@@ -6,7 +6,7 @@ using WebPerformanceMeter.Tools.BrowserTool;
 
 namespace WebPerformanceMeter.Users
 {
-    public abstract class ChromiumUser : User, IDisposable
+    public abstract class ChromiumUser : BaseUser, IDisposable
     {
         protected readonly BrowserTool BrowserTool;
 

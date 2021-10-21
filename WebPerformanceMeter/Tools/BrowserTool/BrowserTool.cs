@@ -2,28 +2,26 @@
 using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Tools.BrowserTool
 {
-    public class BrowserTool : IDisposable
+    public class BrowserTool : Tool, IDisposable
     {
         public readonly IPlaywright Playwright;
 
         public readonly IBrowser Browser;
 
-        public readonly ILogger Logger;
-
         public readonly string UserName;
 
-        public BrowserTool(ILogger logger, string userName)
+        public BrowserTool(string userName, ILogger? logger = null)
+            : base(logger)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Chromium.LaunchAsync(new()
             {
                 Headless = true
             }).GetAwaiter().GetResult();
-
-            this.Logger = logger;
             this.UserName = userName;
         }
 
@@ -32,7 +30,7 @@ namespace WebPerformanceMeter.Tools.BrowserTool
             IBrowserContext browserContext = await Browser.NewContextAsync();
             IPage page = await browserContext.NewPageAsync();
 
-            return new PageContext(browserContext, page, this.Logger, this.UserName);
+            return new PageContext(browserContext, page, this.UserName, this.Logger);
         }
 
         public void Dispose()

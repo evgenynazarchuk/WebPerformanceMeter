@@ -9,48 +9,30 @@ namespace WebPerformanceMeter.PerformancePlans
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ActiveUsersBySteps : PerformancePlan
+    public abstract class ActiveUsersByStepsBase : UsersPerformancePlan
     {
-        private readonly int _fromActiveUsersCount;
+        protected readonly int fromActiveUsersCount;
 
-        private readonly int _toActiveUsersCount;
+        protected readonly int toActiveUsersCount;
 
-        private readonly int _usersStep;
+        protected readonly int usersStep;
 
-        private readonly TimeSpan _stepPeriodDuration;
+        protected readonly TimeSpan stepPeriodDuration;
 
-        private readonly Task[] _activeUsers;
+        protected readonly Task[] activeUsers;
 
-        private readonly int _periodsCount;
+        protected readonly int periodsCount;
 
-        private readonly int _UserLoopCount;
+        protected readonly int userLoopCount;
 
-        private readonly IDataReader? _dataReader;
-
-        private readonly bool _reuseDataInLoop;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="fromActiveUsersCount"></param>
-        /// <param name="toActiveUsersCount"></param>
-        /// <param name="usersStep"></param>
-        /// <param name="stepPeriodDuration"></param>
-        /// <param name="performancePlanDuration"></param>
-        /// <param name="userLoopCount"></param>
-        /// <param name="dataReader"></param>
-        /// <param name="reuseDataInLoop"></param>
-        public ActiveUsersBySteps(
-            User user,
+        public ActiveUsersByStepsBase(
+            IBaseUser user,
             int fromActiveUsersCount,
             int toActiveUsersCount,
             int usersStep,
             TimeSpan? stepPeriodDuration = null,
             TimeSpan? performancePlanDuration = null,
-            int userLoopCount = 1,
-            IDataReader? dataReader = null,
-            bool reuseDataInLoop = true)
+            int userLoopCount = 1)
             : base(user)
         {
             this.UsersCountValidation(fromActiveUsersCount, toActiveUsersCount);
@@ -60,45 +42,45 @@ namespace WebPerformanceMeter.PerformancePlans
             int maximumActiveUsersCount = Math.Max(fromActiveUsersCount, toActiveUsersCount);
             int minimumActiveUsersCount = Math.Min(fromActiveUsersCount, toActiveUsersCount);
 
-            this._fromActiveUsersCount = fromActiveUsersCount;
-            this._toActiveUsersCount = toActiveUsersCount;
-            this._usersStep = usersStep;
-            this._periodsCount = ((maximumActiveUsersCount - minimumActiveUsersCount) / usersStep) + 1;
-            this._activeUsers = new Task[maximumActiveUsersCount];
-            this._stepPeriodDuration = this.CalculateStepPeriodDuration(stepPeriodDuration, performancePlanDuration, this._periodsCount);
+            this.fromActiveUsersCount = fromActiveUsersCount;
+            this.toActiveUsersCount = toActiveUsersCount;
+            this.usersStep = usersStep;
+            this.periodsCount = ((maximumActiveUsersCount - minimumActiveUsersCount) / usersStep) + 1;
+            this.activeUsers = new Task[maximumActiveUsersCount];
+            this.stepPeriodDuration = this.CalculateStepPeriodDuration(stepPeriodDuration, performancePlanDuration, this.periodsCount);
 
-            this._UserLoopCount = userLoopCount;
-            this._dataReader = dataReader;
-            this._reuseDataInLoop = reuseDataInLoop;
+            this.userLoopCount = userLoopCount;
         }
 
         public override async Task StartAsync()
         {
-            int currentMaximumActiveUsersCountPerPeriod = this._fromActiveUsersCount;
+            int currentMaximumActiveUsersCountPerPeriod = this.fromActiveUsersCount;
 
-            for (int i = 1; i <= this._periodsCount; i++)
+            for (int i = 1; i <= this.periodsCount; i++)
             {
-                var endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this._stepPeriodDuration.TotalSeconds;
+                var endTime = ScenarioTimer.Time.Elapsed.TotalSeconds + this.stepPeriodDuration.TotalSeconds;
 
                 while (ScenarioTimer.Time.Elapsed.TotalSeconds < endTime)
                 {
                     for (int currentUser = 0; currentUser < currentMaximumActiveUsersCountPerPeriod; currentUser++)
                     {
-                        if (this._activeUsers[currentUser] is null || this._activeUsers[currentUser].IsCompleted)
+                        if (this.activeUsers[currentUser] is null || this.activeUsers[currentUser].IsCompleted)
                         {
-                            this._activeUsers[currentUser] = this.User.InvokeAsync(this._UserLoopCount, this._dataReader, this._reuseDataInLoop);
+                            this.activeUsers[currentUser] = this.InvokeUserAsync();
                         }
                     }
                 }
 
-                if (this._fromActiveUsersCount <= this._toActiveUsersCount)
-                    currentMaximumActiveUsersCountPerPeriod += this._usersStep;
+                if (this.fromActiveUsersCount <= this.toActiveUsersCount)
+                    currentMaximumActiveUsersCountPerPeriod += this.usersStep;
                 else
-                    currentMaximumActiveUsersCountPerPeriod -= this._usersStep;
+                    currentMaximumActiveUsersCountPerPeriod -= this.usersStep;
             }
 
-            await Task.WhenAll(this._activeUsers);
+            await Task.WhenAll(this.activeUsers);
         }
+
+        protected abstract Task InvokeUserAsync();
 
         private void UsersStepValidation(int step, int end)
         {

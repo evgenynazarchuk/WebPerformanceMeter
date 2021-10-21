@@ -5,10 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Interfaces;
 
-namespace WebPerformanceMeter.Tools.WebSocketTool
+namespace WebPerformanceMeter
 {
-    public class WebSocketClientTool : IWebSocketClientTool, IAsyncDisposable
+    public class WebSocketTool : Tool, IWebSocketTool, IAsyncDisposable
     {
         public readonly ClientWebSocket ClientWebSocket;
 
@@ -18,15 +19,14 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
 
         public readonly int SendBufferSize;
 
-        private readonly ILogger _logger;
-
-        public WebSocketClientTool(
+        public WebSocketTool(
             string host,
             int port,
             string path,
-            ILogger logger,
             int receiveBufferSize = 1024,
-            int sendBufferSize = 1024)
+            int sendBufferSize = 1024,
+            ILogger? logger = null)
+            : base(logger)
         {
             this.ClientWebSocket = new ClientWebSocket();
             this.Uri = new UriBuilder()
@@ -39,7 +39,6 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
 
             this.ReceiveBufferSize = receiveBufferSize;
             this.SendBufferSize = sendBufferSize;
-            this._logger = logger;
         }
 
         public async ValueTask ConnectAsync(string userName = "")
@@ -51,10 +50,13 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
             await this.ClientWebSocket.ConnectAsync(this.Uri, CancellationToken.None);
             endConnect = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this._logger.AppendLogMessage(
-                "WebSocketLogMessage.json",
-                $"{userName},,connect,{startConnect},{endConnect}",
-                typeof(WebSocketLogMessage));
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    "WebSocketLogMessage.json",
+                    $"{userName},,connect,{startConnect},{endConnect}",
+                    typeof(WebSocketLogMessage));
+            }
         }
 
         public async ValueTask DisconnectAsync()
@@ -84,10 +86,13 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
             await this.ClientWebSocket.SendAsync(buffer, messageType, endOfMessage, CancellationToken.None);
             finishRequest = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this._logger.AppendLogMessage(
-                "WebSocketLogMessage.json",
-                $"{userName},{label},send,{startRequest},{finishRequest}",
-                typeof(WebSocketLogMessage));
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    "WebSocketLogMessage.json",
+                    $"{userName},{label},send,{startRequest},{finishRequest}",
+                    typeof(WebSocketLogMessage));
+            }
         }
 
         public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(
@@ -102,11 +107,14 @@ namespace WebPerformanceMeter.Tools.WebSocketTool
             var result = await this.ClientWebSocket.ReceiveAsync(buffer, CancellationToken.None);
             endReceive = ScenarioTimer.Time.Elapsed.Ticks;
 
-            this._logger.AppendLogMessage(
-                $"WebSocketLogMessage.json",
-                $"{userName},{label},receive,{startReceive},{endReceive}",
-                typeof(WebSocketLogMessage));
-
+            if (this.Logger is not null)
+            {
+                this.Logger.AddLogMessage(
+                    $"WebSocketLogMessage.json",
+                    $"{userName},{label},receive,{startReceive},{endReceive}",
+                    typeof(WebSocketLogMessage));
+            }
+            
             return result;
         }
 

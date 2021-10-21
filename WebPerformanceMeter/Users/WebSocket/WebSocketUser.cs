@@ -5,7 +5,7 @@ using WebPerformanceMeter.Tools.WebSocketTool;
 
 namespace WebPerformanceMeter.Users.WebSocket
 {
-    public abstract partial class WebSocketUser : User, IWebSocketUser
+    public abstract partial class WebSocketUser : BaseUser, IWebSocketUser
     {
         protected readonly string host;
 
@@ -45,7 +45,7 @@ namespace WebPerformanceMeter.Users.WebSocket
             bool reuseDataInLoop = true
             )
         {
-            var client = new WebSocketClientTool(
+            var client = new WebSocketTool(
                 this.host,
                 this.port,
                 this.path,
@@ -90,12 +90,12 @@ namespace WebPerformanceMeter.Users.WebSocket
             }
         }
 
-        protected virtual Task PerformanceAsync(WebSocketClientTool client, object entity)
+        protected virtual Task PerformanceAsync(WebSocketTool client, object entity)
         {
             return Task.CompletedTask;
         }
 
-        protected virtual Task PerformanceAsync(WebSocketClientTool client)
+        protected virtual Task PerformanceAsync(WebSocketTool client)
         {
             return Task.CompletedTask;
         }

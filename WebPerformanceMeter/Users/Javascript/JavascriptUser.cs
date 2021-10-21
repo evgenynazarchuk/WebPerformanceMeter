@@ -7,7 +7,7 @@ using WebPerformanceMeter.Logger;
 
 namespace WebPerformanceMeter.Users.Javascript
 {
-    public abstract partial class JavascriptUser : User, IDisposable
+    public abstract partial class JavascriptUser : BaseUser, IDisposable
     {
         protected readonly IPlaywright Playwright;
 
@@ -17,8 +17,8 @@ namespace WebPerformanceMeter.Users.Javascript
 
         protected readonly IPage Page;
 
-        public JavascriptUser(ILogger logger)
-            : base(logger)
+        public JavascriptUser()
+            : base()
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Firefox.LaunchAsync(new()

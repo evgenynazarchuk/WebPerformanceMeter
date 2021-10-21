@@ -3,17 +3,13 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Interfaces
 {
     public interface ILogger
     {
-        ConcurrentQueue<(string logName, string logMessage, Type logType)> LogQueue { get; }
+        void AddLogMessage(string logName, string logMessage, Type logMessageType);
 
-        ConcurrentDictionary<string, StreamWriter> Writers { get; }
-
-        void AppendLogMessage(string logName, string logMessage, Type logMessageType);
-
-        Task Start();
+        Task StartAsync();
 
         void ProcessStop();
 

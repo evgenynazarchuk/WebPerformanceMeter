@@ -4,7 +4,7 @@ using WebPerformanceMeter.Tools.GrpcTool;
 
 namespace WebPerformanceMeter.Users.Grpc
 {
-    public abstract partial class GrpcUser : User, IGrpcUser
+    public abstract partial class GrpcUser : BaseUser, IGrpcUser
     {
         public virtual ValueTask<TResponse> UnaryCallAsync<TResponse, TRequest>(
             GrpcClientTool client,

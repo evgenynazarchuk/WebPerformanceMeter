@@ -1,15 +1,8 @@
-﻿using System.Net.Http;
+﻿using PerformanceTests.Tests.JsonPlaceholder.Dto;
 using System.Threading.Tasks;
-using TestWebApiServer.Models;
-using System.Collections.Generic;
-using WebPerformanceMeter.Attributes;
-using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter;
-using PerformanceTests.Tests.JsonPlaceholder.Dto;
-using FluentAssertions;
+using WebPerformanceMeter.Attributes;
+using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {

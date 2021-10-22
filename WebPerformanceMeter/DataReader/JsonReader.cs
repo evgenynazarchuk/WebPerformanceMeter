@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using System.Text.Json;
-using System.Collections.Concurrent;
-using WebPerformanceMeter.Interfaces;
+﻿using System.Text.Json;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
@@ -23,7 +19,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
                 if (data is null)
                 {
                     continue;
-                } 
+                }
 
                 this.queue.Enqueue(data);
             }

@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
+using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
-using WebPerformanceMeter;
 using WebPerformanceMeter.Tools;
 
 namespace PerformanceTests.Tests.BrowserTests

@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
@@ -115,7 +115,7 @@ namespace WebPerformanceMeter
                     $"{userName},{label},receive,{startReceive},{endReceive}",
                     typeof(WebSocketLogMessage));
             }
-            
+
             return result;
         }
 

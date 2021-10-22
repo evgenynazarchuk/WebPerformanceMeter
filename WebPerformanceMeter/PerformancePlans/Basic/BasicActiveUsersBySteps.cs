@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.PerformancePlans
 {

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Net.Http;
-using System.Net;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 
@@ -41,11 +41,11 @@ namespace WebPerformanceMeter.Users
             string requestLabel = "")
         {
             return this.Tool.RequestAsync(
-                httpMethod, 
-                path, 
-                requestHeaders, 
-                requestContent, 
-                this.userName, 
+                httpMethod,
+                path,
+                requestHeaders,
+                requestContent,
+                this.userName,
                 requestLabel);
         }
 
@@ -55,11 +55,11 @@ namespace WebPerformanceMeter.Users
             string requestLabel = "")
         {
             var httpResponse = await this.Tool.RequestAsync(
-                HttpMethod.Get, 
-                path, 
-                requestHeaders, 
-                null, 
-                this.userName, 
+                HttpMethod.Get,
+                path,
+                requestHeaders,
+                null,
+                this.userName,
                 requestLabel);
 
             return httpResponse.ContentAsUtf8String;
@@ -71,11 +71,11 @@ namespace WebPerformanceMeter.Users
             string requestLabel = "")
         {
             var httpResponse = await this.Tool.RequestAsync(
-                HttpMethod.Delete, 
-                path, 
-                requestHeaders, 
-                null, 
-                this.userName, 
+                HttpMethod.Delete,
+                path,
+                requestHeaders,
+                null,
+                this.userName,
                 requestLabel);
 
             return httpResponse.ContentAsUtf8String;

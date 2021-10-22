@@ -5,7 +5,7 @@ namespace WebPerformanceMeter.Users
     public abstract class BaseUser : IBaseUser
     {
         public string UserName { get => this.userName; }
-        
+
         public ILogger? Logger { get => this.logger; }
 
         protected readonly string userName;

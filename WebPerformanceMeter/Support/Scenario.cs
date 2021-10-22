@@ -91,7 +91,7 @@ namespace WebPerformanceMeter.Support
                     }
 
                     Console.WriteLine($"Start Loggers");
-                    
+
                     //var task = Task.Run(() => plan.User.Logger.Start());
                     var task = plan.User.Logger.StartAsync();
                     this._taskLoggers.Add(task);

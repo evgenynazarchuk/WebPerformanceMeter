@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -45,7 +44,7 @@ namespace WebSocketWebApplication.IntegrationTest.Support.Tool
                 {
                     return;
                 }
-                
+
 
                 //await this.ClientWebSocket.CloseOutputAsync(
                 //    WebSocketCloseStatus.NormalClosure, 

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
@@ -107,11 +107,11 @@ namespace WebPerformanceMeter
             if (this.logger is not null)
             {
                 this.logger.AddLogMessage(
-                    "GrpcLogMessage.json", 
-                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    "GrpcLogMessage.json",
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
             }
-            
+
             return response;
         }
 
@@ -153,11 +153,11 @@ namespace WebPerformanceMeter
             if (this.logger is not null)
             {
                 this.logger.AddLogMessage(
-                    "GrpcLogMessage.json", 
-                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    "GrpcLogMessage.json",
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
             }
-            
+
             return grpcCall.ResponseAsync.Result;
         }
 
@@ -199,8 +199,8 @@ namespace WebPerformanceMeter
             if (this.logger is not null)
             {
                 this.logger.AddLogMessage(
-                    "GrpcLogMessage.json", 
-                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    "GrpcLogMessage.json",
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
             }
 
@@ -225,7 +225,7 @@ namespace WebPerformanceMeter
             long endMethodCall;
 
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
-            
+
             //
             using var grpcCall = (AsyncDuplexStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
             if (grpcCall is null)
@@ -258,8 +258,8 @@ namespace WebPerformanceMeter
             if (this.logger is not null)
             {
                 this.logger.AddLogMessage(
-                    "GrpcLogMessage.json", 
-                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}", 
+                    "GrpcLogMessage.json",
+                    $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
             }
 

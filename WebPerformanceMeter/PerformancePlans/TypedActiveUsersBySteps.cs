@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.PerformancePlans;
 
 namespace WebPerformanceMeter
@@ -24,9 +22,9 @@ namespace WebPerformanceMeter
             TimeSpan? performancePlanDuration = null,
             int userLoopCount = 1,
             bool reuseDataInLoop = true)
-            : base(user, 
-                  fromActiveUsersCount, 
-                  toActiveUsersCount, 
+            : base(user,
+                  fromActiveUsersCount,
+                  toActiveUsersCount,
                   usersStep,
                   stepPeriodDuration,
                   performancePlanDuration,

@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter;
+using WebPerformanceMeter.Support;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {

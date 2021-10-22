@@ -4,10 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Extensions;
+using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
@@ -96,12 +96,12 @@ namespace WebPerformanceMeter
             if (this.logger is not null)
             {
                 this.logger.AddLogMessage(
-                    logName: "HttpClientToolLog.json", 
-                    logMessage: $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", 
+                    logName: "HttpClientToolLog.json",
+                    logMessage: $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}",
                     logMessageType: typeof(HttpLogMessage)
                     );
             }
-            
+
             var response = new HttpResponse(
                 statusCode: (int)httpResponseMessage.StatusCode,
                 content: content,

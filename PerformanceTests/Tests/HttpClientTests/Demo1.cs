@@ -1,12 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using TestWebApiServer.Models;
+using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
-using WebPerformanceMeter;
 
 namespace PerformanceTests.Tests.HttpClientTests
 {

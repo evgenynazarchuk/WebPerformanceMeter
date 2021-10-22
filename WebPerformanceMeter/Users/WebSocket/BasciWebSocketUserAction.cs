@@ -16,7 +16,7 @@ namespace WebPerformanceMeter.Users
         }
 
         public virtual ValueTask<string> ReceiveMessage(
-            IWebSocketTool client, 
+            IWebSocketTool client,
             string label = "")
         {
             return client.ReceiveMessageAsync(this.UserName, label);

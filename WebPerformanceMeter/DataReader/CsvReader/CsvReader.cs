@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Text;
-using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {

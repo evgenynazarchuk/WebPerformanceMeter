@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Interfaces
 {
     public interface IHttpTool : ITool, IHttpJsonTool
     {
         Task<HttpResponse> RequestAsync(
-            HttpRequestMessage httpRequestMessage, 
-            string userName = "", 
+            HttpRequestMessage httpRequestMessage,
+            string userName = "",
             string requestLabel = "");
 
         Task<HttpResponse> RequestAsync(

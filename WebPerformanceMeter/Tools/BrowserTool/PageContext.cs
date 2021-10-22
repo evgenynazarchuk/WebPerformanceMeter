@@ -1,8 +1,8 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Tools
 {
@@ -39,7 +39,7 @@ namespace WebPerformanceMeter.Tools
             if (this.Logger is not null)
             {
                 this.Logger.AddLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
-            }         
+            }
         }
 
         public async Task ReloadAsync(string label = "reload")
@@ -69,7 +69,7 @@ namespace WebPerformanceMeter.Tools
             if (this.Logger is not null)
             {
                 this.Logger.AddLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
-            }            
+            }
         }
 
         public async Task TypeAsync(string selector, string text, string label = "type")

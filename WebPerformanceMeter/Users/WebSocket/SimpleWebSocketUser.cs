@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter

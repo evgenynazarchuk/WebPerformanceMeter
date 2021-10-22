@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter
@@ -12,7 +10,7 @@ namespace WebPerformanceMeter
     public abstract partial class HttpUser : BasicHttpUser, ISimpleUser
     {
         public HttpUser(
-            HttpClient client, 
+            HttpClient client,
             string userName = "",
             ILogger? logger = null)
             : base(client, userName, logger) { }

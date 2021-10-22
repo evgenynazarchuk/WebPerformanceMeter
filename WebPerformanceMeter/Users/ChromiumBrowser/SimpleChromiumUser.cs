@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.Tools;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter
 {
@@ -28,7 +28,7 @@ namespace WebPerformanceMeter
                         $"{TimeSpan.FromMilliseconds(request.Timing.ResponseStart)}\t" +
                         $"{TimeSpan.FromMilliseconds(request.Timing.ResponseEnd)}",
                         typeof(ChromiumPageRequestLogMessage));
-                }  
+                }
             };
 
             for (int i = 0; i < userLoopCount; i++)

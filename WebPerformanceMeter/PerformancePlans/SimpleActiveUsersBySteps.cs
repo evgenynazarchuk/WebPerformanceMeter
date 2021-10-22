@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.PerformancePlans;
 
 namespace WebPerformanceMeter
@@ -23,7 +21,8 @@ namespace WebPerformanceMeter
                   usersStep,
                   stepPeriodDuration,
                   performancePlanDuration,
-                  userLoopCount) { }
+                  userLoopCount)
+        { }
 
         protected override Task InvokeUserAsync()
         {

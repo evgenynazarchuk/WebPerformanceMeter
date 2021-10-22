@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.PerformancePlans;
 
 namespace WebPerformanceMeter
@@ -14,7 +13,7 @@ namespace WebPerformanceMeter
             : base(user, usersCount, userLoopCount) { }
 
         public override Task InvokeUserAsync()
-        { 
+        {
             return ((ISimpleUser)this.user).InvokeAsync(this.userLoopCount);
         }
     }

@@ -1,16 +1,10 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using TestWebApiServer.Models;
-using System.Collections.Generic;
-using WebPerformanceMeter.Attributes;
-using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
-using WebPerformanceMeter;
+﻿using FluentAssertions;
 using PerformanceTests.Tests.JsonPlaceholder.Dto;
-using FluentAssertions;
+using System.Threading.Tasks;
+using WebPerformanceMeter;
+using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.DataReader.CsvReader;
+using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {

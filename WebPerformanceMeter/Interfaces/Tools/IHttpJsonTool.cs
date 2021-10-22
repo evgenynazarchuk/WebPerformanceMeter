@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Interfaces
 {
@@ -18,7 +15,7 @@ namespace WebPerformanceMeter.Interfaces
             string requestLabel = "")
             where ResponseObjectType : class, new()
             where RequestObjectType : class, new();
-            
+
 
         Task<string> RequestAsJsonAsync<RequestObjectType>(
             HttpMethod httpMethod,

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Timers;
-using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.PerformancePlans;
 
 namespace WebPerformanceMeter

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PerformanceTests.Tests.JsonPlaceholder.Dto
+﻿namespace PerformanceTests.Tests.JsonPlaceholder.Dto
 {
     public class UserDto
     {
@@ -12,7 +6,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder.Dto
 
         public string? Name { get; set; }
 
-        public string? UserName {  get; set; }
+        public string? UserName { get; set; }
 
         public string? Email { get; set; }
 
@@ -45,7 +39,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder.Dto
         }
 
         public class CompanyInfo
-        { 
+        {
             public string? Name { get; set; }
 
             public string? CatchPhrase { get; set; }

@@ -36,7 +36,7 @@ namespace WebPerformanceMeter
                     continue;
                 }
 
-                await PerformanceAsync(data);
+                await Performance(data);
 
                 if (!reuseDataInLoop)
                 {
@@ -45,6 +45,6 @@ namespace WebPerformanceMeter
             }
         }
 
-        protected abstract Task PerformanceAsync(TData data);
+        protected abstract Task Performance(TData data);
     }
 }

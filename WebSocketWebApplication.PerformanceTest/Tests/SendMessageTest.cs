@@ -17,7 +17,7 @@ namespace WebSocketWebApplication.PerformanceTest.Tests
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
 
         public class WebSocketUserTest : WebSocketUser

@@ -7,16 +7,17 @@ namespace PerformanceTests.Tests.JsonPlaceholder
 {
     public class Demo1
     {
+        private readonly string _address = "https://jsonplaceholder.typicode.com";
+
         [PerformanceTest(5)]
         public async Task GetAllPostsWithoutResultTest(int usersCount)
         {
-            var address = "https://jsonplaceholder.typicode.com";
-            var user = new UserAction(address);
+            var user = new UserAction(this._address);
             var plan = new ConstantUsers(user, usersCount);
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
 
         public class UserAction : HttpUser
@@ -24,7 +25,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
             public UserAction(string address)
                 : base(address) { }
 
-            protected override async Task PerformanceAsync()
+            protected override async Task Performance()
             {
                 await Get("/posts");
             }

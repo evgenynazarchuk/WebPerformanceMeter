@@ -42,7 +42,7 @@ namespace PerformanceTests.Tests.HttpClientTests
                 .AddParallelPlans(userPlan1, userPlan2)
                 .AddParallelPlans(userPlan3, userPlan4)
                 .AddParallelPlans(userPlan5, userPlan6)
-                .StartAsync();
+                .Start();
         }
 
         public class User1 : HttpUser
@@ -50,7 +50,7 @@ namespace PerformanceTests.Tests.HttpClientTests
             public User1(HttpClient client)
                 : base(client) { }
 
-            protected override async Task PerformanceAsync()
+            protected override async Task Performance()
             {
                 await RequestAsJson(
                     HttpMethod.Post,
@@ -65,7 +65,7 @@ namespace PerformanceTests.Tests.HttpClientTests
             public User2(HttpClient client)
                 : base(client) { }
 
-            protected override async Task PerformanceAsync()
+            protected override async Task Performance()
             {
 
                 await RequestAsJson(

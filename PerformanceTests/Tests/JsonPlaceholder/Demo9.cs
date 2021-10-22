@@ -20,7 +20,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
 
         public class UserAction : HttpUser<PostDto>
@@ -28,7 +28,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
             public UserAction(string address)
                 : base(address) { }
 
-            protected override async Task PerformanceAsync(PostDto data)
+            protected override async Task Performance(PostDto data)
             {
                 var createdPost = await PostAsJson<PostDto, PostDto>("/posts", data);
 

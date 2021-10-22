@@ -21,7 +21,7 @@ namespace PerformanceTests.Tests.HttpClientTests
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
 
         public class UserRequest : HttpUser
@@ -29,7 +29,7 @@ namespace PerformanceTests.Tests.HttpClientTests
             public UserRequest(HttpClient client)
                 : base(client) { }
 
-            protected override async Task PerformanceAsync()
+            protected override async Task Performance()
             {
                 await this.RequestAsJson(
                     HttpMethod.Post,

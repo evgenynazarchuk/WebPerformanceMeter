@@ -10,17 +10,18 @@ namespace PerformanceTests.Tests.JsonPlaceholder
 {
     public class Demo10
     {
+        private readonly string _address = "https://jsonplaceholder.typicode.com";
+
         [PerformanceTest(3)]
         public async Task ReadFromFileAndPostTest(int usersCount)
         {
-            var address = "https://jsonplaceholder.typicode.com";
-            var user = new UserAction(address);
+            var user = new UserAction(this._address);
             var reader = new JsonReader<PostDto>("Tests\\JsonPlaceholder\\Demo10_PostDto.json");
             var plan = new ConstantUsers<PostDto>(user, usersCount, reader);
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
 
         public class UserAction : HttpUser<PostDto>
@@ -28,7 +29,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
             public UserAction(string address)
                 : base(address) { }
 
-            protected override async Task PerformanceAsync(PostDto data)
+            protected override async Task Performance(PostDto data)
             {
                 var createdPost = await PostAsJson<PostDto, PostDto>("/posts", data);
 

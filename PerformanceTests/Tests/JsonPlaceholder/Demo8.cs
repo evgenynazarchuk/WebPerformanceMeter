@@ -16,7 +16,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
 
         public class UserAction : HttpUser
@@ -24,7 +24,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
             public UserAction(string address)
                 : base(address) { }
 
-            protected override async Task PerformanceAsync()
+            protected override async Task Performance()
             {
                 await Delete("/posts/1");
             }

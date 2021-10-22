@@ -18,7 +18,7 @@ namespace PerformanceTests.Tests.BrowserTests
 
             await new Scenario()
                 .AddSequentialPlans(plan)
-                .StartAsync();
+                .Start();
         }
     }
 

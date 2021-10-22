@@ -38,7 +38,7 @@ namespace WebPerformanceMeter.Support
             return this;
         }
 
-        public async Task StartAsync()
+        public async Task Start()
         {
             this.StartLoggers();
             ScenarioTimer.Time.Start();

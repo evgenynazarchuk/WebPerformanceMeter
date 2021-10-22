@@ -23,13 +23,13 @@ namespace WebPerformanceMeter
             ILogger? logger = null)
             : base(address, defaultHeaders, defaultCookies, userName, logger) { }
 
-        protected abstract Task PerformanceAsync();
+        protected abstract Task Performance();
 
         public async Task InvokeAsync(int userLoopCount)
         {
             for (int i = 0; i < userLoopCount; i++)
             {
-                await PerformanceAsync();
+                await Performance();
             }
         }
     }

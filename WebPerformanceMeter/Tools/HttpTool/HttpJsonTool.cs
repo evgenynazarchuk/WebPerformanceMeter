@@ -16,15 +16,15 @@ namespace WebPerformanceMeter
         };
 
         // request: send, receive
-        public async Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
+        public async Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType, RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null,
             string userName = "",
             string requestLabel = "")
-            where RequestObjectType : class, new()
             where ResponseObjectType : class, new()
+            where RequestObjectType : class, new()
         {
             string requestContent = JsonSerializer.Serialize(requestObject, JsonSerializerOptions);
 
@@ -42,7 +42,7 @@ namespace WebPerformanceMeter
         }
 
         // request: send
-        public async Task<int> RequestAsJsonAsync<RequestObjectType>(
+        public async Task<string> RequestAsJsonAsync<RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -61,7 +61,7 @@ namespace WebPerformanceMeter
                 userName: userName,
                 requestLabel: requestLabel);
 
-            return response.StatusCode;
+            return response.ContentAsUtf8String;
         }
 
         // request: receive

@@ -7,7 +7,8 @@ namespace WebPerformanceMeter.Users
 {
     public partial class BasicHttpUser : BaseUser, IBaseHttpJsonUser
     {
-        public Task<ResponseObjectType?> RequestAsJson<RequestObjectType, ResponseObjectType>(
+        //
+        public Task<ResponseObjectType?> RequestAsJson<ResponseObjectType, RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -16,7 +17,7 @@ namespace WebPerformanceMeter.Users
             where RequestObjectType : class, new()
             where ResponseObjectType : class, new()
         {
-            return this.Tool.RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
+            return this.Tool.RequestAsJsonAsync<ResponseObjectType, RequestObjectType>(
                 httpMethod,
                 requestUri,
                 requestObject,
@@ -25,7 +26,7 @@ namespace WebPerformanceMeter.Users
                 requestLabel);
         }
 
-        public Task<int> RequestAsJson<RequestObjectType>(
+        public async Task<string> RequestAsJson<RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -33,14 +34,15 @@ namespace WebPerformanceMeter.Users
             Dictionary<string, string>? requestHeaders = null)
             where RequestObjectType : class, new()
         {
-
-            return this.Tool.RequestAsJsonAsync<RequestObjectType>(
+            var httpResult = await this.Tool.RequestAsJsonAsync<RequestObjectType>(
                 httpMethod,
                 requestUri,
                 requestObject,
                 requestHeaders,
                 this.UserName,
                 requestLabel);
+
+            return httpResult;
         }
 
         public Task<ResponseObjectType?> RequestAsJson<ResponseObjectType>(
@@ -57,5 +59,121 @@ namespace WebPerformanceMeter.Users
                 this.UserName,
                 requestLabel);
         }
+
+        // string <-> object
+        public Task<ResponseObjectType?> GetAsJson<ResponseObjectType>(
+            string path,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where ResponseObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<ResponseObjectType>(
+                HttpMethod.Get,
+                path,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+
+        public Task<string> PostAsJson<RequestObjectType>(
+            string path,
+            RequestObjectType requestObject,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where RequestObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<RequestObjectType>(
+                HttpMethod.Post,
+                path,
+                requestObject,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+
+        public Task<string> PutAsJson<RequestObjectType>(
+            string path,
+            RequestObjectType requestObject,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where RequestObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<RequestObjectType>(
+                HttpMethod.Put,
+                path,
+                requestObject,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+
+        public Task<string> DeleteAsJson<RequestObjectType>(
+            string path,
+            RequestObjectType requestObject,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where RequestObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<RequestObjectType>(
+                HttpMethod.Delete,
+                path,
+                requestObject,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+
+        // object <-> object
+        public Task<ResponseObjectType?> PostAsJson<ResponseObjectType, RequestObjectType>(
+            string path,
+            RequestObjectType requestObject,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where ResponseObjectType : class, new()
+            where RequestObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<ResponseObjectType, RequestObjectType>(
+                HttpMethod.Post,
+                path,
+                requestObject,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+
+        public Task<ResponseObjectType?> PutAsJson<ResponseObjectType, RequestObjectType>(
+            string path,
+            RequestObjectType requestObject,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where ResponseObjectType : class, new()
+            where RequestObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<ResponseObjectType, RequestObjectType>(
+                HttpMethod.Put,
+                path,
+                requestObject,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+
+        public Task<ResponseObjectType?> DeleteAsJson<ResponseObjectType, RequestObjectType>(
+            string path,
+            RequestObjectType requestObject,
+            string requestLabel = "",
+            Dictionary<string, string>? requestHeaders = null)
+            where ResponseObjectType : class, new()
+            where RequestObjectType : class, new()
+        {
+            return this.Tool.RequestAsJsonAsync<ResponseObjectType, RequestObjectType>(
+                HttpMethod.Delete,
+                path,
+                requestObject,
+                requestHeaders,
+                this.UserName,
+                requestLabel);
+        }
+        //
     }
 }

@@ -119,7 +119,8 @@ namespace WebPerformanceMeter
             string userName = "",
             string requestLabel = "")
         {
-            using HttpRequestMessage httpRequestMessage = new()
+            //using HttpRequestMessage httpRequestMessage = new()
+            var httpRequestMessage = new HttpRequestMessage()
             {
                 Method = httpMethod,
                 RequestUri = new Uri(path, UriKind.Relative),

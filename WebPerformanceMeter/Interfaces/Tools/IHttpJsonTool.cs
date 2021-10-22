@@ -9,17 +9,18 @@ namespace WebPerformanceMeter.Interfaces
 {
     public interface IHttpJsonTool : ITool
     {
-        Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
+        Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType, RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
             Dictionary<string, string>? requestHeaders = null,
             string userName = "",
             string requestLabel = "")
-            where RequestObjectType : class, new()
-            where ResponseObjectType : class, new();
+            where ResponseObjectType : class, new()
+            where RequestObjectType : class, new();
+            
 
-        Task<int> RequestAsJsonAsync<RequestObjectType>(
+        Task<string> RequestAsJsonAsync<RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,

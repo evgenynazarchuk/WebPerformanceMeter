@@ -48,6 +48,6 @@ namespace WebPerformanceMeter
             }
         }
 
-        public abstract Task PerformanceAsync(TData data);
+        protected abstract Task PerformanceAsync(TData data);
     }
 }

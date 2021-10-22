@@ -6,50 +6,70 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
-    public sealed class CsvReader<TEntity> : IDataReader<TEntity>
-        where TEntity : class, new()
+    public sealed class CsvReader<TData> : IDataReader<TData>
+        where TData : class, new()
     {
-        private StreamReader? streamReader = null;
+        private readonly StreamReader _streamReader;
 
-        private ConcurrentQueue<TEntity>? queue = null;
+        private ConcurrentQueue<TData> _queue;
 
-        private bool cyclicalData = false;
+        private readonly bool _cyclicalData = false;
 
-        private bool hasHeader = false;
+        private readonly bool _hasHeader = false;
 
-        public void ProcessFile(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
+        public CsvReader(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
         {
-            this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
-            this.cyclicalData = cyclicalData;
-            this.hasHeader = hasHeader;
-            this.queue = new();
+            this._streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
+            this._cyclicalData = cyclicalData;
+            this._hasHeader = hasHeader;
+            this._queue = new();
 
-            if (this.hasHeader)
+            if (this._hasHeader)
             {
-                streamReader.ReadLine();
+                _streamReader.ReadLine();
             }
 
             string? line;
-            while ((line = this.streamReader.ReadLine()) != null)
+            while ((line = this._streamReader.ReadLine()) != null)
             {
                 var columns = line.Split(separator);
-                this.queue.Enqueue(GetObjectFromCsvColumns<TEntity>(columns));
+                this._queue.Enqueue(GetObjectFromCsvColumns<TData>(columns));
             }
         }
 
-        public TEntity? GetData()
+        //public void ProcessFile(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
+        //{
+        //    this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
+        //    this.cyclicalData = cyclicalData;
+        //    this.hasHeader = hasHeader;
+        //    this.queue = new();
+
+        //    if (this.hasHeader)
+        //    {
+        //        streamReader.ReadLine();
+        //    }
+
+        //    string? line;
+        //    while ((line = this.streamReader.ReadLine()) != null)
+        //    {
+        //        var columns = line.Split(separator);
+        //        this.queue.Enqueue(GetObjectFromCsvColumns<TEntity>(columns));
+        //    }
+        //}
+
+        public TData? GetData()
         {
-            if (this.queue is null)
+            if (this._queue is null)
             {
                 return null;
             }
 
-            this.queue.TryDequeue(out TEntity? result);
+            this._queue.TryDequeue(out TData? result);
 
             // put again
-            if (this.cyclicalData && result is not null)
+            if (this._cyclicalData && result is not null)
             {
-                this.queue.Enqueue(result);
+                this._queue.Enqueue(result);
             }
 
             return result;

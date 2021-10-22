@@ -27,20 +27,58 @@ namespace WebPerformanceMeter.Users
             IEnumerable<Cookie>? defaultCookies = null,
             string userName = "",
             ILogger? logger = null)
-            : base(userName, logger)
+            : base(userName, logger ?? HttpLoggerSingleton.GetInstance())
         {
             this.Client = new HttpClient() { BaseAddress = new Uri(address) };
             this.Tool = new HttpTool(address, defaultHeaders, defaultCookies, this.logger);
         }
 
-        public virtual Task<HttpResponse> Request(
+        public Task<HttpResponse> Request(
             HttpMethod httpMethod,
             string path,
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
             string requestLabel = "")
         {
-            return this.Tool.RequestAsync(httpMethod, path, requestHeaders, requestContent, this.UserName, requestLabel);
+            return this.Tool.RequestAsync(
+                httpMethod, 
+                path, 
+                requestHeaders, 
+                requestContent, 
+                this.userName, 
+                requestLabel);
+        }
+
+        public async Task<string> Get(
+            string path,
+            Dictionary<string, string>? requestHeaders = null,
+            string requestLabel = "")
+        {
+            var httpResponse = await this.Tool.RequestAsync(
+                HttpMethod.Get, 
+                path, 
+                requestHeaders, 
+                null, 
+                this.userName, 
+                requestLabel);
+
+            return httpResponse.ContentAsUtf8String;
+        }
+
+        public async Task<string> Delete(
+            string path,
+            Dictionary<string, string>? requestHeaders = null,
+            string requestLabel = "")
+        {
+            var httpResponse = await this.Tool.RequestAsync(
+                HttpMethod.Delete, 
+                path, 
+                requestHeaders, 
+                null, 
+                this.userName, 
+                requestLabel);
+
+            return httpResponse.ContentAsUtf8String;
         }
     }
 }

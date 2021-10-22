@@ -4,16 +4,6 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 {
     public static class CsvConverter
     {
-        // (?:^|,)(?=[^"]|(")?)"?((?(1)[^"]*|[^,"]*))"?(?=,|$)
-        // (?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))
-        // (?:,"|^")(""|[\w\W]*?)(?=",|"$)|(?:,(?!")|^(?!"))([^,]*?)(?=$|,)|(\r\n|\n)
-        // (?<quoted>(?<=,"|^")(?:""|[\w\W]*?)*(?=",|"$))|(?<normal>(?<=,(?!")|^(?!"))[^,]*?(?=(?<!")$|(?<!"),))|(?<eol>\r\n|\n)
-        // (?:^"|,")(""|[\w\W]*?)(?=",|"$)|(?:^(?!")|,(?!"))([^,]*?)(?=$|,)|(\r\n|\n)
-        // @"(?:^""|,"")(""""|[\w\W]*?)(?="",|""$)|(?:^(?!"")|,(?!""))([^,]*?)(?=$|,)|(\r\n|\n)"
-        // ("([^"]*)"|[^,]*)(,|$)
-        //",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))" - default
-        //public static readonly Regex RegexParser = new Regex("(?<=^|,)(\"(?:[^\"]|\"\")*\"|[^,]*)", RegexOptions.Compiled);
-
         public static object GetObjectFromCsvLine(string line, Type resultObjectType, string separator = ",")
         {
             return GetObjectFromCsvColumns(line.Split(separator), resultObjectType);
@@ -21,6 +11,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 
         public static object GetObjectFromCsvColumns(ReadOnlySpan<string> columns, Type resultObjectType)
         {
+            // TODO
             //var ctor = resultObjectType.GetConstructor(new Type[] { });
             //var entity = ctor.Invoke(new object[] { });
 

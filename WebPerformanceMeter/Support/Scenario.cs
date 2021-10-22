@@ -7,31 +7,31 @@ namespace WebPerformanceMeter.Support
 {
     public sealed class Scenario
     {
-        private readonly List<KeyValuePair<ActType, PerformancePlan[]>> _acts;
+        private readonly List<KeyValuePair<ActType, IUsersPerformancePlan[]>> _acts;
 
-        private readonly List<Task> _loggers;
+        private readonly List<Task> _taskLoggers;
 
         public Scenario()
         {
             this._acts = new();
-            this._loggers = new();
+            this._taskLoggers = new();
         }
 
-        public Scenario AddParallelPlans(params PerformancePlan[] performancePlan)
+        public Scenario AddParallelPlans(params IUsersPerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Parallel, performancePlan);
 
             return this;
         }
 
-        public Scenario AddSequentialPlans(params PerformancePlan[] performancePlan)
+        public Scenario AddSequentialPlans(params IUsersPerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Sequential, performancePlan);
 
             return this;
         }
 
-        private Scenario AddActs(ActType launchType, params PerformancePlan[] performancePlan)
+        private Scenario AddActs(ActType launchType, params IUsersPerformancePlan[] performancePlan)
         {
             this._acts.Add(new(launchType, performancePlan));
 
@@ -41,16 +41,10 @@ namespace WebPerformanceMeter.Support
         public async Task StartAsync()
         {
             this.StartLoggers();
-
             ScenarioTimer.Time.Start();
 
-            // TODO: (launchType, plans)
             foreach (var (launchType, plans) in this._acts)
-            //foreach (var act in this.acts)
             {
-                //var launchType = act.Key;
-                //var plans = act.Value;
-
                 switch (launchType)
                 {
                     case ActType.Parallel:
@@ -63,12 +57,9 @@ namespace WebPerformanceMeter.Support
                             {
                                 await plan.StartAsync();
                             }));
-
-                            // TODO: check
-                            //tasks.Add(plan.StartAsync());
                         }
 
-                        Task.WaitAll(tasks.ToArray());
+                        await Task.WhenAll(tasks.ToArray());
 
                         break;
 
@@ -80,37 +71,12 @@ namespace WebPerformanceMeter.Support
                         }
 
                         break;
-
-                    default:
-                        throw new ApplicationException("Not Implement ActType");
                 }
-
-                //if (launchType == ActType.Sequential)
-                //{
-                //    foreach (var plan in plans)
-                //    {
-                //        await plan.StartPerformanceAsync();
-                //    }
-                //}
-                //else if (launchType == ActType.Parallel)
-                //{
-                //    var plansWaiter = new List<Task>();
-                //
-                //    foreach (var plan in plans)
-                //    {
-                //        plansWaiter.Add(Task.Run(async () =>
-                //        {
-                //            await plan.StartPerformanceAsync();
-                //        }));
-                //    }
-                //
-                //    Task.WaitAll(plansWaiter.ToArray());
-                //}
             }
 
             ScenarioTimer.Time.Stop();
 
-            this.WaitLoggers();
+            await this.WaitLoggersAsync();
         }
 
         private void StartLoggers()
@@ -119,27 +85,40 @@ namespace WebPerformanceMeter.Support
             {
                 foreach (var plan in plans)
                 {
-                    var task = Task.Run(() => plan.User.Logger.Start());
-                    this._loggers.Add(task);
+                    if (plan.User.Logger is null)
+                    {
+                        continue;
+                    }
 
-                    // TODO: check
-                    //var task2 = plan.User.Logger.Start();
-                    //_loggers.Add(task2);
+                    Console.WriteLine($"Start Loggers");
+
+                    //var task = Task.Run(() => plan.User.Logger.Start());
+                    var task = plan.User.Logger.StartAsync();
+                    this._taskLoggers.Add(task);
                 }
             }
         }
 
-        private void WaitLoggers()
+        private async Task WaitLoggersAsync()
         {
             foreach (var (_, plans) in this._acts)
             {
                 foreach (var plan in plans)
                 {
+                    if (plan.User.Logger is null)
+                    {
+                        continue;
+                    }
+
+                    Console.WriteLine($"Stop Logger");
+
                     plan.User.Logger.ProcessStop();
                 }
             }
 
-            Task.WaitAll(_loggers.ToArray());
+            Console.WriteLine($"Wait Logger");
+
+            await Task.WhenAll(_taskLoggers.ToArray());
         }
     }
 }

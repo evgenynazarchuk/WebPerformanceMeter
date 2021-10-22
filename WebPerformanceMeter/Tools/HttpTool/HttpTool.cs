@@ -4,77 +4,55 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using WebPerformanceMeter.Extensions;
+using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Tools;
 
-namespace WebPerformanceMeter.Tools.HttpTool
+namespace WebPerformanceMeter
 {
-    public partial class HttpTool : Tool
+    public sealed partial class HttpTool : Tool, IHttpTool
     {
         public readonly HttpClient HttpClient;
 
-        private readonly HttpClientHandler _handler = new();
-
-        public readonly ILogger Logger;
-
         public HttpTool(
-            ILogger logger,
             string baseAddress,
             IDictionary<string, string>? defaultHeaders = null,
-            IEnumerable<Cookie>? defaultCookies = null)
+            IEnumerable<Cookie>? defaultCookies = null,
+            ILogger? logger = null)
+            : base(logger)
         {
-            this.Logger = logger;
+            var handler = new HttpClientHandler();
+            handler.SetDefaultCookie(defaultCookies);
 
-            this._handler = new();
-            this.SetDefaultCookie(defaultCookies);
+            this.HttpClient = new HttpClient(handler);
+            this.HttpClient.SetDefaultHeader(defaultHeaders);
 
-            this.HttpClient = new(_handler);
-            this.SetDefaultHeaders(defaultHeaders);
-
+            this.TurnOffConnectionLimit(baseAddress);
             this.SetBaseSettings(baseAddress);
         }
 
-        public HttpTool(ILogger logger, HttpClient client)
+        public HttpTool(HttpClient client, ILogger? logger = null)
+            : base(logger)
         {
-            this.Logger = logger;
+            //
+            // Console.WriteLine($"{logger is null}"); -
             this.HttpClient = client;
-        }
-
-        private void SetDefaultHeaders(IDictionary<string, string>? headers)
-        {
-            if (headers is not null)
-            {
-                foreach (var (headerName, headerValue) in headers)
-                {
-                    HttpClient.DefaultRequestHeaders.Add(headerName, headerValue);
-                }
-            }
-        }
-
-        private void SetDefaultCookie(IEnumerable<Cookie>? cookies)
-        {
-            if (cookies is not null && _handler is not null)
-            {
-                CookieContainer cookieContainer = new();
-                foreach (var cookie in cookies)
-                {
-                    cookieContainer.Add(cookie);
-                }
-
-                _handler.CookieContainer = cookieContainer;
-                _handler.UseCookies = true;
-            }
         }
 
         private void SetBaseSettings(string baseAddress)
         {
+            this.HttpClient.BaseAddress = new(baseAddress);
+            this.HttpClient.DefaultRequestVersion = new(2, 0);
+            this.HttpClient.Timeout = Timeout.InfiniteTimeSpan;
+            this.HttpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
+        }
+
+        private void TurnOffConnectionLimit(string baseAddress)
+        {
             var delayServicePoint = ServicePointManager.FindServicePoint(new Uri(baseAddress));
             delayServicePoint.ConnectionLeaseTimeout = 0;
-
-            HttpClient.BaseAddress = new(baseAddress);
-            HttpClient.DefaultRequestVersion = new(2, 0);
-            HttpClient.Timeout = Timeout.InfiniteTimeSpan;
-            HttpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
         }
 
         public async Task<HttpResponse> RequestAsync(
@@ -82,13 +60,16 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string userName = "",
             string requestLabel = "")
         {
+            //
+            //Console.WriteLine($"Start request"); +
+
             long startSendRequest;
             long startWaitResponse;
             long startResponse;
             long endResponse;
             long requestSize = 0;
 
-            Task<HttpResponseMessage>? httpResponseMessageTask = null;
+            Task<HttpResponseMessage>? httpResponseMessageTask;
             HttpResponseMessage httpResponseMessage;
             byte[] content;
 
@@ -109,7 +90,17 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            this.Logger.AppendLogMessage("HttpClientToolLog.json", $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", typeof(HttpLogMessage));
+            //
+            //Console.WriteLine($"{this.logger is not null}"); -
+
+            if (this.logger is not null)
+            {
+                this.logger.AddLogMessage(
+                    logName: "HttpClientToolLog.json",
+                    logMessage: $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}",
+                    logMessageType: typeof(HttpLogMessage)
+                    );
+            }
 
             var response = new HttpResponse(
                 statusCode: (int)httpResponseMessage.StatusCode,
@@ -122,16 +113,17 @@ namespace WebPerformanceMeter.Tools.HttpTool
 
         public Task<HttpResponse> RequestAsync(
             HttpMethod httpMethod,
-            string requestUri,
+            string path,
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
             string userName = "",
             string requestLabel = "")
         {
-            using HttpRequestMessage httpRequestMessage = new()
+            //using HttpRequestMessage httpRequestMessage = new()
+            var httpRequestMessage = new HttpRequestMessage()
             {
                 Method = httpMethod,
-                RequestUri = new(requestUri, UriKind.Relative),
+                RequestUri = new Uri(path, UriKind.Relative),
                 Content = requestContent,
             };
 

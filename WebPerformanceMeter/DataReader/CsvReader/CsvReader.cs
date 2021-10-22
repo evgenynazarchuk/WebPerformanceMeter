@@ -1,69 +1,31 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Text;
-using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
-    public sealed class CsvReader<TResult> : IDataReader
-        where TResult : class, new()
+    public sealed class CsvReader<TData> : DataReader<TData>
+        where TData : class, new()
     {
-        private StreamReader? streamReader = null;
+        private readonly bool _hasHeader = false;
 
-        private ConcurrentQueue<TResult>? queue = null;
-
-        private bool cyclicalData = false;
-
-        private bool hasHeader = false;
-
-        public void ProcessFile(string path, bool hasHeader = false, bool cyclicalData = false, string separator = ",")
+        public CsvReader(string filePath, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
+            : base(filePath, cyclicalData)
         {
-            this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
-            this.cyclicalData = cyclicalData;
-            this.hasHeader = hasHeader;
-            this.queue = new();
+            this._hasHeader = hasHeader;
 
-            if (this.hasHeader)
+            if (this._hasHeader)
             {
-                streamReader.ReadLine();
+                this.reader.ReadLine();
             }
 
             string? line;
-            while ((line = this.streamReader.ReadLine()) != null)
+            while ((line = this.reader.ReadLine()) != null)
             {
-                //var row = CsvConverter.RegexParser.Split(line);
                 var columns = line.Split(separator);
-                this.queue.Enqueue(GetObjectFromCsvColumns<TResult>(columns));
+                this.queue.Enqueue(GetObjectFromCsvColumns<TData>(columns));
             }
         }
 
-        public object? GetEntity()
-        {
-            if (this.queue is null)
-            {
-                return null;
-            }
-
-            this.queue.TryDequeue(out TResult? result);
-
-            // put again
-            if (this.cyclicalData && result is not null)
-            {
-                this.queue.Enqueue(result);
-            }
-
-            return result;
-        }
-
-        public static ResultObjectType GetObjectFromCsvLine<ResultObjectType>(string line, string separator = ",")
-            where ResultObjectType : class, new()
-        {
-            //return GetObjectFromCsvColumns<ResultObjectType>(CsvConverter.RegexParser.Split(line));
-            return GetObjectFromCsvColumns<ResultObjectType>(line.Split(separator));
-        }
-
-        public static ResultObjectType GetObjectFromCsvColumns<ResultObjectType>(ReadOnlySpan<string> columns)
+        private static ResultObjectType GetObjectFromCsvColumns<ResultObjectType>(ReadOnlySpan<string> columns)
             where ResultObjectType : class, new()
         {
             var entity = new ResultObjectType();

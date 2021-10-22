@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
+using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Tools.WebSocketTool;
-using WebPerformanceMeter.Users.WebSocket;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {
@@ -26,9 +24,9 @@ namespace WebSocketWebApplication.PerformanceTest.Tests
         {
             public WebSocketUserTest(string host, int port, string path) : base(host, port, path) { }
 
-            protected override async Task PerformanceAsync(WebSocketClientTool client)
+            protected override async Task PerformanceAsync(IWebSocketTool client)
             {
-                await ReceiveMessageAsync(client);
+                await ReceiveMessage(client);
             }
         }
     }

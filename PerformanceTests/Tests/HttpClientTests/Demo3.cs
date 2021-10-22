@@ -1,11 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using TestWebApiServer.Models;
+using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Users;
 
 namespace PerformanceTests.Tests.HttpClientTests
 {
@@ -53,7 +52,7 @@ namespace PerformanceTests.Tests.HttpClientTests
 
             protected override async Task PerformanceAsync()
             {
-                await this.RequestAsJsonAsync(
+                await RequestAsJson(
                     HttpMethod.Post,
                     "/Test/TestWaitMethod",
                     new TestRequestContent { Timeout = 100 },
@@ -69,7 +68,7 @@ namespace PerformanceTests.Tests.HttpClientTests
             protected override async Task PerformanceAsync()
             {
 
-                await this.RequestAsJsonAsync(
+                await RequestAsJson(
                     HttpMethod.Post,
                     "/Test/TestWaitMethod",
                     new TestRequestContent { Timeout = 200 },

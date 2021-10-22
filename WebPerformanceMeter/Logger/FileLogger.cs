@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using WebPerformanceMeter.DataReader.CsvReader;
+using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Logger
 {
@@ -49,11 +50,11 @@ namespace WebPerformanceMeter.Logger
 
         private bool _processStart = false;
 
-        public virtual Task Start()
+        public virtual Task StartAsync()
         {
             lock (this._lock)
             {
-                if (_processStart)
+                if (this._processStart)
                 {
                     return Task.CompletedTask;
                 }
@@ -87,6 +88,10 @@ namespace WebPerformanceMeter.Logger
                         if (logWriter is not null)
                         {
                             var jsonLogMessage = this.Convert(log.logMessage, log.logMessageType);
+
+                            //
+                            //Console.WriteLine(jsonLogMessage);
+
                             logWriter.WriteLine(jsonLogMessage);
                         }
                     }
@@ -123,8 +128,11 @@ namespace WebPerformanceMeter.Logger
         {
         }
 
-        public virtual void AppendLogMessage(string logName, string logMessage, Type logMessageType)
+        public virtual void AddLogMessage(string logName, string logMessage, Type logMessageType)
         {
+            //
+            //Console.WriteLine($"log message: {logName} {logMessage}");
+
             this.logQueue.Enqueue((logName, logMessage, logMessageType));
         }
 

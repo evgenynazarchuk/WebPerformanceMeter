@@ -115,7 +115,12 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 3);
 
-            using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            if (grpcConnect is null)
+            {
+                throw new ApplicationException("grpc connect error");
+            }
+
             var responseMessages = new List<TResponse>();
 
             var readMessageTask = Task.Run(async () =>

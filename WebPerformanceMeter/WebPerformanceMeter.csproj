@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Interfaces\Users\BrowserUser\" />
+    <Folder Include="Interfaces\Users\JavascriptUser\" />
     <Folder Include="Logger\JavascriptLogger\" />
-    <Folder Include="Tools\JavascriptTool\" />
   </ItemGroup>
 
   <ItemGroup>

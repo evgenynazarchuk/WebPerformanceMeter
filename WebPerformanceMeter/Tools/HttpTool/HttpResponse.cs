@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace WebPerformanceMeter.Tools.HttpTool
+namespace WebPerformanceMeter
 {
     public sealed class HttpResponse
     {

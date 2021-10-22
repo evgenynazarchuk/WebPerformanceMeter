@@ -6,18 +6,19 @@ using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Users;
+using WebPerformanceMeter;
 
 namespace PerformanceTests.Tests.HttpClientTests
 {
     public class Demo1
     {
-        [PerformanceTest(1, 200)]
         [PerformanceTest(10, 200)]
-        public async Task ActiveUsersOnPeriodTest(int minutes, int usersCount)
+        [PerformanceTest(30, 200)]
+        public async Task ActiveUsersOnPeriodTest(int seconds, int usersCount)
         {
             var app = new WebApplication();
             var user = new UserRequest(app.HttpClient);
-            var plan = new ActiveUsersOnPeriod(user, usersCount, minutes.Minutes());
+            var plan = new ActiveUsersOnPeriod(user, usersCount, seconds.Seconds());
 
             await new Scenario()
                 .AddSequentialPlans(plan)
@@ -31,7 +32,7 @@ namespace PerformanceTests.Tests.HttpClientTests
 
             protected override async Task PerformanceAsync()
             {
-                await this.RequestAsJsonAsync(
+                await RequestAsJson(
                     HttpMethod.Post,
                     "/Test/TestWaitMethod",
                     new TestRequestContent { Timeout = 100 },

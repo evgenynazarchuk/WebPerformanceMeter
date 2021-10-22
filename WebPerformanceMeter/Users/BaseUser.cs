@@ -1,27 +1,21 @@
-﻿using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
+﻿using WebPerformanceMeter.Interfaces;
 
-namespace WebPerformanceMeter
+namespace WebPerformanceMeter.Users
 {
     public abstract class BaseUser : IBaseUser
     {
-        public string UserName { get; private set; }
+        public string UserName { get => this.userName; }
+        
+        public ILogger? Logger { get => this.logger; }
 
-        public ILogger? Logger { get; private set; }
+        protected readonly string userName;
 
-        public BaseUser()
+        protected readonly ILogger? logger;
+
+        public BaseUser(string userName, ILogger? logger = null)
         {
-            this.UserName = string.Empty;
-        }
-
-        public virtual void SetUserName(string userName)
-        {
-            this.UserName = userName;
-        }
-
-        public virtual void SetLogger(ILogger logger)
-        {
-            this.Logger = logger;
+            this.userName = userName;
+            this.logger = logger;
         }
     }
 }

@@ -6,51 +6,48 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter
 {
-    public abstract class TypedHttpUser<TEntity> : BaseHttpUser, ITypedHttpUser<TEntity>
-        where TEntity : class
+    public abstract class HttpUser<TData> : BasicHttpUser, ITypedUser<TData>
+        where TData : class
     {
-        public TypedHttpUser(HttpClient client, string userName = "")
-            : base(client, userName) { }
+        public HttpUser(HttpClient client, string userName = "", ILogger? logger = null)
+            : base(client, userName, logger) { }
 
-        public TypedHttpUser(
+        public HttpUser(
             string address,
             IDictionary<string, string>? defaultHeaders = null,
             IEnumerable<Cookie>? defaultCookies = null,
-            string userName = "")
-            : base(address, defaultHeaders, defaultCookies, userName) { }
+            string userName = "",
+            ILogger? logger = null)
+            : base(address, defaultHeaders, defaultCookies, userName, logger) { }
 
         public virtual async Task InvokeAsync(
-            int userloopCount = 1,
-            IDataReader? dataReader = null,
-            bool reuseDataInLoop = true
+            IDataReader<TData> dataReader,
+            bool reuseDataInLoop = true,
+            int userloopCount = 1
             )
         {
-            TEntity? entity = null;
-
-            if (dataReader is not null)
-            {
-                entity = (TEntity?)dataReader.GetEntity();
-            }
+            TData? data = dataReader.GetData();
 
             for (int i = 0; i < userloopCount; i++)
             {
-                if (entity is null)
+                if (data is null)
                 {
-                    return;
+                    continue;
                 }
 
-                await PerformanceAsync(entity);
+                await PerformanceAsync(data);
 
-                if (dataReader is not null && !reuseDataInLoop)
+                if (!reuseDataInLoop)
                 {
-                    entity = (TEntity?)dataReader.GetEntity();
+                    data = dataReader.GetData();
                 }
             }
         }
 
-        public abstract Task PerformanceAsync(TEntity data);
+        public abstract Task PerformanceAsync(TData data);
     }
 }

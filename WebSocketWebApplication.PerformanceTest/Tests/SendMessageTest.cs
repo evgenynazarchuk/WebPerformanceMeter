@@ -3,8 +3,8 @@ using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
-using WebPerformanceMeter.Tools.WebSocketTool;
-using WebPerformanceMeter.Users.WebSocket;
+using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {
@@ -25,9 +25,9 @@ namespace WebSocketWebApplication.PerformanceTest.Tests
         {
             public WebSocketUserTest(string host, int port, string path) : base(host, port, path) { }
 
-            protected override async Task PerformanceAsync(WebSocketTool client)
+            protected override async Task PerformanceAsync(IWebSocketTool client)
             {
-                await SendMessageAsync(client, "Hello world");
+                await SendMessage(client, "Hello world");
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Net.WebSockets;
 
 namespace WebPerformanceMeter.Interfaces
 {
-    public interface IWebSocketUser : IBaseWebSocketUser, IUser
+    public interface IWebSocketUser : IBaseWebSocketUser
     {
     }
 }

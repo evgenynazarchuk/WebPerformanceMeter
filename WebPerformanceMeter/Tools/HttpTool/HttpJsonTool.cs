@@ -4,8 +4,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Tools;
 
-namespace WebPerformanceMeter.Tools.HttpTool
+namespace WebPerformanceMeter
 {
     public partial class HttpTool : IHttpJsonTool
     {

@@ -7,31 +7,31 @@ namespace WebPerformanceMeter.Support
 {
     public sealed class Scenario
     {
-        private readonly List<KeyValuePair<ActType, UsersPerformancePlan[]>> _acts;
+        private readonly List<KeyValuePair<ActType, IUsersPerformancePlan[]>> _acts;
 
-        private readonly List<Task> _loggers;
+        private readonly List<Task> _taskLoggers;
 
         public Scenario()
         {
             this._acts = new();
-            this._loggers = new();
+            this._taskLoggers = new();
         }
 
-        public Scenario AddParallelPlans(params UsersPerformancePlan[] performancePlan)
+        public Scenario AddParallelPlans(params IUsersPerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Parallel, performancePlan);
 
             return this;
         }
 
-        public Scenario AddSequentialPlans(params UsersPerformancePlan[] performancePlan)
+        public Scenario AddSequentialPlans(params IUsersPerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Sequential, performancePlan);
 
             return this;
         }
 
-        private Scenario AddActs(ActType launchType, params UsersPerformancePlan[] performancePlan)
+        private Scenario AddActs(ActType launchType, params IUsersPerformancePlan[] performancePlan)
         {
             this._acts.Add(new(launchType, performancePlan));
 
@@ -71,9 +71,6 @@ namespace WebPerformanceMeter.Support
                         }
 
                         break;
-
-                    default:
-                        throw new ApplicationException("Not Implement ActType");
                 }
             }
 
@@ -92,10 +89,12 @@ namespace WebPerformanceMeter.Support
                     {
                         continue;
                     }
+
+                    Console.WriteLine($"Start Loggers");
                     
                     //var task = Task.Run(() => plan.User.Logger.Start());
                     var task = plan.User.Logger.StartAsync();
-                    this._loggers.Add(task);
+                    this._taskLoggers.Add(task);
                 }
             }
         }
@@ -111,11 +110,15 @@ namespace WebPerformanceMeter.Support
                         continue;
                     }
 
+                    Console.WriteLine($"Stop Logger");
+
                     plan.User.Logger.ProcessStop();
                 }
             }
 
-            await Task.WhenAll(_loggers.ToArray());
+            Console.WriteLine($"Wait Logger");
+
+            await Task.WhenAll(_taskLoggers.ToArray());
         }
     }
 }

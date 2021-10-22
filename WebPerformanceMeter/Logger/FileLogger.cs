@@ -88,6 +88,10 @@ namespace WebPerformanceMeter.Logger
                         if (logWriter is not null)
                         {
                             var jsonLogMessage = this.Convert(log.logMessage, log.logMessageType);
+
+                            //
+                            Console.WriteLine(jsonLogMessage);
+
                             logWriter.WriteLine(jsonLogMessage);
                         }
                     }
@@ -126,6 +130,9 @@ namespace WebPerformanceMeter.Logger
 
         public virtual void AddLogMessage(string logName, string logMessage, Type logMessageType)
         {
+            //
+            Console.WriteLine($"log message: {logName} {logMessage}");
+
             this.logQueue.Enqueue((logName, logMessage, logMessageType));
         }
 

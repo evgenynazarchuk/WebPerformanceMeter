@@ -1,13 +1,14 @@
-﻿namespace PerformanceTests.Tests.BrowserTests
-{
-    using System.Threading.Tasks;
-    using WebPerformanceMeter.Attributes;
-    using WebPerformanceMeter.Extensions;
-    using WebPerformanceMeter.PerformancePlans;
-    using WebPerformanceMeter.Support;
-    using WebPerformanceMeter.Tools.BrowserTool;
-    using WebPerformanceMeter.Users;
+﻿using System.Threading.Tasks;
+using WebPerformanceMeter.Attributes;
+using WebPerformanceMeter.Extensions;
+using WebPerformanceMeter.PerformancePlans;
+using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Users;
+using WebPerformanceMeter;
+using WebPerformanceMeter.Tools;
 
+namespace PerformanceTests.Tests.BrowserTests
+{
     public class Demo1
     {
         [PerformanceTest(1, 5)]

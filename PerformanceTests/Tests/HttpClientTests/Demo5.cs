@@ -5,6 +5,7 @@ using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Users;
+using WebPerformanceMeter;
 
 namespace PerformanceTests.Tests.HttpClientTests
 {
@@ -30,7 +31,7 @@ namespace PerformanceTests.Tests.HttpClientTests
 
             protected override async Task PerformanceAsync()
             {
-                await this.RequestAsJsonAsync(
+                await this.RequestAsJson(
                     HttpMethod.Post,
                     "/Test/TestWaitMethod",
                     new TestRequestContent { Timeout = 100 },

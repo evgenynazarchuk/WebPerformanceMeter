@@ -11,9 +11,5 @@ namespace WebPerformanceMeter.Interfaces
         string UserName { get; }
 
         ILogger? Logger { get; }
-
-        void SetLogger(ILogger logger);
-
-        void SetUserName(string userName);
     }
 }

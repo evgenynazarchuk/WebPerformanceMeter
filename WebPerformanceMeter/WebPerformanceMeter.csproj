@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Users\GrpcUser\" />
     <Folder Include="Interfaces\Users\BrowserUser\" />
     <Folder Include="Interfaces\Users\JavascriptUser\" />
     <Folder Include="Logger\JavascriptLogger\" />

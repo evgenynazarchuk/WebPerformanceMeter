@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
-using WebPerformanceMeter.Tools.HttpTool;
 
 namespace WebPerformanceMeter.Interfaces
 {

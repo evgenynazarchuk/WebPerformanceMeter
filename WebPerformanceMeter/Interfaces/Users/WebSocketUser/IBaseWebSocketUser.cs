@@ -3,46 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Users.WebSocket;
 using System.Net.WebSockets;
 
 namespace WebPerformanceMeter.Interfaces
 {
     public interface IBaseWebSocketUser : IBaseUser
     {
-        IWebSocketTool Tool { get; set; }
-
         void SetClientBuffer(
             int receiveBufferSize = 1024,
             int sendBufferSize = 1024);
 
-        ValueTask SendMessageAsync(
-            WebSocketTool client,
+        ValueTask SendMessage(
+            IWebSocketTool client,
             string message,
             string label = "");
 
-        ValueTask<string> ReceiveMessageAsync(
-            WebSocketTool client,
+        ValueTask<string> ReceiveMessage(
+            IWebSocketTool client,
             string label = "");
 
-        ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(
-            WebSocketTool client,
+        ValueTask<ValueWebSocketReceiveResult> Receive(
+            IWebSocketTool client,
             Memory<byte> buffer,
             string label = "");
 
-        ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytesAsync(
-            WebSocketTool client,
+        ValueTask<(Memory<byte> buffer, ValueWebSocketReceiveResult bufferInfo)> ReceiveBytes(
+            IWebSocketTool client,
             string label = "");
 
-        ValueTask SendAsync(
-            WebSocketTool client,
+        ValueTask Send(
+            IWebSocketTool client,
             ReadOnlyMemory<byte> buffer,
             WebSocketMessageType messageType,
             bool endOfMessage = true,
             string label = "");
 
-        ValueTask SendBytesAsync(
-            WebSocketTool client,
+        ValueTask SendBytes(
+            IWebSocketTool client,
             ReadOnlyMemory<byte> buffer,
             string label = "");
     }

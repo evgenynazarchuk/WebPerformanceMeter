@@ -1,9 +1,10 @@
 ﻿namespace WebPerformanceMeter.Interfaces
 {
-    public interface IDataReader
+    public interface IDataReader<TEntity>
+        where TEntity : class
     {
-        object? GetEntity();
+        TEntity? GetData();
 
-        void ProcessFile(string path, bool hasHeader = false, bool cyclicalData = false, string separator = ",");
+        void ProcessFile(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false);
     }
 }

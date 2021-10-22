@@ -9,7 +9,7 @@ namespace WebPerformanceMeter.Interfaces
 {
     public interface IBaseHttpJsonUser
     {
-        Task<ResponseObjectType?> RequestAsJsonAsync<RequestObjectType, ResponseObjectType>(
+        Task<ResponseObjectType?> RequestAsJson<RequestObjectType, ResponseObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -18,7 +18,7 @@ namespace WebPerformanceMeter.Interfaces
             where RequestObjectType : class, new()
             where ResponseObjectType : class, new();
 
-        Task<int> RequestAsJsonAsync<RequestObjectType>(
+        Task<int> RequestAsJson<RequestObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             RequestObjectType requestObject,
@@ -26,7 +26,7 @@ namespace WebPerformanceMeter.Interfaces
             Dictionary<string, string>? requestHeaders = null)
             where RequestObjectType : class, new();
 
-        Task<ResponseObjectType?> RequestAsJsonAsync<ResponseObjectType>(
+        Task<ResponseObjectType?> RequestAsJson<ResponseObjectType>(
             HttpMethod httpMethod,
             string requestUri,
             string requestLabel = "",

@@ -8,8 +8,9 @@ using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Extensions;
+using WebPerformanceMeter.Tools;
 
-namespace WebPerformanceMeter.Tools.HttpTool
+namespace WebPerformanceMeter
 {
     public sealed partial class HttpTool : Tool, IHttpTool
     {
@@ -35,6 +36,8 @@ namespace WebPerformanceMeter.Tools.HttpTool
         public HttpTool(HttpClient client, ILogger? logger = null)
             : base(logger)
         {
+            //
+            // Console.WriteLine($"{logger is null}"); -
             this.HttpClient = client;
         }
 
@@ -57,6 +60,9 @@ namespace WebPerformanceMeter.Tools.HttpTool
             string userName = "",
             string requestLabel = "")
         {
+            //
+            //Console.WriteLine($"Start request"); +
+
             long startSendRequest;
             long startWaitResponse;
             long startResponse;
@@ -84,9 +90,12 @@ namespace WebPerformanceMeter.Tools.HttpTool
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            if (this.Logger is not null)
+            //
+            //Console.WriteLine($"{this.logger is not null}"); -
+
+            if (this.logger is not null)
             {
-                this.Logger.AddLogMessage(
+                this.logger.AddLogMessage(
                     logName: "HttpClientToolLog.json", 
                     logMessage: $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}", 
                     logMessageType: typeof(HttpLogMessage)

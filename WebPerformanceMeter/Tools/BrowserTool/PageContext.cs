@@ -4,7 +4,7 @@ using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Interfaces;
 
-namespace WebPerformanceMeter.Tools.BrowserTool
+namespace WebPerformanceMeter.Tools
 {
     public class PageContext
     {

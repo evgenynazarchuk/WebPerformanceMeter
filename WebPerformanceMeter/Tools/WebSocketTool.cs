@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
 {
@@ -50,9 +51,9 @@ namespace WebPerformanceMeter
             await this.ClientWebSocket.ConnectAsync(this.Uri, CancellationToken.None);
             endConnect = ScenarioTimer.Time.Elapsed.Ticks;
 
-            if (this.Logger is not null)
+            if (this.logger is not null)
             {
-                this.Logger.AddLogMessage(
+                this.logger.AddLogMessage(
                     "WebSocketLogMessage.json",
                     $"{userName},,connect,{startConnect},{endConnect}",
                     typeof(WebSocketLogMessage));
@@ -86,9 +87,9 @@ namespace WebPerformanceMeter
             await this.ClientWebSocket.SendAsync(buffer, messageType, endOfMessage, CancellationToken.None);
             finishRequest = ScenarioTimer.Time.Elapsed.Ticks;
 
-            if (this.Logger is not null)
+            if (this.logger is not null)
             {
-                this.Logger.AddLogMessage(
+                this.logger.AddLogMessage(
                     "WebSocketLogMessage.json",
                     $"{userName},{label},send,{startRequest},{finishRequest}",
                     typeof(WebSocketLogMessage));
@@ -107,9 +108,9 @@ namespace WebPerformanceMeter
             var result = await this.ClientWebSocket.ReceiveAsync(buffer, CancellationToken.None);
             endReceive = ScenarioTimer.Time.Elapsed.Ticks;
 
-            if (this.Logger is not null)
+            if (this.logger is not null)
             {
-                this.Logger.AddLogMessage(
+                this.logger.AddLogMessage(
                     $"WebSocketLogMessage.json",
                     $"{userName},{label},receive,{startReceive},{endReceive}",
                     typeof(WebSocketLogMessage));

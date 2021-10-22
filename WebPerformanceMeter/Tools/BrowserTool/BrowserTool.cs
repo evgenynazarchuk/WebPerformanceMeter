@@ -3,8 +3,9 @@ using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Logger;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Tools;
 
-namespace WebPerformanceMeter.Tools.BrowserTool
+namespace WebPerformanceMeter
 {
     public class BrowserTool : Tool, IDisposable
     {
@@ -30,7 +31,7 @@ namespace WebPerformanceMeter.Tools.BrowserTool
             IBrowserContext browserContext = await Browser.NewContextAsync();
             IPage page = await browserContext.NewPageAsync();
 
-            return new PageContext(browserContext, page, this.UserName, this.Logger);
+            return new PageContext(browserContext, page, this.UserName, this.logger);
         }
 
         public void Dispose()

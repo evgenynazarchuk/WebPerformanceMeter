@@ -6,18 +6,18 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
-    public sealed class CsvReader<TResult> : IDataReader
-        where TResult : class, new()
+    public sealed class CsvReader<TEntity> : IDataReader<TEntity>
+        where TEntity : class, new()
     {
         private StreamReader? streamReader = null;
 
-        private ConcurrentQueue<TResult>? queue = null;
+        private ConcurrentQueue<TEntity>? queue = null;
 
         private bool cyclicalData = false;
 
         private bool hasHeader = false;
 
-        public void ProcessFile(string path, bool hasHeader = false, bool cyclicalData = false, string separator = ",")
+        public void ProcessFile(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
         {
             this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
             this.cyclicalData = cyclicalData;
@@ -32,20 +32,19 @@ namespace WebPerformanceMeter.DataReader.CsvReader
             string? line;
             while ((line = this.streamReader.ReadLine()) != null)
             {
-                //var row = CsvConverter.RegexParser.Split(line);
                 var columns = line.Split(separator);
-                this.queue.Enqueue(GetObjectFromCsvColumns<TResult>(columns));
+                this.queue.Enqueue(GetObjectFromCsvColumns<TEntity>(columns));
             }
         }
 
-        public object? GetEntity()
+        public TEntity? GetData()
         {
             if (this.queue is null)
             {
                 return null;
             }
 
-            this.queue.TryDequeue(out TResult? result);
+            this.queue.TryDequeue(out TEntity? result);
 
             // put again
             if (this.cyclicalData && result is not null)
@@ -59,7 +58,6 @@ namespace WebPerformanceMeter.DataReader.CsvReader
         public static ResultObjectType GetObjectFromCsvLine<ResultObjectType>(string line, string separator = ",")
             where ResultObjectType : class, new()
         {
-            //return GetObjectFromCsvColumns<ResultObjectType>(CsvConverter.RegexParser.Split(line));
             return GetObjectFromCsvColumns<ResultObjectType>(line.Split(separator));
         }
 

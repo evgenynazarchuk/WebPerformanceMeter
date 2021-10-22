@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Tools.HttpTool;
 
 namespace WebPerformanceMeter.Interfaces
 {
@@ -9,12 +8,11 @@ namespace WebPerformanceMeter.Interfaces
     {
         IHttpTool Tool { get; }
 
-        Task<HttpResponse> RequestAsync(
+        Task<HttpResponse> Request(
             HttpMethod httpMethod,
             string path,
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
-            string userName = "",
             string requestLabel = "");
     }
 }

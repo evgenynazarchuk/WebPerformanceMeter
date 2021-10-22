@@ -9,8 +9,8 @@ namespace WebPerformanceMeter.Interfaces
     public interface ITypedUser<TEntity> : IBaseUser
         where TEntity : class
     {
-        Task InvokeAsync(int userLoopCount, IDataReader? dataReader = null, bool reuseDataInLoop = false);
+        Task InvokeAsync(IDataReader<TEntity> dataReader, bool reuseDataInLoop = false, int userLoopCount = 1);
 
-        Task PerformanceAsync(TEntity data);
+        //Task PerformanceAsync(TEntity data);
     }
 }

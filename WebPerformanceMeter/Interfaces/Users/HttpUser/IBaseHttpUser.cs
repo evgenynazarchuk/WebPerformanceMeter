@@ -14,10 +14,5 @@ namespace WebPerformanceMeter.Interfaces
             Dictionary<string, string>? requestHeaders = null,
             HttpContent? requestContent = null,
             string requestLabel = "");
-
-        Task<string> Get(
-            string path,
-            Dictionary<string, string>? requestHeaders = null,
-            string requestLabel = "");
     }
 }

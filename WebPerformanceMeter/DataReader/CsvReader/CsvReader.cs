@@ -6,82 +6,30 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader.CsvReader
 {
-    public sealed class CsvReader<TData> : IDataReader<TData>
+    public sealed class CsvReader<TData> : DataReader<TData>
         where TData : class, new()
     {
-        private readonly StreamReader _streamReader;
-
-        private ConcurrentQueue<TData> _queue;
-
-        private readonly bool _cyclicalData = false;
-
         private readonly bool _hasHeader = false;
 
-        public CsvReader(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
+        public CsvReader(string filePath, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
+            : base(filePath, cyclicalData)
         {
-            this._streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
-            this._cyclicalData = cyclicalData;
             this._hasHeader = hasHeader;
-            this._queue = new();
 
             if (this._hasHeader)
             {
-                _streamReader.ReadLine();
+                this.reader.ReadLine();
             }
 
             string? line;
-            while ((line = this._streamReader.ReadLine()) != null)
+            while ((line = this.reader.ReadLine()) != null)
             {
                 var columns = line.Split(separator);
-                this._queue.Enqueue(GetObjectFromCsvColumns<TData>(columns));
+                this.queue.Enqueue(GetObjectFromCsvColumns<TData>(columns));
             }
         }
 
-        //public void ProcessFile(string path, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
-        //{
-        //    this.streamReader = new StreamReader(path, Encoding.UTF8, true, 65525);
-        //    this.cyclicalData = cyclicalData;
-        //    this.hasHeader = hasHeader;
-        //    this.queue = new();
-
-        //    if (this.hasHeader)
-        //    {
-        //        streamReader.ReadLine();
-        //    }
-
-        //    string? line;
-        //    while ((line = this.streamReader.ReadLine()) != null)
-        //    {
-        //        var columns = line.Split(separator);
-        //        this.queue.Enqueue(GetObjectFromCsvColumns<TEntity>(columns));
-        //    }
-        //}
-
-        public TData? GetData()
-        {
-            if (this._queue is null)
-            {
-                return null;
-            }
-
-            this._queue.TryDequeue(out TData? result);
-
-            // put again
-            if (this._cyclicalData && result is not null)
-            {
-                this._queue.Enqueue(result);
-            }
-
-            return result;
-        }
-
-        public static ResultObjectType GetObjectFromCsvLine<ResultObjectType>(string line, string separator = ",")
-            where ResultObjectType : class, new()
-        {
-            return GetObjectFromCsvColumns<ResultObjectType>(line.Split(separator));
-        }
-
-        public static ResultObjectType GetObjectFromCsvColumns<ResultObjectType>(ReadOnlySpan<string> columns)
+        private static ResultObjectType GetObjectFromCsvColumns<ResultObjectType>(ReadOnlySpan<string> columns)
             where ResultObjectType : class, new()
         {
             var entity = new ResultObjectType();

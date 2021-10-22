@@ -14,14 +14,14 @@ using WebPerformanceMeter.DataReader.CsvReader;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {
-    public class Demo9
+    public class Demo10
     {
         [PerformanceTest(1)]
         public async Task ReadFromFileAndPostTest(int usersCount)
         {
             var address = "https://jsonplaceholder.typicode.com";
             var user = new UserAction(address);
-            var reader = new CsvReader<PostDto>("Tests\\JsonPlaceholder\\Demo9_PostDto.csv", hasHeader: true);
+            var reader = new JsonReader<PostDto>("Tests\\JsonPlaceholder\\Demo10_PostDto.json");
             var plan = new ConstantUsers<PostDto>(user, usersCount, reader);
 
             await new Scenario()

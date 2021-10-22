@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Tests\JsonPlaceholder\Demo10_PostDto.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\JsonPlaceholder\Demo9_PostDto.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

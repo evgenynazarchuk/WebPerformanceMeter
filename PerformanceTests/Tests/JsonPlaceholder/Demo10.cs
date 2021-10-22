@@ -16,7 +16,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
 {
     public class Demo10
     {
-        [PerformanceTest(1)]
+        [PerformanceTest(3)]
         public async Task ReadFromFileAndPostTest(int usersCount)
         {
             var address = "https://jsonplaceholder.typicode.com";

@@ -96,7 +96,7 @@ namespace WebPerformanceMeter
 
             //
             using var grpcCall = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
-            
+
             if (grpcCall is null)
             {
                 throw new ApplicationException("gRPC call error");
@@ -138,7 +138,7 @@ namespace WebPerformanceMeter
 
             //
             using var grpcCall = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
-            
+
             if (grpcCall is null)
             {
                 throw new ApplicationException("gRPC call error");

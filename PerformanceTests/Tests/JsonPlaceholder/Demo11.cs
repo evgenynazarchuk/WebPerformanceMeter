@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
-using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Extensions;
+using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {

@@ -28,16 +28,17 @@ namespace WebPerformanceMeter
             this._grpcChannel = GrpcChannel.ForAddress(address);
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
+
             if (ctor is not null)
             {
                 this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+
+                if (this._grpcClient is null)
+                {
+                    throw new ApplicationException("gRpc client is not create");
+                }
             }
             else
-            {
-                throw new ApplicationException("gRpc client is not create");
-            }
-
-            if (this._grpcClient is null)
             {
                 throw new ApplicationException("gRpc client is not create");
             }
@@ -59,16 +60,17 @@ namespace WebPerformanceMeter
             }
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
+
             if (ctor is not null)
             {
                 this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+
+                if (this._grpcClient is null)
+                {
+                    throw new ApplicationException("gRpc client is not create");
+                }
             }
             else
-            {
-                throw new ApplicationException("gRpc client is not create");
-            }
-
-            if (this._grpcClient is null)
             {
                 throw new ApplicationException("gRpc client is not create");
             }
@@ -93,7 +95,8 @@ namespace WebPerformanceMeter
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
             //
-            var grpcCall = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            using var grpcCall = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            
             if (grpcCall is null)
             {
                 throw new ApplicationException("gRPC call error");
@@ -117,7 +120,7 @@ namespace WebPerformanceMeter
 
         public async ValueTask<TResponse> ClientStreamAsync<TResponse, TRequest>(
             string methodCall,
-            ICollection<TRequest> requestBodyList,
+            ICollection<TRequest> requestObjects,
             string userName = "",
             string label = "")
             where TRequest : class, new()
@@ -135,12 +138,13 @@ namespace WebPerformanceMeter
 
             //
             using var grpcCall = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            
             if (grpcCall is null)
             {
                 throw new ApplicationException("gRPC call error");
             }
 
-            foreach (var requestBody in requestBodyList)
+            foreach (var requestBody in requestObjects)
             {
                 await grpcCall.RequestStream.WriteAsync(requestBody);
             }
@@ -180,6 +184,7 @@ namespace WebPerformanceMeter
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
             //
+            // TODO add using
             using var grpcCall = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
             if (grpcCall is null)
             {
@@ -209,7 +214,7 @@ namespace WebPerformanceMeter
 
         public async ValueTask<IReadOnlyCollection<TResponse>> BidirectionalStreamAsync<TResponse, TRequest>(
             string methodCall,
-            ICollection<TRequest> requestBodyList,
+            ICollection<TRequest> requestObjects,
             string userName = "",
             string label = "")
             where TRequest : class, new()
@@ -244,7 +249,7 @@ namespace WebPerformanceMeter
             });
 
 
-            foreach (var requestBody in requestBodyList)
+            foreach (var requestBody in requestObjects)
             {
                 await grpcCall.RequestStream.WriteAsync(requestBody);
             }

@@ -5,7 +5,7 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.DataReader
 {
-    public class DataReader<TData> : IDataReader<TData>
+    public abstract class DataReader<TData> : IDataReader<TData>
         where TData : class
     {
         protected readonly bool cyclicalData;

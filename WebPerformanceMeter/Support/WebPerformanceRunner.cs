@@ -5,11 +5,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Attributes;
+using WebPerformanceMeter.TestRunnerWebService;
 
 namespace WebPerformanceMeter.Support
 {
     public class WebPerformanceRunner
     {
+        public static void WebService(Assembly assembly)
+        {
+            WebServiceRunner.Start(assembly);
+        }
+
         public static async Task ManualAsync(Assembly assembly)
         {
             // get test method

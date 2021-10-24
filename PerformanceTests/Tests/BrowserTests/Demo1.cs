@@ -24,11 +24,11 @@ namespace PerformanceTests.Tests.BrowserTests
 
     public class SearchGoogleUser : ChromiumUser
     {
-        protected override async Task PerformanceAsync(PageContext pageContext)
+        protected override async Task Performance(PageTool tool)
         {
-            await pageContext.GotoAsync("https://google.com");
-            await pageContext.TypeAsync("input[name='q']", "Google");
-            await pageContext.ClickAsync("li+div>center>input[name='btnK']");
+            await tool.OpenPage("https://google.com");
+            await tool.Type("input[name='q']", "Google");
+            await tool.Click("li+div>center>input[name='btnK']");
         }
     }
 }

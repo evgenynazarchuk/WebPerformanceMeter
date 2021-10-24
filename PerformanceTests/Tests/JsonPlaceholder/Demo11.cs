@@ -1,20 +1,21 @@
-﻿using PerformanceTests.Tests.JsonPlaceholder.Dto;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Extensions;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {
     [PerformanceClass]
-    public class Demo4
+    public class Demo11
     {
-        [PerformanceTest(1)]
-        public async Task CreatePostsWithoutResultTest(int usersCount)
+        private readonly string _address = "https://jsonplaceholder.typicode.com";
+
+        [PerformanceTest()]
+        public async Task GetAllPostsWithoutResultTest()
         {
-            var address = "https://jsonplaceholder.typicode.com";
-            var user = new UserAction(address);
-            var plan = new ConstantUsers(user, usersCount);
+            var user = new UserAction(this._address);
+            var plan = new ActiveUsersOnPeriod(user, 10, 30.Seconds());
 
             await new Scenario()
                 .AddSequentialPlans(plan)
@@ -28,8 +29,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
 
             protected override async Task Performance()
             {
-                var post = new PostDto { UserId = 1, Title = "test", Body = "test" };
-                await PostAsJson<PostDto>("/posts", post);
+                await Get("/posts");
             }
         }
     }

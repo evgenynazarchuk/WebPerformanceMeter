@@ -14,7 +14,7 @@ namespace WebPerformanceMeter
 
         public virtual async Task InvokeAsync(int userLoopCount = 1)
         {
-            var pageContext = await this.BrowserTool.GetNewPageContextAsync();
+            var pageContext = await this.BrowserTool.GetPageTool();
 
             pageContext.Page.RequestFinished += (_, request) =>
             {
@@ -33,12 +33,12 @@ namespace WebPerformanceMeter
 
             for (int i = 0; i < userLoopCount; i++)
             {
-                await PerformanceAsync(pageContext);
+                await Performance(pageContext);
             }
 
             await pageContext.CloseAsync();
         }
 
-        protected abstract Task PerformanceAsync(PageContext pageContext);
+        protected abstract Task Performance(PageTool pageContext);
     }
 }

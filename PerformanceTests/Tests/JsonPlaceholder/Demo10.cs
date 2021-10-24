@@ -8,6 +8,7 @@ using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {
+    [PerformanceClass]
     public class Demo10
     {
         private readonly string _address = "https://jsonplaceholder.typicode.com";

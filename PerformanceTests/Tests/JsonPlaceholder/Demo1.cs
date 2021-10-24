@@ -2,18 +2,22 @@
 using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter.Extensions;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {
+    [PerformanceClass]
     public class Demo1
     {
         private readonly string _address = "https://jsonplaceholder.typicode.com";
 
-        [PerformanceTest(5)]
-        public async Task GetAllPostsWithoutResultTest(int usersCount)
+        [PerformanceTest(10, 10)]
+        [PerformanceTest(20, 10)]
+        [PerformanceTest(30, 10)]
+        public async Task GetAllPostsWithoutResultTest(int activeUsersCount, int seconds)
         {
             var user = new UserAction(this._address);
-            var plan = new ConstantUsers(user, usersCount);
+            var plan = new ActiveUsersOnPeriod(user, activeUsersCount, seconds.Seconds());
 
             await new Scenario()
                 .AddSequentialPlans(plan)

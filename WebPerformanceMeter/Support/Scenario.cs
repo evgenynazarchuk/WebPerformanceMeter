@@ -90,7 +90,7 @@ namespace WebPerformanceMeter.Support
                         continue;
                     }
 
-                    Console.WriteLine($"Start Loggers");
+                    Console.WriteLine($"Debug: Start Loggers");
 
                     //var task = Task.Run(() => plan.User.Logger.Start());
                     var task = plan.User.Logger.StartAsync();
@@ -110,13 +110,13 @@ namespace WebPerformanceMeter.Support
                         continue;
                     }
 
-                    Console.WriteLine($"Stop Logger");
+                    Console.WriteLine($"Debug: Stop Logger");
 
                     plan.User.Logger.ProcessStop();
                 }
             }
 
-            Console.WriteLine($"Wait Logger");
+            Console.WriteLine($"Debug: Wait Logger");
 
             await Task.WhenAll(_taskLoggers.ToArray());
         }

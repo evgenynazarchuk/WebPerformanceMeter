@@ -1,12 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using RestWebApplication.Services;
 
-namespace RestWebApplication
+namespace WebPerformanceMeter.TestRunnerWebService
 {
     public class Startup
     {
@@ -19,22 +23,18 @@ namespace RestWebApplication
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<DataAccess>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestWebApplication", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Test Runner Web Service", Version = "v1" });
             });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestWebApplication v1"));
-            }
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test Runner Web Service v1"));
 
             app.UseHttpsRedirection();
 

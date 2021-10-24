@@ -1,8 +1,8 @@
-﻿namespace RestWebApplication.Controllers
-{
-    using Microsoft.AspNetCore.Mvc;
-    using RestWebApplication.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using RestWebApplication.Services;
 
+namespace RestWebApplication.Controllers
+{
     [ApiController]
     [Route("[controller]")]
     public class ProductController : ControllerBase

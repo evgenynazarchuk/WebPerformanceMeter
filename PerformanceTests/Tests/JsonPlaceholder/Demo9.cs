@@ -8,6 +8,7 @@ using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.JsonPlaceholder
 {
+    [PerformanceClass]
     public class Demo9
     {
         [PerformanceTest(1)]

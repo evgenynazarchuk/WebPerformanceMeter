@@ -6,17 +6,17 @@ namespace WebPerformanceMeter.Users
 {
     public abstract class BasicChromiumUser : BaseUser, IDisposable
     {
-        protected readonly BrowserTool BrowserTool;
+        protected readonly ChromiumTool BrowserTool;
 
         public BasicChromiumUser(string userName = "", ILogger? logger = null)
             : base(userName, logger ?? new ChromiumLogger())
         {
-            this.BrowserTool = new BrowserTool(this.UserName, logger);
+            this.BrowserTool = new ChromiumTool(this.UserName, logger);
         }
 
         public void Dispose()
         {
-            this.BrowserTool.Dispose();
+            this.BrowserTool.DisposeAsync().GetAwaiter().GetResult();
         }
     }
 }

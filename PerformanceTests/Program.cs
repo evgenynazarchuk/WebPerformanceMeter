@@ -6,9 +6,14 @@ namespace PerformanceTests
 {
     public class Program
     {
-        public static async Task Main()
+        //public static async Task Main()
+        //{
+        //    await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());
+        //}
+
+        public static void Main()
         {
-            await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());
+            WebPerformanceRunner.WebService(Assembly.GetExecutingAssembly());
         }
     }
 }

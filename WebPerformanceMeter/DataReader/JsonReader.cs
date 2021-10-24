@@ -16,6 +16,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
             while ((line = this.reader.ReadLine()) != null)
             {
                 var data = JsonSerializer.Deserialize<TData?>(line, this._jsonOptions);
+
                 if (data is null)
                 {
                     continue;

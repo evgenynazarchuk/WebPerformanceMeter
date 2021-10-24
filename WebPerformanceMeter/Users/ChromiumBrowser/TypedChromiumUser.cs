@@ -19,7 +19,7 @@ namespace WebPerformanceMeter
             int userLoopCount = 1
             )
         {
-            var pageContext = await this.BrowserTool.GetNewPageContextAsync();
+            var pageContext = await this.BrowserTool.GetPageTool();
 
             pageContext.Page.RequestFinished += (_, request) =>
             {
@@ -56,6 +56,6 @@ namespace WebPerformanceMeter
             await pageContext.CloseAsync();
         }
 
-        protected abstract Task PerformanceAsync(PageContext pageContext, TData data);
+        protected abstract Task PerformanceAsync(PageTool pageContext, TData data);
     }
 }

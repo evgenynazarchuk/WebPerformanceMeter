@@ -12,9 +12,5 @@
         }
 
         public HttpClient HttpClient { get; set; }
-
-        //protected override void ConfigureWebHost(IWebHostBuilder builder)
-        //{
-        //}
     }
 }

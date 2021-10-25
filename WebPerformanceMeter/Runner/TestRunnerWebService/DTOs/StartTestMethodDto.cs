@@ -2,7 +2,8 @@
 {
     public class StartTestMethodDto : TestMethodIdentityDto
     {
-        //[JsonConverter(typeof(object?[]))]
+        public long TestRunIdentifier { get; set; }
+
         public object[]? ParametersValues { get; set; } = null;
     }
 }

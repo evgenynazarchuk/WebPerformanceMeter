@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Support;
+using WebPerformanceMeter;
 
 namespace WebSocketWebApplication.PerformanceTest
 {
@@ -8,7 +8,8 @@ namespace WebSocketWebApplication.PerformanceTest
     {
         static async Task Main(string[] args)
         {
-            await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());
+            var runner = new Runner(args, Assembly.GetExecutingAssembly());
+            await runner.StartAsync();
         }
     }
 }

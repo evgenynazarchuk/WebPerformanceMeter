@@ -70,7 +70,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 3);
 
-            using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
 
             // TODO logging
             foreach (var requestBody in requestBodyList)
@@ -93,7 +93,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 4);
 
-            using var grpcConnect = (AsyncServerStreamingCall<TResponse>)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
+            using var grpcConnect = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
             var messages = new List<TResponse>();
 
             // TODO logging

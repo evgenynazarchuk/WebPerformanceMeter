@@ -1,0 +1,299 @@
+﻿
+<html>
+<head>
+<script src='https://cdn.plot.ly/plotly-2.3.0.min.js'></script>
+
+<style>
+body {
+    background-color: #1A1A1A;
+}
+</style>
+
+</head>
+<body>
+<div id='StartedRequestsChart' style='width:99%;height:400px;'></div>
+<div id='CompletedRequestsChart' style='width:99%;height:400px;'></div>
+<div id='ResponseTimeChart' style='width:99%;height:400px;'></div>
+<div id='SentTimeChart' style='width:99%;height:400px;'></div>
+<div id='WaitTimeChart' style='width:99%;height:400px;'></div>
+<div id='ReceivedTimeChart' style='width:99%;height:400px;'></div>
+<div id='SentBytesChart' style='width:99%;height:400px;'></div>
+<div id='ReceivedBytesChart' style='width:99%;height:400px;'></div>
+
+
+<script>
+const groupedRawLog = [{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":0,"CompletedRequests":94,"ResponseTime":929500.4042553192,"SentTime":10426.744680851063,"WaitTime":859601.7872340425,"ReceivedTime":59471.87234042553},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":1,"CompletedRequests":167,"ResponseTime":605958.1856287426,"SentTime":1017.9640718562874,"WaitTime":567823.1556886227,"ReceivedTime":37117.065868263475},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":2,"CompletedRequests":159,"ResponseTime":632472.6918238994,"SentTime":823.5911949685535,"WaitTime":598573.7421383648,"ReceivedTime":33075.35849056604},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":3,"CompletedRequests":158,"ResponseTime":628603.5316455696,"SentTime":800.8037974683544,"WaitTime":595195.9746835442,"ReceivedTime":32606.75316455696},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":4,"CompletedRequests":149,"ResponseTime":663038.8053691275,"SentTime":888.5637583892617,"WaitTime":620381.7651006711,"ReceivedTime":41768.476510067114},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":5,"CompletedRequests":163,"ResponseTime":619012.2944785276,"SentTime":942.4601226993865,"WaitTime":584586.6748466258,"ReceivedTime":33483.15950920245},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":6,"CompletedRequests":167,"ResponseTime":594169.6766467065,"SentTime":645.6407185628742,"WaitTime":554507.2035928144,"ReceivedTime":39016.83233532934},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":7,"CompletedRequests":169,"ResponseTime":595321.449704142,"SentTime":801.7041420118343,"WaitTime":558752.9585798817,"ReceivedTime":35766.78698224852},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":8,"CompletedRequests":161,"ResponseTime":617082.3788819875,"SentTime":933.5093167701864,"WaitTime":576753.6645962733,"ReceivedTime":39395.2049689441},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":9,"CompletedRequests":151,"ResponseTime":647831.2251655629,"SentTime":988.5165562913908,"WaitTime":617301.7218543047,"ReceivedTime":29540.98675496689},
+{"User":"","HttpMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"EndResponseTime":10,"CompletedRequests":10,"ResponseTime":723981.1,"SentTime":900.2,"WaitTime":693033.9,"ReceivedTime":30047},
+]
+const sentBytesLog = [{"EndResponseTime":0,"Count":0},
+{"EndResponseTime":1,"Count":0},
+{"EndResponseTime":2,"Count":0},
+{"EndResponseTime":3,"Count":0},
+{"EndResponseTime":4,"Count":0},
+{"EndResponseTime":5,"Count":0},
+{"EndResponseTime":6,"Count":0},
+{"EndResponseTime":7,"Count":0},
+{"EndResponseTime":8,"Count":0},
+{"EndResponseTime":9,"Count":0},
+{"EndResponseTime":10,"Count":0},
+]
+const receivedBytesLog = [{"EndResponseTime":0,"Count":2586880},
+{"EndResponseTime":1,"Count":4595840},
+{"EndResponseTime":2,"Count":4375680},
+{"EndResponseTime":3,"Count":4348160},
+{"EndResponseTime":4,"Count":4100480},
+{"EndResponseTime":5,"Count":4485760},
+{"EndResponseTime":6,"Count":4595840},
+{"EndResponseTime":7,"Count":4650880},
+{"EndResponseTime":8,"Count":4430720},
+{"EndResponseTime":9,"Count":4155520},
+{"EndResponseTime":10,"Count":275200},
+]
+const startedRequestLog = [{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":0,"CountStartedRequest":104},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":1,"CountStartedRequest":167},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":2,"CountStartedRequest":159},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":3,"CountStartedRequest":158},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":4,"CountStartedRequest":149},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":5,"CountStartedRequest":163},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":6,"CountStartedRequest":167},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":7,"CountStartedRequest":169},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":8,"CountStartedRequest":161},
+{"User":"","RequestMethod":"GET","Request":"https://jsonplaceholder.typicode.com/posts","RequestLabel":"","StatusCode":200,"StartRequestTime":9,"CountStartedRequest":151},
+]
+</script>
+
+
+<script>
+function PlotlyJsLineDraw(chartName, yaxisLabel, plotlyIdent, plotlyData, rawData=true) {
+    let chartPlotData = []
+	if(rawData)
+	{
+		for(let key in plotlyData) {
+		chartPlotData.push({
+			x: plotlyData[key].map(item => item.x),
+			y: plotlyData[key].map(item => item.y),
+			type: 'scatter',
+			name: key,
+			})
+		}
+	}
+	else {
+		chartPlotData = plotlyData
+	}
+	
+
+	let chartLayout ={
+		showlegend: true,
+		legend: {
+			bgcolor: '#1A1A1A',
+			font: {
+				color: '#7C7C7C',
+				family: 'Open Sans',
+				size: 14
+			},
+			orientation: 'h',
+			y: -0.4
+		},
+		title: {
+			text: chartName,
+			font: {
+				color: '#828282',
+				family: 'Open Sans',
+				size: 21
+			},
+		},
+		xaxis: {
+			title: {
+				text: '',
+			},
+			gridcolor: '#3C3C3C',
+			gridwidth: 1,
+			tickfont : {
+				size : 11,
+				color : '#7C7C7C'
+			}
+		},
+		
+		yaxis: {
+			title: {
+				text: yaxisLabel,
+				font: {
+					color: '#7C7C7C',
+					family: 'Open Sans',
+					size: 14
+				},
+			},
+			gridcolor: '#3C3C3C',
+			gridwidth: 1,
+		},
+		plot_bgcolor:'#1A1A1A',
+		paper_bgcolor:'#1A1A1A',
+	}
+	
+	
+	Plotly.newPlot(plotlyIdent, chartPlotData, chartLayout);
+}
+</script>
+
+
+<script>
+
+/*
+**
+*/
+let startedRequestData = { };
+for (let item of startedRequestLog)
+{
+    if (startedRequestData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        startedRequestData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+
+	let date = new Date(0);
+	date.setSeconds(item.StartRequestTime);
+	let timeString = date.toISOString().substr(11, 8);
+
+    startedRequestData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CountStartedRequest })
+}
+
+PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedRequestData)
+
+
+/*
+**
+*/
+let completedRequestsData = { };
+for (let item of groupedRawLog)
+{
+    if (completedRequestsData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        completedRequestsData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+
+	let date = new Date(0);
+	date.setSeconds(item.EndResponseTime);
+	let timeString = date.toISOString().substr(11, 8);
+
+    completedRequestsData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.CompletedRequests })
+}
+
+PlotlyJsLineDraw('Completed Requests', 'Count', 'CompletedRequestsChart', completedRequestsData)
+
+/*
+**
+*/
+let responseTimeData = {}
+for(let item of groupedRawLog) {
+	if (responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+
+	let date = new Date(0);
+	date.setSeconds(item.EndResponseTime);
+	let timeString = date.toISOString().substr(11, 8);
+
+    responseTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ResponseTime / 10000 })
+}
+
+PlotlyJsLineDraw('Response Time', 'Milliseconds', 'ResponseTimeChart', responseTimeData)
+
+/*
+**
+*/
+let sentTimeData = { };
+for (let item of groupedRawLog)
+{
+    if (sentTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        sentTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+	let date = new Date(0);
+	date.setSeconds(item.EndResponseTime);
+	let timeString = date.toISOString().substr(11, 8);
+    sentTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.SentTime / 10000 })
+}
+
+PlotlyJsLineDraw('Data Timed Sending', 'Milliseconds', 'SentTimeChart', sentTimeData)
+
+/*
+**
+*/
+let waitTimeData = { };
+for (let item of groupedRawLog)
+{
+    if (waitTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        waitTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+	let date = new Date(0);
+	date.setSeconds(item.EndResponseTime);
+	let timeString = date.toISOString().substr(11, 8);
+    waitTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.WaitTime / 10000 })
+}
+
+PlotlyJsLineDraw('Data Wait Times', 'Milliseconds', 'WaitTimeChart', waitTimeData)
+
+/*
+**
+*/
+let receivedTimeData = { };
+for (let item of groupedRawLog)
+{
+    if (receivedTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] == undefined)
+    {
+        receivedTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode] = []
+    }
+	let date = new Date(0);
+	date.setSeconds(item.EndResponseTime);
+	let timeString = date.toISOString().substr(11, 8);
+    receivedTimeData[item.User + ' ' + item.RequestMethod + ' ' + item.Request + ' ' + item.RequestLabel + ' ' + item.StatusCode].push({ x: timeString, y: item.ReceivedTime / 10000 })
+}
+
+PlotlyJsLineDraw('Data Timed Receiving', 'Milliseconds', 'ReceivedTimeChart', receivedTimeData)
+
+/*
+**
+*/
+let sentBytesChartDataset = []
+sentBytesChartDataset.push({
+	x: sentBytesLog.map(item => {
+		let date = new Date(0);
+		date.setSeconds(item.EndResponseTime);
+		return date.toISOString().substr(11, 8);
+	}),
+	y: sentBytesLog.map(item => item.Count),
+	type: 'scatter'
+})
+
+PlotlyJsLineDraw('Sent Bytes', 'Bytes', 'SentBytesChart', sentBytesChartDataset, false)
+
+/*
+**
+*/
+let receivedBytesChartDataset = []
+receivedBytesChartDataset.push({
+	x: receivedBytesLog.map(item => {
+		let date = new Date(0);
+		date.setSeconds(item.EndResponseTime);
+		return date.toISOString().substr(11, 8);
+	}),
+	y: receivedBytesLog.map(item => item.Count),
+	type: 'scatter'
+})
+
+PlotlyJsLineDraw('Received Bytes', 'Bytes', 'ReceivedBytesChart', receivedBytesChartDataset, false)
+</script>
+
+</body>
+</html>
+

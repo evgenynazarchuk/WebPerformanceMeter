@@ -1,18 +1,16 @@
-﻿using System.Reflection;
+﻿using System.Threading.Tasks;
+using System.Reflection;
 using WebPerformanceMeter.Support;
+using WebPerformanceMeter;
 
 namespace PerformanceTests
 {
     public class Program
     {
-        //public static async Task Main()
-        //{
-        //    await WebPerformanceRunner.ManualAsync(Assembly.GetExecutingAssembly());
-        //}
-
-        public static void Main()
+        public static async Task Main(string[] args)
         {
-            WebPerformanceRunner.WebService(Assembly.GetExecutingAssembly());
+            var runner = new Runner(args, Assembly.GetExecutingAssembly());
+            await runner.StartAsync();
         }
     }
 }

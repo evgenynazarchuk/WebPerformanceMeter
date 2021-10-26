@@ -13,7 +13,7 @@ namespace WebPerformanceMeter.Logger
             string httpClientToolLogFileName,
             string httpClientReport)
         {
-            this.httpClientToolLogMessageList = new();
+            this.httpLogMessageList = new();
             this.reader = new(httpClientToolLogFileName, Encoding.UTF8, false, 65535);
             this.writer = new(httpClientReport, false, Encoding.UTF8, 65355);
         }
@@ -22,20 +22,23 @@ namespace WebPerformanceMeter.Logger
 
         private readonly StreamWriter writer;
 
-        private readonly List<HttpLogMessage> httpClientToolLogMessageList;
+        private readonly List<HttpLogMessage> httpLogMessageList;
 
-        public void ReadJsonHttpClientLog()
+        public void ReadHttpLogMessage()
         {
-            string? jsonHttpClientToolLogMessage;
-            HttpLogMessage? httpClientToolLogMessage;
+            string? line;
+            HttpLogMessage? httpLogMessage;
 
-            while ((jsonHttpClientToolLogMessage = this.reader.ReadLine()) != null)
+            while ((line = this.reader.ReadLine()) != null)
             {
-                httpClientToolLogMessage = JsonSerializer.Deserialize<HttpLogMessage>(jsonHttpClientToolLogMessage);
+                httpLogMessage = JsonSerializer.Deserialize<HttpLogMessage>(line);
 
-                if (httpClientToolLogMessage is null) throw new ApplicationException("Error convertation");
+                if (httpLogMessage is null)
+                {
+                    throw new ApplicationException("Error convertation");
+                }
 
-                this.httpClientToolLogMessageList.Add(httpClientToolLogMessage);
+                this.httpLogMessageList.Add(httpLogMessage);
             }
 
             this.reader.Close();
@@ -43,15 +46,22 @@ namespace WebPerformanceMeter.Logger
 
         public void GenerateReport()
         {
-            this.ReadJsonHttpClientLog();
+            this.ReadHttpLogMessage();
 
-            if (this.httpClientToolLogMessageList is null)
+            if (this.httpLogMessageList is null)
             {
                 return;
             }
 
-            var groupByRequestStatusCodeEndResponse = this.httpClientToolLogMessageList
-                .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, EndResponseTime = (long)(x.EndResponseTime / 10000000) })
+            var completedRequestTime = this.httpLogMessageList
+                .GroupBy(x => new 
+                { 
+                    x.User, 
+                    x.RequestMethod, 
+                    x.Request, 
+                    x.RequestLabel, 
+                    x.StatusCode,
+                    EndResponseTime = (long)(x.EndResponseTime / 10000000) })
                 .Select(x => new
                 {
                     x.Key,
@@ -64,8 +74,15 @@ namespace WebPerformanceMeter.Logger
                     ReceivedTime = x.Average(y => y.EndResponseTime - y.StartResponseTime)
                 }).ToList();
 
-            var startedRequestLog = this.httpClientToolLogMessageList
-                .GroupBy(x => new { x.User, x.RequestMethod, x.Request, x.RequestLabel, x.StatusCode, StartRequestTime = (long)(x.StartSendRequestTime / 10000000) })
+            var startedRequestTime = this.httpLogMessageList
+                .GroupBy(x => new 
+                { 
+                    x.User, 
+                    x.RequestMethod, 
+                    x.Request, 
+                    x.RequestLabel, 
+                    x.StatusCode, 
+                    StartRequestTime = (long)(x.StartSendRequestTime / 10000000) })
                 .Select(x => new HttpLogMessageByStartedRequest(
                     x.Key.User,
                     x.Key.RequestMethod,
@@ -73,9 +90,10 @@ namespace WebPerformanceMeter.Logger
                     x.Key.RequestLabel,
                     x.Key.StatusCode,
                     x.Key.StartRequestTime,
-                    x.LongCount())).ToList();
+                    x.LongCount()))
+                .ToList();
 
-            var groupByEndResponse = this.httpClientToolLogMessageList
+            var totalTraffic = this.httpLogMessageList
                 .GroupBy(x => new { EndResponseTime = x.EndResponseTime / 10000000 })
                 .Select(x => new
                 {
@@ -84,12 +102,41 @@ namespace WebPerformanceMeter.Logger
                     ReceivedBytes = x.Sum(y => y.ReceiveBytes)
                 }).ToList();
 
-            StringBuilder groupedStringLog = new();
-            StringBuilder sentStringLog = new();
-            StringBuilder receivedStringLog = new();
-            StringBuilder startedRequestTimeLogString = new();
+            var userTraffic = this.httpLogMessageList
+                .GroupBy(x => new 
+                { 
+                    x.User, 
+                    EndResponseTime = x.EndResponseTime / 10000000 }
+                ).Select(x => new
+                {
+                    x.Key,
+                    //EndResponseTime = x.Key.EndResponseTime,
+                    SentBytes = x.Sum(y => y.SendBytes),
+                    ReceivedBytes = x.Sum(y => y.ReceiveBytes)
+                }).ToList();
 
-            foreach (var item in groupByRequestStatusCodeEndResponse)
+            var requestTraffic = this.httpLogMessageList
+                .GroupBy(x => new 
+                { 
+                    x.User,
+                    x.RequestMethod,
+                    x.Request,
+                    x.RequestLabel, 
+                    EndResponseTime = x.EndResponseTime / 10000000 }
+                ).Select(x => new
+                {
+                    x.Key,
+                    //EndResponseTime = x.Key.EndResponseTime,
+                    SentBytes = x.Sum(y => y.SendBytes),
+                    ReceivedBytes = x.Sum(y => y.ReceiveBytes)
+                }).ToList();
+
+            StringBuilder startedRequestTimeJsonString = new();
+            StringBuilder completedRequestTimeJsonString = new();
+            StringBuilder totalSentBytesStringLog = new();
+            StringBuilder totalReceivedBytesStringLog = new();
+            
+            foreach (var item in completedRequestTime)
             {
                 HttpLogMessageTimeAnalytic totalLog = new(
                     item.Key.User,
@@ -104,28 +151,28 @@ namespace WebPerformanceMeter.Logger
                     item.WaitTime,
                     item.ReceivedTime);
 
-                groupedStringLog.Append(JsonSerializer.Serialize(totalLog) + ",\n");
+                completedRequestTimeJsonString.Append(JsonSerializer.Serialize(totalLog) + ",\n");
             }
 
-            foreach (var item in startedRequestLog)
+            foreach (var item in startedRequestTime)
             {
-                startedRequestTimeLogString.Append(JsonSerializer.Serialize(item) + ",\n");
+                startedRequestTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }
 
-            foreach (var item in groupByEndResponse)
+            foreach (var item in totalTraffic)
             {
-                sentStringLog.Append(JsonSerializer.Serialize(new HttpLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
-                receivedStringLog.Append(JsonSerializer.Serialize(new HttpLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
+                totalSentBytesStringLog.Append(JsonSerializer.Serialize(new HttpLogMessageByteAnalytic(item.EndResponseTime, item.SentBytes)) + ",\n");
+                totalReceivedBytesStringLog.Append(JsonSerializer.Serialize(new HttpLogMessageByteAnalytic(item.EndResponseTime, item.ReceivedBytes)) + ",\n");
             }
 
             //
             string sourceData = @$"
 
 <script>
-const groupedRawLog = [{groupedStringLog}]
-const sentBytesLog = [{sentStringLog}]
-const receivedBytesLog = [{receivedStringLog}]
-const startedRequestLog = [{startedRequestTimeLogString}]
+const startedRequestLog = [{startedRequestTimeJsonString}]
+const groupedRawLog = [{completedRequestTimeJsonString}]
+const sentBytesLog = [{totalSentBytesStringLog}]
+const receivedBytesLog = [{totalReceivedBytesStringLog}]
 </script>
 ";
 

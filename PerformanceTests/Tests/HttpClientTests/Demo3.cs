@@ -20,7 +20,7 @@ namespace PerformanceTests.Tests.HttpClientTests
             )
         {
             // webapi
-            var app = new WebApplication();
+            var app = new TestApplication();
 
             //
             var user1 = new User1(app.HttpClient);

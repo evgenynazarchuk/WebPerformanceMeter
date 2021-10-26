@@ -13,7 +13,7 @@ namespace PerformanceTests.Tests.HttpClientTests
         [PerformanceTest(1000)]
         public async Task ConstantUsersTest(int usersCount)
         {
-            var app = new WebApplication();
+            var app = new TestApplication();
             var user = new UserRequest(app.HttpClient);
             var plan = new ConstantUsers(user, usersCount);
 

@@ -13,7 +13,7 @@ namespace PerformanceTests.Tests.HttpClientTests
         [PerformanceTest(10, 100, 200)]
         public async Task ActiveUsersByStepsTest(int minutes, int fromUsersCount, int toUsersCount)
         {
-            var app = new WebApplication();
+            var app = new TestApplication();
             var user = new UserRequest(app.HttpClient);
             var plan = new ActiveUsersBySteps(user, fromUsersCount, toUsersCount, usersStep: 3, stepPeriodDuration: minutes.Minutes());
 

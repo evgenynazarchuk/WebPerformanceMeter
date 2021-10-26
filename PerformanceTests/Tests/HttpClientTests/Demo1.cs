@@ -8,13 +8,14 @@ using WebPerformanceMeter.Support;
 
 namespace PerformanceTests.Tests.HttpClientTests
 {
+    [PerformanceClass]
     public class Demo1
     {
         [PerformanceTest(10, 200)]
-        [PerformanceTest(30, 200)]
+        [PerformanceTest(60 * 30, 200)]
         public async Task ActiveUsersOnPeriodTest(int seconds, int usersCount)
         {
-            var app = new WebApplication();
+            var app = new TestApplication();
             var user = new UserRequest(app.HttpClient);
             var plan = new ActiveUsersOnPeriod(user, usersCount, seconds.Seconds());
 

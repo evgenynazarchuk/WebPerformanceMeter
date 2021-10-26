@@ -14,7 +14,7 @@ namespace PerformanceTests.Tests.HttpClientTests
         [PerformanceTest(10, 200)]
         public async Task ActiveUsersOnPeriodTest(int minutes, int usersCount)
         {
-            var app = new WebApplication();
+            var app = new TestApplication();
             var user = new UserRequest(app.HttpClient);
             var plan = new ActiveUsersOnPeriod(user, usersCount, minutes.Minutes());
 

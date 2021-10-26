@@ -8,7 +8,7 @@ namespace WebSocketWebApplication.PerformanceTest
     {
         static async Task Main(string[] args)
         {
-            var runner = new Runner(args, Assembly.GetExecutingAssembly());
+            var runner = new TestRunner(args, Assembly.GetExecutingAssembly());
             await runner.StartAsync();
         }
     }

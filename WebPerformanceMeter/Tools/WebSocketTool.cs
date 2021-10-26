@@ -10,7 +10,7 @@ using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
 {
-    public class WebSocketTool : Tool, IWebSocketTool, IAsyncDisposable
+    public class WebSocketTool : Tool, IAsyncDisposable
     {
         public readonly ClientWebSocket ClientWebSocket;
 
@@ -60,17 +60,30 @@ namespace WebPerformanceMeter
             }
         }
 
-        public async ValueTask DisconnectAsync()
+        public async ValueTask DisconnectAsync(string userName = "")
         {
+
             if (this.ClientWebSocket.State == WebSocketState.Open)
             {
+                long startConnect;
+                long endConnect;
+
+                startConnect = ScenarioTimer.Time.Elapsed.Ticks;
                 await this.ClientWebSocket.CloseAsync(
                     WebSocketCloseStatus.NormalClosure,
                     "Close from web socket client tool",
                     CancellationToken.None);
+                endConnect = ScenarioTimer.Time.Elapsed.Ticks;
+
+                if (this.logger is not null)
+                {
+                    this.logger.AddLogMessage(
+                        "WebSocketLogMessage.json",
+                        $"{userName},,disconnect,{startConnect},{endConnect}",
+                        typeof(WebSocketLogMessage));
+                }
             }
         }
-
 
         // base
         public async ValueTask SendAsync(

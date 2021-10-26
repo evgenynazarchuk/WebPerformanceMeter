@@ -11,8 +11,8 @@
 
         public void GenerateHtmlReport()
         {
-            var htmlGenerate = new HttpHtmlReportGenerator("HttpClientToolLog.json", "HttpClientToolReport.html");
-            htmlGenerate.GenerateReport();
+            var htmlGenerate = new HttpLogMessageHtmlBuilder("HttpClientToolLog.json", "HttpClientToolReport.html");
+            htmlGenerate.BuildHtml();
         }
     }
 }

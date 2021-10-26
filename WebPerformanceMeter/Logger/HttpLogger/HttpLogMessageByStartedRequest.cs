@@ -2,7 +2,7 @@
 {
     public class HttpLogMessageByStartedRequest
     {
-        public string? User { get; set; }
+        public string? UserName { get; set; }
 
         public string? RequestMethod { get; set; }
 
@@ -17,8 +17,8 @@
         public long CountStartedRequest { get; set; }
 
         public HttpLogMessageByStartedRequest(
-            string? user,
-            string? httpMethod,
+            string? userName,
+            string? requestMethod,
             string? request,
             string? requestLabel,
             int statusCode,
@@ -26,8 +26,8 @@
             long countStartedRequest
             )
         {
-            this.User = user;
-            this.RequestMethod = httpMethod;
+            this.UserName = userName;
+            this.RequestMethod = requestMethod;
             this.RequestLabel = requestLabel;
             this.Request = request;
             this.StatusCode = statusCode;

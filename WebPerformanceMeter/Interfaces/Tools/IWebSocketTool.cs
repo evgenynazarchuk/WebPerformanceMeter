@@ -8,7 +8,7 @@ namespace WebPerformanceMeter.Interfaces
     {
         ValueTask ConnectAsync(string userName = "");
 
-        ValueTask DisconnectAsync();
+        ValueTask DisconnectAsync(string userName = "");
 
         ValueTask SendMessageAsync(string message, string userName = "", string label = "");
 

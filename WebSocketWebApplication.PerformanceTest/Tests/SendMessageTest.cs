@@ -24,7 +24,7 @@ namespace WebSocketWebApplication.PerformanceTest.Tests
         {
             public WebSocketUserTest(string host, int port, string path) : base(host, port, path) { }
 
-            protected override async Task PerformanceAsync(IWebSocketTool client)
+            protected override async Task PerformanceAsync(WebSocketTool client)
             {
                 await SendMessage(client, "Hello world");
             }

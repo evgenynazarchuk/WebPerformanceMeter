@@ -12,7 +12,7 @@ using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
 {
-    public sealed class GrpcClientTool : Tool, IGrpcClientTool, IDisposable
+    public sealed class GrpcClientTool : Tool, IDisposable
     {
         private readonly GrpcChannel _grpcChannel;
 
@@ -121,6 +121,7 @@ namespace WebPerformanceMeter
         public async ValueTask<TResponse> ClientStreamAsync<TResponse, TRequest>(
             string methodCall,
             ICollection<TRequest> requestObjects,
+            int millisecondsDelay = 0,
             string userName = "",
             string label = "")
             where TRequest : class, new()
@@ -147,6 +148,7 @@ namespace WebPerformanceMeter
             foreach (var requestBody in requestObjects)
             {
                 await grpcCall.RequestStream.WriteAsync(requestBody);
+                await Task.Delay(millisecondsDelay);
             }
 
             await grpcCall.RequestStream.CompleteAsync();
@@ -168,6 +170,7 @@ namespace WebPerformanceMeter
         public async ValueTask<IReadOnlyCollection<TResponse>> ServerStreamAsync<TResponse, TRequest>(
             string methodCall,
             TRequest requestBody,
+            int millisecondsDelay = 0,
             string userName = "",
             string label = "")
             where TRequest : class, new()
@@ -196,6 +199,7 @@ namespace WebPerformanceMeter
             while (await grpcCall.ResponseStream.MoveNext())
             {
                 messages.Add(grpcCall.ResponseStream.Current);
+                await Task.Delay(millisecondsDelay);
             }
             //
 
@@ -215,6 +219,8 @@ namespace WebPerformanceMeter
         public async ValueTask<IReadOnlyCollection<TResponse>> BidirectionalStreamAsync<TResponse, TRequest>(
             string methodCall,
             ICollection<TRequest> requestObjects,
+            int sendMillisecondsDelay = 0,
+            int readMillisecondsDelay = 0,
             string userName = "",
             string label = "")
             where TRequest : class, new()
@@ -245,6 +251,7 @@ namespace WebPerformanceMeter
                 await foreach (var responseMessage in grpcCall.ResponseStream.ReadAllAsync())
                 {
                     responseMessages.Add(responseMessage);
+                    await Task.Delay(readMillisecondsDelay);
                 }
             });
 
@@ -252,6 +259,7 @@ namespace WebPerformanceMeter
             foreach (var requestBody in requestObjects)
             {
                 await grpcCall.RequestStream.WriteAsync(requestBody);
+                await Task.Delay(sendMillisecondsDelay);
             }
 
             await grpcCall.RequestStream.CompleteAsync();

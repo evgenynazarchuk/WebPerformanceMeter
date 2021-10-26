@@ -1,9 +1,9 @@
 ﻿namespace WebPerformanceMeter.Logger
 {
-    public class HttpLogMessageTimeAnalytic
+    public class HttpLogMessageByCompletedRequest
     {
-        public HttpLogMessageTimeAnalytic(
-            string? user,
+        public HttpLogMessageByCompletedRequest(
+            string? userName,
             string? requestMethod,
             string? request,
             string? requestLabel,
@@ -13,10 +13,12 @@
             double responseTime,
             double sentTime,
             double waitTime,
-            double receiveTime)
+            double receiveTime,
+            long sentBytes,
+            long receivedBytes)
         {
-            this.User = user;
-            this.HttpMethod = requestMethod;
+            this.UserName = userName;
+            this.RequestMethod = requestMethod;
             this.Request = request;
             this.RequestLabel = requestLabel;
             this.StatusCode = statusCode;
@@ -26,11 +28,13 @@
             this.SentTime = sentTime;
             this.WaitTime = waitTime;
             this.ReceivedTime = receiveTime;
+            this.SentBytes = sentBytes;
+            this.ReceivedBytes = receivedBytes;
         }
 
-        public string? User { get; set; }
+        public string? UserName { get; set; }
 
-        public string? HttpMethod { get; set; }
+        public string? RequestMethod { get; set; }
 
         public string? Request { get; set; }
 
@@ -49,5 +53,9 @@
         public double WaitTime { get; set; }
 
         public double ReceivedTime { get; set; }
+
+        public long SentBytes {  get; set; }
+
+        public long ReceivedBytes {  get; set; }
     }
 }

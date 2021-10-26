@@ -28,10 +28,10 @@ namespace WebPerformanceMeter
             {
                 await client.ConnectAsync(this.UserName);
                 await PerformanceAsync(client);
-                await client.DisconnectAsync();
+                await client.DisconnectAsync(this.UserName);
             }
         }
 
-        protected abstract Task PerformanceAsync(IWebSocketTool client);
+        protected abstract Task PerformanceAsync(WebSocketTool client);
     }
 }

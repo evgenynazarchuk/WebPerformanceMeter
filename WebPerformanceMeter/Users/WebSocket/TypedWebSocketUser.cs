@@ -40,7 +40,7 @@ namespace WebPerformanceMeter
 
                 await client.ConnectAsync(this.UserName);
                 await PerformanceAsync(client, data);
-                await client.DisconnectAsync();
+                await client.DisconnectAsync(this.UserName);
 
                 if (!reuseDataInLoop)
                 {
@@ -49,6 +49,6 @@ namespace WebPerformanceMeter
             }
         }
 
-        protected abstract Task PerformanceAsync(IWebSocketTool client, object entity);
+        protected abstract Task PerformanceAsync(WebSocketTool client, object entity);
     }
 }

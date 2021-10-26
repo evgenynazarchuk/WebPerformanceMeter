@@ -4,7 +4,7 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Users
 {
-    public abstract partial class BasicGrpcUser : BaseUser, IGrpcUser
+    public abstract partial class BasicGrpcUser : BaseUser
     {
         public virtual ValueTask<TResponse> UnaryCall<TResponse, TRequest>(
             GrpcClientTool client,
@@ -25,6 +25,7 @@ namespace WebPerformanceMeter.Users
             GrpcClientTool client,
             string methodCall,
             ICollection<TRequest> requestBodyList,
+            int millisecondsDelay = 0,
             string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
@@ -32,6 +33,7 @@ namespace WebPerformanceMeter.Users
             return client.ClientStreamAsync<TResponse, TRequest>(
                 methodCall,
                 requestBodyList,
+                millisecondsDelay,
                 this.UserName,
                 label);
         }
@@ -40,6 +42,7 @@ namespace WebPerformanceMeter.Users
             GrpcClientTool client,
             string methodCall,
             TRequest requestBody,
+            int millisecondsDelay = 0,
             string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
@@ -47,6 +50,7 @@ namespace WebPerformanceMeter.Users
             return client.ServerStreamAsync<TResponse, TRequest>(
                 methodCall,
                 requestBody,
+                millisecondsDelay,
                 this.UserName,
                 label);
         }
@@ -55,6 +59,8 @@ namespace WebPerformanceMeter.Users
             GrpcClientTool client,
             string methodCall,
             ICollection<TRequest> requestBodyList,
+            int sendMillisecondsDelay = 0,
+            int readMillisecondsDelay = 0,
             string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
@@ -62,6 +68,8 @@ namespace WebPerformanceMeter.Users
             return client.BidirectionalStreamAsync<TResponse, TRequest>(
                 methodCall,
                 requestBodyList,
+                sendMillisecondsDelay,
+                readMillisecondsDelay,
                 this.UserName,
                 label);
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Report
 {
     public class HttpLogMessageHtmlBuilder
     {

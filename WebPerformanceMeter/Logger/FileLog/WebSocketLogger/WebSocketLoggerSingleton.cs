@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Report
 {
     public class WebSocketLoggerSingleton
     {

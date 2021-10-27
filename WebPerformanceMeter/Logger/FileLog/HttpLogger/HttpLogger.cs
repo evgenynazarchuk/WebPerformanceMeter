@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Report
 {
     public class HttpLogger : FileLogger
     {

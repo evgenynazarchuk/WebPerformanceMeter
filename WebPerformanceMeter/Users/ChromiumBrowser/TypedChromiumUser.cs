@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Report;
 using WebPerformanceMeter.Tools;
 using WebPerformanceMeter.Users;
 

@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Report;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Tools;
 

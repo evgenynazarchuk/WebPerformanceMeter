@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Report
 {
     public class Watcher
     {

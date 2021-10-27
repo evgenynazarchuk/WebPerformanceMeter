@@ -1,7 +1,7 @@
 ﻿using System;
 using WebPerformanceMeter.DataReader.CsvReader;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Report
 {
     public class ChromiumLogger : FileLogger
     {

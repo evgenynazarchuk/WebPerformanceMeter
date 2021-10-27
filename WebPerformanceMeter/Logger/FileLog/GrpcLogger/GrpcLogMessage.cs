@@ -1,4 +1,4 @@
-﻿namespace WebPerformanceMeter.Logger
+﻿namespace WebPerformanceMeter.Report
 {
     public class GrpcLogMessage
     {

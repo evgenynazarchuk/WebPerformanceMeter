@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WebPerformanceMeter.DataReader.CsvReader;
 using WebPerformanceMeter.Interfaces;
 
-namespace WebPerformanceMeter.Logger
+namespace WebPerformanceMeter.Report
 {
     public abstract class Report : ILogger
     {

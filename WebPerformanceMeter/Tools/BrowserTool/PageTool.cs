@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Report;
 using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools

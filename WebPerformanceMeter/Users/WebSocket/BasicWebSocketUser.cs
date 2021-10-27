@@ -1,5 +1,5 @@
 ﻿using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Logger;
+using WebPerformanceMeter.Report;
 
 namespace WebPerformanceMeter.Users
 {

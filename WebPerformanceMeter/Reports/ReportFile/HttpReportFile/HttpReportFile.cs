@@ -11,8 +11,8 @@ namespace WebPerformanceMeter.Reports
         {
             if (logName == "HttpClientToolLog.json")
             {
-                var htmlGenerate = new HttpReportHtmlFile("HttpClientToolLog.json", "HttpClientToolReport.html");
-                htmlGenerate.BuildHtml();
+                var htmlGenerate = new HttpRequestHtmlBuilder(logName, "HttpClientToolReport.html");
+                htmlGenerate.Build();
             }
 
             return Task.CompletedTask;

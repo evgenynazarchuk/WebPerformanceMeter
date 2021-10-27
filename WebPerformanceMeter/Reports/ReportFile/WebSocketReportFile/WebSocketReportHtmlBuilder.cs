@@ -8,83 +8,40 @@ using System.Text.Json;
 
 namespace WebPerformanceMeter.Reports
 {
-    public class GrpcReportHtmlFile
+    public class WebSocketReportHtmlBuilder : HtmlBuilder<WebSocketLogMessage>
     {
-        private readonly string _sourceFilePath;
+        public WebSocketReportHtmlBuilder(string sourceJsonFilePath, string destinationHtmlFilePath)
+            : base(sourceJsonFilePath, destinationHtmlFilePath) { }
 
-        private readonly string _destinationFilePath;
-
-        private readonly StreamReader _reader;
-
-        private readonly StreamWriter _writer;
-
-        private readonly List<GrpcLogMessage> _logMessages;
-
-        public GrpcReportHtmlFile(string sourceFilePath, string destinationFilePath)
+        protected override string GenerateHtml()
         {
-            this._sourceFilePath = sourceFilePath;
-            this._destinationFilePath = destinationFilePath;
-            this._reader = new(this._sourceFilePath, Encoding.UTF8, false, 65535);
-            this._writer = new(this._destinationFilePath, false, Encoding.UTF8, 65355);
-            this._logMessages = new List<GrpcLogMessage>();
-        }
-
-        private void ReadLogMessages()
-        {
-            string? line;
-            GrpcLogMessage? httpLogMessage;
-
-            while ((line = this._reader.ReadLine()) != null)
-            {
-                httpLogMessage = JsonSerializer.Deserialize<GrpcLogMessage>(line);
-
-                if (httpLogMessage is null)
-                {
-                    throw new ApplicationException("Error convertation");
-                }
-
-                this._logMessages.Add(httpLogMessage);
-            }
-
-            this._reader.Close();
-        }
-
-        public void BuildHtml()
-        {
-            this.ReadLogMessages();
-
-            if (this._logMessages is null)
-            {
-                return;
-            }
-
-            var startedRequest = this._logMessages
+            var startedRequest = this.logs
                 .GroupBy(x => new
                 {
                     x.UserName,
-                    x.Method,
+                    x.ActionType,
                     x.Label,
                     StartRequestTime = (long)(x.StartTime / 10000000)
                 })
-                .Select(x => new GrpcLogByStartTime(
+                .Select(x => new WebSocketLogByStartTime(
                     x.Key.UserName,
-                    x.Key.Method,
+                    x.Key.ActionType,
                     x.Key.Label,
                     x.Key.StartRequestTime,
                     x.LongCount()))
                 .ToList();
 
-            var completedRequest = this._logMessages
+            var completedRequest = this.logs
                 .GroupBy(x => new
                 {
                     x.UserName,
-                    x.Method,
+                    x.ActionType,
                     x.Label,
                     EndRequestTime = (long)(x.EndTime / 10000000)
                 })
-                .Select(x => new GrpcLogByEndTime(
+                .Select(x => new WebSocketLogByEndTime(
                     x.Key.UserName,
-                    x.Key.Method,
+                    x.Key.ActionType,
                     x.Key.Label,
                     x.Key.EndRequestTime,
                     x.LongCount()))
@@ -102,6 +59,10 @@ namespace WebPerformanceMeter.Reports
             {
                 completedRequestTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }
+
+            //
+            //
+            //
 
             //
             string sourceData = @$"
@@ -195,16 +156,16 @@ function PlotlyJsLineDraw(chartName, yaxisLabel, plotlyIdent, plotlyData, rawDat
 let startedRequestData = { };
 for (let item of startedRequestRawLog)
 {
-    if (startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] == undefined)
+    if (startedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] == undefined)
     {
-        startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] = []
+        startedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] = []
     }
 
 	let date = new Date(0);
 	date.setSeconds(item.Time);
 	let timeString = date.toISOString().substr(11, 8);
 
-    startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label].push({ x: timeString, y: item.Count })
+    startedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label].push({ x: timeString, y: item.Count })
 }
 
 PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedRequestData)
@@ -215,16 +176,16 @@ PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedReq
 let completedRequestData = { };
 for (let item of startedRequestRawLog)
 {
-    if (completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] == undefined)
+    if (completedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] == undefined)
     {
-        completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] = []
+        completedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] = []
     }
 
 	let date = new Date(0);
 	date.setSeconds(item.Time);
 	let timeString = date.toISOString().substr(11, 8);
 
-    completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label].push({ x: timeString, y: item.Count })
+    completedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label].push({ x: timeString, y: item.Count })
 }
 
 PlotlyJsLineDraw('Completed Requests', 'Count', 'CompletedRequestsChart', completedRequestData)
@@ -260,9 +221,7 @@ body {
 
 
             //
-            _writer.WriteLine(totalHtml);
-            _writer.Flush();
-            _writer.Close();
+            return totalHtml;
         }
     }
 }

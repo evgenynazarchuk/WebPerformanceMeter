@@ -8,90 +8,52 @@ using System.Text.Json;
 
 namespace WebPerformanceMeter.Reports
 {
-    public class WebSocketReportHtmlFile
+    public class GrpcReportHtmlBuilder : HtmlBuilder<GrpcLogMessage>
     {
-        private readonly string _sourceFilePath;
+        public GrpcReportHtmlBuilder(string sourceJsonFilePath, string destinationJsonFilePath)
+            : base(sourceJsonFilePath, destinationJsonFilePath) { }
 
-        private readonly string _destinationFilePath;
-
-        private readonly StreamReader _reader;
-
-        private readonly StreamWriter _writer;
-
-        private readonly List<WebSocketLogMessage> _logMessages;
-
-        public WebSocketReportHtmlFile(string sourceFilePath, string destinationFilePath)
-        { 
-            this._sourceFilePath = sourceFilePath;
-            this._destinationFilePath = destinationFilePath;
-            this._reader = new(this._sourceFilePath, Encoding.UTF8, false, 65535);
-            this._writer = new(destinationFilePath, false, Encoding.UTF8, 65355);
-            this._logMessages = new List<WebSocketLogMessage>();
-        }
-
-        private void ReadLogMessages()
+        protected override string GenerateHtml()
         {
-            string? line;
-            WebSocketLogMessage? httpLogMessage;
-
-            while ((line = this._reader.ReadLine()) != null)
+            if (this.logs is null)
             {
-                httpLogMessage = JsonSerializer.Deserialize<WebSocketLogMessage>(line);
-
-                if (httpLogMessage is null)
-                {
-                    throw new ApplicationException("Error convertation");
-                }
-
-                this._logMessages.Add(httpLogMessage);
+                return "";
             }
 
-            this._reader.Close();
-        }
-
-        public void BuildHtml()
-        {
-            this.ReadLogMessages();
-
-            if (this._logMessages is null)
-            {
-                return;
-            }
-
-            var startedRequest = this._logMessages
+            var startedRequest = this.logs
                 .GroupBy(x => new
                 {
                     x.UserName,
-                    x.ActionType,
+                    x.Method,
                     x.Label,
                     StartRequestTime = (long)(x.StartTime / 10000000)
                 })
-                .Select(x => new WebSocketLogByStartTime(
+                .Select(x => new GrpcLogByStartTime(
                     x.Key.UserName,
-                    x.Key.ActionType,
+                    x.Key.Method,
                     x.Key.Label,
                     x.Key.StartRequestTime,
                     x.LongCount()))
                 .ToList();
 
-            var completedRequest = this._logMessages
+            var completedRequest = this.logs
                 .GroupBy(x => new
                 {
                     x.UserName,
-                    x.ActionType,
+                    x.Method,
                     x.Label,
                     EndRequestTime = (long)(x.EndTime / 10000000)
                 })
-                .Select(x => new WebSocketLogByEndTime(
+                .Select(x => new GrpcLogByEndTime(
                     x.Key.UserName,
-                    x.Key.ActionType,
+                    x.Key.Method,
                     x.Key.Label,
                     x.Key.EndRequestTime,
                     x.LongCount()))
                 .ToList();
 
-            StringBuilder startedRequestTimeJsonString = new();
-            StringBuilder completedRequestTimeJsonString = new();
+            var startedRequestTimeJsonString = new StringBuilder();
+            var completedRequestTimeJsonString = new StringBuilder();
 
             foreach (var item in startedRequest)
             {
@@ -102,10 +64,6 @@ namespace WebPerformanceMeter.Reports
             {
                 completedRequestTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }
-
-            //
-            //
-            //
 
             //
             string sourceData = @$"
@@ -199,16 +157,16 @@ function PlotlyJsLineDraw(chartName, yaxisLabel, plotlyIdent, plotlyData, rawDat
 let startedRequestData = { };
 for (let item of startedRequestRawLog)
 {
-    if (startedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] == undefined)
+    if (startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] == undefined)
     {
-        startedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] = []
+        startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] = []
     }
 
 	let date = new Date(0);
 	date.setSeconds(item.Time);
 	let timeString = date.toISOString().substr(11, 8);
 
-    startedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label].push({ x: timeString, y: item.Count })
+    startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label].push({ x: timeString, y: item.Count })
 }
 
 PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedRequestData)
@@ -219,16 +177,16 @@ PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedReq
 let completedRequestData = { };
 for (let item of startedRequestRawLog)
 {
-    if (completedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] == undefined)
+    if (completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] == undefined)
     {
-        completedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label] = []
+        completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] = []
     }
 
 	let date = new Date(0);
 	date.setSeconds(item.Time);
 	let timeString = date.toISOString().substr(11, 8);
 
-    completedRequestData[item.UserName + ' ' + item.ActionType + ' ' + item.Label].push({ x: timeString, y: item.Count })
+    completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label].push({ x: timeString, y: item.Count })
 }
 
 PlotlyJsLineDraw('Completed Requests', 'Count', 'CompletedRequestsChart', completedRequestData)
@@ -261,12 +219,8 @@ body {
 </html>
 ";
 
-
-
             //
-            _writer.WriteLine(totalHtml);
-            _writer.Flush();
-            _writer.Close();
+            return totalHtml;
         }
     }
 }

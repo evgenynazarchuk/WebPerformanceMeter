@@ -7,53 +7,21 @@ using System.Text.Json;
 
 namespace WebPerformanceMeter.Reports
 {
-    public class HttpReportHtmlFile
+    public class HttpRequestHtmlBuilder : HtmlBuilder<HttpLogMessage>
     {
-        public HttpReportHtmlFile(
-            string httpClientToolLogFileName,
-            string httpClientReport)
+        public HttpRequestHtmlBuilder(
+            string sourceJsonFilePath,
+            string destinationJsonFilePath)
+            : base(sourceJsonFilePath, destinationJsonFilePath) { }
+
+        protected override string GenerateHtml()
         {
-            this._httpLogMessageList = new();
-            this._reader = new(httpClientToolLogFileName, Encoding.UTF8, false, 65535);
-            this._writer = new(httpClientReport, false, Encoding.UTF8, 65355);
-        }
-
-        private readonly StreamReader _reader;
-
-        private readonly StreamWriter _writer;
-
-        private readonly List<HttpLogMessage> _httpLogMessageList;
-
-        public void ReadHttpLogMessage()
-        {
-            string? line;
-            HttpLogMessage? httpLogMessage;
-
-            while ((line = this._reader.ReadLine()) != null)
+            if (this.logs is null)
             {
-                httpLogMessage = JsonSerializer.Deserialize<HttpLogMessage>(line);
-
-                if (httpLogMessage is null)
-                {
-                    throw new ApplicationException("Error convertation");
-                }
-
-                this._httpLogMessageList.Add(httpLogMessage);
+                return "";
             }
 
-            this._reader.Close();
-        }
-
-        public void BuildHtml()
-        {
-            this.ReadHttpLogMessage();
-
-            if (this._httpLogMessageList is null)
-            {
-                return;
-            }
-
-            var startedRequest = this._httpLogMessageList
+            var startedRequest = this.logs
                 .GroupBy(x => new
                 {
                     x.UserName,
@@ -73,7 +41,7 @@ namespace WebPerformanceMeter.Reports
                     x.LongCount()))
                 .ToList();
 
-            var completedRequest = this._httpLogMessageList
+            var completedRequest = this.logs
                 .GroupBy(x => new
                 {
                     x.UserName,
@@ -100,7 +68,7 @@ namespace WebPerformanceMeter.Reports
                 .ToList();
 
             // traffic
-            var totalTraffic = this._httpLogMessageList
+            var totalTraffic = this.logs
                 .GroupBy(x => new { EndResponseTime = x.EndResponseTime / 10000000 })
                 .Select(x => new HttpLogMessageTotalTraffic(
                     x.Key.EndResponseTime,
@@ -108,7 +76,7 @@ namespace WebPerformanceMeter.Reports
                     x.Sum(y => y.ReceiveBytes)))
                 .ToList();
 
-            var userTraffic = this._httpLogMessageList
+            var userTraffic = this.logs
                 .GroupBy(x => new 
                 { 
                     x.UserName, 
@@ -120,10 +88,10 @@ namespace WebPerformanceMeter.Reports
                     x.Sum(y => y.ReceiveBytes)))
                 .ToList();
 
-            StringBuilder startedRequestTimeJsonString = new();
-            StringBuilder completedRequestTimeJsonString = new();
-            StringBuilder totalTrafficJsonStringLog = new();
-            StringBuilder userTrafficJsonStringLog = new();
+            var startedRequestTimeJsonString = new StringBuilder();
+            var completedRequestTimeJsonString = new StringBuilder();
+            var totalTrafficJsonStringLog = new StringBuilder();
+            var userTrafficJsonStringLog = new StringBuilder();
             
             foreach (var item in completedRequest)
             {
@@ -502,12 +470,7 @@ body {
 </html>
 ";
 
-
-
-            //
-            _writer.WriteLine(htmlReport);
-            _writer.Flush();
-            _writer.Close();
+            return htmlReport;
         }
     }
 }

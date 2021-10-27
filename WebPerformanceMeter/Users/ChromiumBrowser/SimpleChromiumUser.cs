@@ -9,7 +9,7 @@ namespace WebPerformanceMeter
 {
     public abstract class ChromiumUser : BasicChromiumUser, ISimpleUser, IDisposable
     {
-        public ChromiumUser(string userName = "", ILogger? logger = null)
+        public ChromiumUser(string? userName = null, ILogger? logger = null)
             : base(userName, logger) { }
 
         public virtual async Task InvokeAsync(int userLoopCount = 1)

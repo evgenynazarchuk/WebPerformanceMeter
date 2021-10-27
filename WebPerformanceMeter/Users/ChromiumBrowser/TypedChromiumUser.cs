@@ -10,7 +10,7 @@ namespace WebPerformanceMeter
     public abstract class ChromiumUser<TData> : BasicChromiumUser, ITypedUser<TData>, IDisposable
         where TData : class
     {
-        public ChromiumUser(string userName = "", ILogger? logger = null)
+        public ChromiumUser(string? userName = null, ILogger? logger = null)
             : base(userName, logger) { }
 
         public virtual async Task InvokeAsync(

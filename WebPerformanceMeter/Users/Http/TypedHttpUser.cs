@@ -10,14 +10,14 @@ namespace WebPerformanceMeter
     public abstract class HttpUser<TData> : BasicHttpUser, ITypedUser<TData>
         where TData : class
     {
-        public HttpUser(HttpClient client, string userName = "", ILogger? logger = null)
+        public HttpUser(HttpClient client, string? userName = null, ILogger? logger = null)
             : base(client, userName, logger) { }
 
         public HttpUser(
             string address,
             IDictionary<string, string>? defaultHeaders = null,
             IEnumerable<Cookie>? defaultCookies = null,
-            string userName = "",
+            string? userName = null,
             ILogger? logger = null)
             : base(address, defaultHeaders, defaultCookies, userName, logger) { }
 

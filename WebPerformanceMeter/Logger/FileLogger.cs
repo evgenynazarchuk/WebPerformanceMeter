@@ -70,6 +70,7 @@ namespace WebPerformanceMeter.Logger
                 {
                     if (this.logQueue.IsEmpty && this.Token.IsCancellationRequested)
                     {
+                        this.Finish();
                         break;
                     }
 
@@ -96,8 +97,6 @@ namespace WebPerformanceMeter.Logger
                         }
                     }
                 }
-
-                this.Finish();
             });
         }
 

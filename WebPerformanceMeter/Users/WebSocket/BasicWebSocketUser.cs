@@ -19,9 +19,9 @@ namespace WebPerformanceMeter.Users
             string host,
             int port,
             string path,
-            string userName = "",
+            string? userName = null,
             ILogger? logger = null)
-            : base(userName, logger ?? WebSocketLoggerSingleton.GetInstance())
+            : base(userName ?? typeof(BasicChromiumUser).Name, logger ?? WebSocketLoggerSingleton.GetInstance())
         {
             this.host = host;
             this.port = port;

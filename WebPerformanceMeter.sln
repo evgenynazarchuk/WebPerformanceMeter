@@ -39,10 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketWebApplication.Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketWebApplication.PerformanceTest", "WebSocketWebApplication.PerformanceTest\WebSocketWebApplication.PerformanceTest.csproj", "{832D9E71-550A-4BB5-B5F7-5413E64831E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPerformanceMeterWebClient", "WebPerformanceMeterWebClient\WebPerformanceMeterWebClient.csproj", "{9176140C-ACBC-4BFD-8D6A-D345DB82A481}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPerformanceMeterLogServer", "WebPerformanceMeterLogServer\WebPerformanceMeterLogServer.csproj", "{976371C4-BE17-4815-9C9C-634E2E0A1C88}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,14 +93,6 @@ Global
 		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{832D9E71-550A-4BB5-B5F7-5413E64831E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9176140C-ACBC-4BFD-8D6A-D345DB82A481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9176140C-ACBC-4BFD-8D6A-D345DB82A481}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9176140C-ACBC-4BFD-8D6A-D345DB82A481}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9176140C-ACBC-4BFD-8D6A-D345DB82A481}.Release|Any CPU.Build.0 = Release|Any CPU
-		{976371C4-BE17-4815-9C9C-634E2E0A1C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{976371C4-BE17-4815-9C9C-634E2E0A1C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{976371C4-BE17-4815-9C9C-634E2E0A1C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{976371C4-BE17-4815-9C9C-634E2E0A1C88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

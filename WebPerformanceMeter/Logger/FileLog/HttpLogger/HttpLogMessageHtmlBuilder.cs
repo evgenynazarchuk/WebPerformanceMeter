@@ -91,10 +91,10 @@ namespace WebPerformanceMeter.Logger
                     x.Key.StatusCode,
                     x.Key.EndResponseTime,
                     x.LongCount(),
-                    x.Average(y => y.EndResponseTime - y.StartSendRequestTime), // response time
-                    x.Average(y => y.StartWaitResponseTime - y.StartSendRequestTime), // sent time
-                    x.Average(y => y.StartResponseTime - y.StartWaitResponseTime), // wait time
-                    x.Average(y => y.EndResponseTime - y.StartResponseTime), // receive time
+                    responseTime: x.Average(y => y.EndResponseTime - y.StartSendRequestTime), // response time
+                    sentTime: x.Average(y => y.StartWaitResponseTime - y.StartSendRequestTime), // sent time
+                    waitTime: x.Average(y => y.StartResponseTime - y.StartWaitResponseTime), // wait time
+                    receiveTime: x.Average(y => y.EndResponseTime - y.StartResponseTime), // receive time
                     x.Sum(y => y.SendBytes),
                     x.Sum(y => y.ReceiveBytes)))
                 .ToList();

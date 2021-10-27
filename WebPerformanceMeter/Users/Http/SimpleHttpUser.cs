@@ -11,7 +11,7 @@ namespace WebPerformanceMeter
     {
         public HttpUser(
             HttpClient client,
-            string userName = "",
+            string? userName = null,
             ILogger? logger = null)
             : base(client, userName, logger) { }
 
@@ -19,7 +19,7 @@ namespace WebPerformanceMeter
             string address,
             IDictionary<string, string>? defaultHeaders = null,
             IEnumerable<Cookie>? defaultCookies = null,
-            string userName = "",
+            string? userName = null,
             ILogger? logger = null)
             : base(address, defaultHeaders, defaultCookies, userName, logger) { }
 

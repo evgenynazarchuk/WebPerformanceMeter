@@ -15,8 +15,8 @@ namespace WebPerformanceMeter.Users
 
         protected readonly IPage Page;
 
-        public BasicJavascriptUser(string userName = "", ILogger? logger = null)
-            : base(userName, logger)
+        public BasicJavascriptUser(string? userName = null, ILogger? logger = null)
+            : base(userName ?? typeof(BasicJavascriptUser).Name, logger)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Firefox.LaunchAsync(new()

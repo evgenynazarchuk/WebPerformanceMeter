@@ -10,8 +10,8 @@ namespace WebPerformanceMeter.Users
 
         protected Type? grpcClientType = null;
 
-        public BasicGrpcUser(string address, string userName = "", ILogger? logger = null)
-            : base(userName, logger ?? GrpcLoggerSingleton.GetInstance())
+        public BasicGrpcUser(string address, string? userName = null, ILogger? logger = null)
+            : base(userName ?? typeof(BasicGrpcUser).Name, logger ?? GrpcLoggerSingleton.GetInstance())
         {
             this.address = address;
         }

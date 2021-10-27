@@ -8,7 +8,7 @@ namespace WebPerformanceMeter
     public abstract class GrpcUser<TData> : BasicGrpcUser, ITypedUser<TData>
         where TData : class
     {
-        public GrpcUser(string address, ILogger? logger = null, string userName = "")
+        public GrpcUser(string address, ILogger? logger = null, string? userName = null)
             : base(address, userName, logger) { }
 
         public virtual async Task InvokeAsync(

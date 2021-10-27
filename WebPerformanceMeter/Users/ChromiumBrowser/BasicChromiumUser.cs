@@ -8,8 +8,8 @@ namespace WebPerformanceMeter.Users
     {
         protected readonly ChromiumTool BrowserTool;
 
-        public BasicChromiumUser(string userName = "", ILogger? logger = null)
-            : base(userName, logger ?? new ChromiumLogger())
+        public BasicChromiumUser(string? userName = null, ILogger? logger = null)
+            : base(userName ?? typeof(BasicChromiumUser).Name, logger ?? new ChromiumLogger())
         {
             this.BrowserTool = new ChromiumTool(this.UserName, logger);
         }

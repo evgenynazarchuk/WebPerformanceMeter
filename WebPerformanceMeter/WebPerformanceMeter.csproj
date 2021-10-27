@@ -9,7 +9,7 @@
   <ItemGroup>
     <Folder Include="Interfaces\Users\BrowserUser\" />
     <Folder Include="Interfaces\Users\JavascriptUser\" />
-    <Folder Include="Logger\JavascriptLogger\" />
+    <Folder Include="Logger\FileLog\JavascriptLogger\" />
   </ItemGroup>
 
   <ItemGroup>

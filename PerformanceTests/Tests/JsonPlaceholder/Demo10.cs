@@ -17,7 +17,7 @@ namespace PerformanceTests.Tests.JsonPlaceholder
         public async Task ReadFromFileAndPostTest(int usersCount)
         {
             var user = new UserAction(this._address);
-            var reader = new JsonReader<PostDto>("Tests\\JsonPlaceholder\\Demo10_PostDto.json");
+            var reader = new JsonReader<PostDto>("Tests\\JsonPlaceholder\\Demo10_PostDto.json", cyclicalData: true);
             var plan = new ConstantUsers<PostDto>(user, usersCount, reader);
 
             await new Scenario()

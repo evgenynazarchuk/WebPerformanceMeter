@@ -7,7 +7,7 @@ namespace WebPerformanceMeter
     public abstract partial class JavascriptUser<TData> : BasicJavascriptUser, ITypedUser<TData>
         where TData : class
     {
-        public JavascriptUser(string userName = "", ILogger? logger = null)
+        public JavascriptUser(string? userName = null, ILogger? logger = null)
             : base(userName, logger) { }
 
         public async Task InvokeAsync(

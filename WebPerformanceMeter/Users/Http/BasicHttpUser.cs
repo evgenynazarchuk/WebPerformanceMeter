@@ -14,8 +14,8 @@ namespace WebPerformanceMeter.Users
 
         public HttpClient Client { get; set; }
 
-        public BasicHttpUser(HttpClient client, string userName = "", ILogger? logger = null)
-            : base(userName, logger ?? HttpLoggerSingleton.GetInstance())
+        public BasicHttpUser(HttpClient client, string? userName = null, ILogger? logger = null)
+            : base(userName ?? typeof(BasicHttpUser).Name, logger ?? HttpLoggerSingleton.GetInstance())
         {
             this.Client = client;
             this.Tool = new HttpTool(client, this.logger);

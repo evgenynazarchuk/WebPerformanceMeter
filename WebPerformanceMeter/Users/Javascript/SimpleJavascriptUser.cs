@@ -6,7 +6,7 @@ namespace WebPerformanceMeter
 {
     public abstract partial class JavascriptUser : BasicJavascriptUser, ISimpleUser
     {
-        public JavascriptUser(string userName = "", ILogger? logger = null)
+        public JavascriptUser(string? userName = null, ILogger? logger = null)
             : base(userName, logger) { }
 
         public async Task InvokeAsync(int loopCount = 1)

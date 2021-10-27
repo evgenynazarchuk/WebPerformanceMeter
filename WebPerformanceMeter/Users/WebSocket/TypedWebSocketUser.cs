@@ -11,7 +11,7 @@ namespace WebPerformanceMeter
             string host,
             int port,
             string path,
-            string userName = "",
+            string? userName = null,
             ILogger? logger = null)
             : base(host, port, path, userName, logger) { }
 

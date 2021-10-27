@@ -28,7 +28,7 @@ namespace WebPerformanceMeter
 
         protected override Task StartUserAsync()
         {
-            return ((ITypedUser<TData>)this.user).InvokeAsync(this.dataReader, this.reuseDataInLoop, this.userLoopCount);
+            return ((ITypedUser<TData>)this.User).InvokeAsync(this.dataReader, this.reuseDataInLoop, this.userLoopCount);
         }
     }
 }

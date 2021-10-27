@@ -6,22 +6,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Report;
+using WebPerformanceMeter.Reports;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Tools;
 
 namespace WebPerformanceMeter
 {
-    public sealed partial class HttpTool : Tool, IHttpTool
+    public sealed partial class HttpTool : Tool
     {
         public readonly HttpClient HttpClient;
 
         public HttpTool(
             string baseAddress,
+            Watcher watcher,
             IDictionary<string, string>? defaultHeaders = null,
-            IEnumerable<Cookie>? defaultCookies = null,
-            ILogger? logger = null)
-            : base(logger)
+            IEnumerable<Cookie>? defaultCookies = null)
+            : base(watcher)
         {
             var handler = new HttpClientHandler();
             handler.SetDefaultCookie(defaultCookies);
@@ -33,11 +33,9 @@ namespace WebPerformanceMeter
             this.SetBaseSettings(baseAddress);
         }
 
-        public HttpTool(HttpClient client, ILogger? logger = null)
-            : base(logger)
+        public HttpTool(HttpClient client, Watcher watcher)
+            : base(watcher)
         {
-            //
-            // Console.WriteLine($"{logger is null}"); -
             this.HttpClient = client;
         }
 
@@ -90,12 +88,9 @@ namespace WebPerformanceMeter
                 requestSize = httpRequestMessage.Content.Headers.ContentLength.Value;
             }
 
-            //
-            //Console.WriteLine($"{this.logger is not null}"); -
-
-            if (this.logger is not null)
+            if (this.Watcher is not null)
             {
-                this.logger.SendLogMessage(
+                this.Watcher.SendMessage(
                     logName: "HttpClientToolLog.json",
                     logMessage: $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}",
                     logMessageType: typeof(HttpLogMessage)
@@ -119,6 +114,7 @@ namespace WebPerformanceMeter
             string userName = "",
             string requestLabel = "")
         {
+            // TODO
             //using HttpRequestMessage httpRequestMessage = new()
             var httpRequestMessage = new HttpRequestMessage()
             {

@@ -25,7 +25,7 @@ namespace WebPerformanceMeter
 
         public override Task InvokeUserAsync()
         {
-            return ((ITypedUser<TData>)this.user).InvokeAsync(this.dataReader, this.reuseDataInLoop, this.userLoopCount);
+            return ((ITypedUser<TData>)this.User).InvokeAsync(this.dataReader, this.reuseDataInLoop, this.userLoopCount);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Interfaces
 {
-    public interface IBaseWebSocketUser : IBaseUser
+    public interface IBaseWebSocketUser : IBasicUser
     {
         void SetClientBuffer(
             int receiveBufferSize = 1024,

@@ -3,19 +3,10 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract class BasicConstantUsers : UsersPerformancePlan
     {
-        protected readonly int usersCount;
-
-        protected readonly int userLoopCount;
-
-        protected readonly Task[] invokedUsers;
-
         public BasicConstantUsers(
-            IBaseUser user,
+            IBasicUser user,
             int usersCount,
             int userLoopCount = 1)
             : base(user)
@@ -36,5 +27,11 @@ namespace WebPerformanceMeter.PerformancePlans
         }
 
         public abstract Task InvokeUserAsync();
+
+        protected readonly int usersCount;
+
+        protected readonly int userLoopCount;
+
+        protected readonly Task[] invokedUsers;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Tools;
+using WebPerformanceMeter.Reports;
 
 namespace WebPerformanceMeter
 {
@@ -14,8 +15,8 @@ namespace WebPerformanceMeter
 
         public readonly string UserName;
 
-        public ChromiumTool(string userName, ILogger? logger = null)
-            : base(logger)
+        public ChromiumTool(string userName, Watcher watcher)
+            : base(watcher)
         {
             this.Playwright = Microsoft.Playwright.Playwright.CreateAsync().GetAwaiter().GetResult();
             this.Browser = Playwright.Chromium.LaunchAsync(new()
@@ -25,8 +26,8 @@ namespace WebPerformanceMeter
             this.UserName = userName;
         }
 
-        public ChromiumTool(IPlaywright playwright, IBrowser browser, string userName, ILogger? logger = null)
-            : base(logger)
+        public ChromiumTool(IPlaywright playwright, IBrowser browser, string userName, Watcher watcher)
+            : base(watcher)
         {
             this.Playwright = playwright;
             this.Browser = browser;
@@ -38,7 +39,7 @@ namespace WebPerformanceMeter
             IBrowserContext browserContext = await Browser.NewContextAsync();
             IPage page = await browserContext.NewPageAsync();
 
-            return new PageTool(browserContext, page, this.UserName, this.logger);
+            return new PageTool(browserContext, page, this.UserName, this.Watcher);
         }
 
         public static Task<IBrowserContext> GetNewContextAsync(IBrowser browser)
@@ -50,11 +51,6 @@ namespace WebPerformanceMeter
         {
             return browserContext.NewPageAsync();
         }
-
-        //public void Dispose()
-        //{
-        //    this.Browser.CloseAsync().GetAwaiter().GetResult();
-        //}
 
         public async ValueTask DisposeAsync()
         {

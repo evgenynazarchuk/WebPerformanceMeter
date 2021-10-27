@@ -7,16 +7,8 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public abstract class BasicActiveUsersOnPeriod : UsersPerformancePlan
     {
-        protected readonly int activeUsersCount;
-
-        protected readonly TimeSpan performancePlanDuration;
-
-        protected readonly Task[] activeUsers;
-
-        protected readonly int userLoopCount;
-
         public BasicActiveUsersOnPeriod(
-            IBaseUser user,
+            IBasicUser user,
             int activeUsersCount,
             TimeSpan performancePlanDuration,
             int userLoopCount = 1)
@@ -58,5 +50,13 @@ namespace WebPerformanceMeter.PerformancePlans
                 }
             }
         }
+
+        protected readonly int activeUsersCount;
+
+        protected readonly TimeSpan performancePlanDuration;
+
+        protected readonly Task[] activeUsers;
+
+        protected readonly int userLoopCount;
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ITool
     {
-        ILogger? Logger { get; }
+        IReport? Logger { get; }
     }
 }

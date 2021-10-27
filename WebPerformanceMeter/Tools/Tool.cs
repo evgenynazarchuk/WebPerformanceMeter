@@ -1,16 +1,15 @@
 ﻿using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Reports;
 
 namespace WebPerformanceMeter.Tools
 {
-    public class Tool : ITool
+    public class Tool
     {
-        protected readonly ILogger? logger;
+        public readonly Watcher Watcher;
 
-        public ILogger? Logger { get => this.logger; }
-
-        public Tool(ILogger? logger = null)
+        public Tool(Watcher watcher)
         {
-            this.logger = logger;
+            this.Watcher = watcher;
         }
     }
 }

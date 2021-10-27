@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Interfaces
 {
-    public interface IGrpcUser : IBaseUser
+    public interface IGrpcUser : IBasicUser
     {
         void UseGrpcClient(Type grpcClient);
 

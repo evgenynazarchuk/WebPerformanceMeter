@@ -2,45 +2,36 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebPerformanceMeter.PerformancePlans;
+using WebPerformanceMeter.Users;
+using WebPerformanceMeter.Reports;
 
 namespace WebPerformanceMeter.Support
 {
     public sealed class Scenario
     {
-        private readonly List<KeyValuePair<ActType, IUsersPerformancePlan[]>> _acts;
-
-        private readonly List<Task> _taskLoggers;
-
         public Scenario()
         {
             this._acts = new();
-            this._taskLoggers = new();
+            this._reports = new();
         }
 
-        public Scenario AddParallelPlans(params IUsersPerformancePlan[] performancePlan)
+        public Scenario AddParallelPlans(params UsersPerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Parallel, performancePlan);
 
             return this;
         }
 
-        public Scenario AddSequentialPlans(params IUsersPerformancePlan[] performancePlan)
+        public Scenario AddSequentialPlans(params UsersPerformancePlan[] performancePlan)
         {
             this.AddActs(ActType.Sequential, performancePlan);
 
             return this;
         }
 
-        private Scenario AddActs(ActType launchType, params IUsersPerformancePlan[] performancePlan)
-        {
-            this._acts.Add(new(launchType, performancePlan));
-
-            return this;
-        }
-
         public async Task Start()
         {
-            this.StartLoggers();
+            this.StartWatcher();
 
             ScenarioTimer.Time.Start();
 
@@ -77,49 +68,80 @@ namespace WebPerformanceMeter.Support
 
             ScenarioTimer.Time.Stop();
 
-            await this.WaitStopLoggersAsync();
+            await this.StopAndWaitWatcher();
         }
 
-        private void StartLoggers()
+        private Scenario AddActs(ActType launchType, params UsersPerformancePlan[] performancePlan)
+        {
+            this._acts.Add(new(launchType, performancePlan));
+
+            return this;
+        }
+
+        private void InitDefaultReport()
         {
             foreach (var (_, plans) in this._acts)
             {
                 foreach (var plan in plans)
                 {
-                    if (plan.User.Logger is null)
+                    if (plan.User is HttpUser)
                     {
-                        continue;
+                        plan.User.Watcher.AddReport(HttpReportFileSingleton.GetInstance());
                     }
 
-                    Console.WriteLine($"Info: Start Loggers");
+                    if (plan.User is GrpcUser)
+                    {
+                        plan.User.Watcher.AddReport(GrpcReportFileSingleton.GetInstance());
+                    }
 
-                    //var task = Task.Run(() => plan.User.Logger.Start());
-                    var task = plan.User.Logger.StartAsync();
-                    this._taskLoggers.Add(task);
+                    if (plan.User is WebSocketUser)
+                    {
+                        plan.User.Watcher.AddReport(WebSocketReportFileSingleton.GetInstance());
+                    }
+
+                    if (plan.User is ChromiumUser)
+                    {
+                        plan.User.Watcher.AddReport(ChromiumReportFileSingleton.GetInstance());
+                    }
                 }
             }
         }
 
-        private async Task WaitStopLoggersAsync()
+        private void StartWatcher()
         {
-            Console.WriteLine($"Info: Stop Loggers");
+            this.InitDefaultReport();
 
             foreach (var (_, plans) in this._acts)
             {
                 foreach (var plan in plans)
                 {
-                    if (plan.User.Logger is null)
-                    {
-                        continue;
-                    }
+                    Console.WriteLine($"Info: Start Reports");
 
-                    plan.User.Logger.Stop();
+                    var task = plan.User.Watcher.StartAsync();
+                    this._reports.AddRange(task);
+                }
+            }
+        }
+
+        private async Task StopAndWaitWatcher()
+        {
+            Console.WriteLine($"Info: Stop Reports");
+
+            foreach (var (_, plans) in this._acts)
+            {
+                foreach (var plan in plans)
+                {
+                    plan.User.Watcher.Stop();
                 }
             }
 
-            Console.WriteLine($"Info: Wait Loggers");
+            Console.WriteLine($"Info: Wait Reports");
 
-            await Task.WhenAll(_taskLoggers.ToArray());
+            await Task.WhenAll(this._reports.ToArray());
         }
+
+        private readonly List<KeyValuePair<ActType, UsersPerformancePlan[]>> _acts;
+
+        private readonly List<Task> _reports;
     }
 }

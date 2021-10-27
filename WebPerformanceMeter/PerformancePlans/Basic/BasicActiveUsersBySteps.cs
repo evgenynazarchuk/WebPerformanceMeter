@@ -7,22 +7,8 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public abstract class BasicActiveUsersBySteps : UsersPerformancePlan
     {
-        protected readonly int fromActiveUsersCount;
-
-        protected readonly int toActiveUsersCount;
-
-        protected readonly int usersStep;
-
-        protected readonly TimeSpan stepPeriodDuration;
-
-        protected readonly Task[] activeUsers;
-
-        protected readonly int periodsCount;
-
-        protected readonly int userLoopCount;
-
         public BasicActiveUsersBySteps(
-            IBaseUser user,
+            IBasicUser user,
             int fromActiveUsersCount,
             int toActiveUsersCount,
             int usersStep,
@@ -123,5 +109,19 @@ namespace WebPerformanceMeter.PerformancePlans
             }
             else throw new ApplicationException("DurationIsNotSet");
         }
+
+        protected readonly int fromActiveUsersCount;
+
+        protected readonly int toActiveUsersCount;
+
+        protected readonly int usersStep;
+
+        protected readonly TimeSpan stepPeriodDuration;
+
+        protected readonly Task[] activeUsers;
+
+        protected readonly int periodsCount;
+
+        protected readonly int userLoopCount;
     }
 }

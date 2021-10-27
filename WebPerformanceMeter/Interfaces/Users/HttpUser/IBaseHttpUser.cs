@@ -4,15 +4,7 @@ using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Interfaces
 {
-    public interface IBaseHttpUser : IBaseUser
+    public interface IBaseHttpUser : IBasicUser
     {
-        IHttpTool Tool { get; }
-
-        Task<HttpResponse> Request(
-            HttpMethod httpMethod,
-            string path,
-            Dictionary<string, string>? requestHeaders = null,
-            HttpContent? requestContent = null,
-            string requestLabel = "");
     }
 }

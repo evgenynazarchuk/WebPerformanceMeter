@@ -6,31 +6,10 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.PerformancePlans
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract class BasicUsersOnPeriod : UsersPerformancePlan
     {
-        protected readonly int totalUsers;
-
-        protected readonly TimeSpan userPerformancePlanDuration;
-
-        protected readonly Task[] invokedUsers;
-
-        protected readonly int usersCount;
-
-        protected readonly int interval;
-
-        protected readonly Timer runner;
-
-        protected readonly TimeSpan minimalInvokePeriod;
-
-        protected int currentInvoke;
-
-        protected readonly int userLoopCount;
-
         public BasicUsersOnPeriod(
-            IBaseUser user,
+            IBasicUser user,
             int totalUsers,
             TimeSpan performancePlanDuration,
             TimeSpan? minimalInvokePeriod = null,
@@ -110,5 +89,23 @@ namespace WebPerformanceMeter.PerformancePlans
         {
             await Task.Delay(this.userPerformancePlanDuration + 500.Milliseconds());
         }
+
+        protected readonly int totalUsers;
+
+        protected readonly TimeSpan userPerformancePlanDuration;
+
+        protected readonly Task[] invokedUsers;
+
+        protected readonly int usersCount;
+
+        protected readonly int interval;
+
+        protected readonly Timer runner;
+
+        protected readonly TimeSpan minimalInvokePeriod;
+
+        protected int currentInvoke;
+
+        protected readonly int userLoopCount;
     }
 }

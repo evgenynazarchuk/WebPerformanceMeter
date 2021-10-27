@@ -1,20 +1,19 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.PerformancePlans;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter
 {
     public abstract class UsersPerformancePlan : IUsersPerformancePlan
     {
-        protected readonly IBaseUser user;
-
-        public IBaseUser User { get => this.user; }
-
-        public UsersPerformancePlan(IBaseUser user)
+        public UsersPerformancePlan(IBasicUser user)
         {
-            this.user = user;
+            this.User = (BasicUser)user;
         }
 
         public abstract Task StartAsync();
+
+        public readonly BasicUser User;
     }
 }

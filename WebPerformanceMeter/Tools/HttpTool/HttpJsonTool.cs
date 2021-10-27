@@ -7,7 +7,7 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter
 {
-    public partial class HttpTool : IHttpJsonTool
+    public partial class HttpTool
     {
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {

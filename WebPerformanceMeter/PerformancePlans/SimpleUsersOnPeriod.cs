@@ -23,7 +23,7 @@ namespace WebPerformanceMeter
 
         protected override Task StartUserAsync()
         {
-            return ((ISimpleUser)this.user).InvokeAsync(this.userLoopCount);
+            return ((ISimpleUser)this.User).InvokeAsync(this.userLoopCount);
         }
     }
 }

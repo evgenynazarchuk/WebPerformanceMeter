@@ -8,24 +8,8 @@ namespace WebPerformanceMeter.PerformancePlans
 {
     public abstract class BasicUsersPerPeriod : UsersPerformancePlan
     {
-        protected readonly int totalUsersPerPeriod;
-
-        protected readonly TimeSpan perPeriod;
-
-        protected readonly TimeSpan performancePlanDuration;
-
-        protected readonly Task[,] invokedUsers;
-
-        protected readonly int sizePeriodBuffer;
-
-        protected readonly Timer runner;
-
-        protected int currentPeriod;
-
-        protected readonly int userLoopCount;
-
         public BasicUsersPerPeriod(
-            IBaseUser user,
+            IBasicUser user,
             int usersCountPerPeriod,
             TimeSpan performancePlanDuration,
             TimeSpan? perPeriod = null,
@@ -55,6 +39,8 @@ namespace WebPerformanceMeter.PerformancePlans
             await this.WaitUserTerminationAsync();
         }
 
+        protected abstract Task StartUserAsync();
+
         private void InvokeUsers()
         {
             for (var i = 0; i < this.totalUsersPerPeriod; i++)
@@ -64,8 +50,6 @@ namespace WebPerformanceMeter.PerformancePlans
 
             this.IncrementPeriod();
         }
-
-        protected abstract Task StartUserAsync();
 
         private async Task WaitUserTerminationAsync()
         {
@@ -86,5 +70,21 @@ namespace WebPerformanceMeter.PerformancePlans
                 this.currentPeriod = 0;
             }
         }
+
+        protected readonly int totalUsersPerPeriod;
+
+        protected readonly TimeSpan perPeriod;
+
+        protected readonly TimeSpan performancePlanDuration;
+
+        protected readonly Task[,] invokedUsers;
+
+        protected readonly int sizePeriodBuffer;
+
+        protected readonly Timer runner;
+
+        protected int currentPeriod;
+
+        protected readonly int userLoopCount;
     }
 }

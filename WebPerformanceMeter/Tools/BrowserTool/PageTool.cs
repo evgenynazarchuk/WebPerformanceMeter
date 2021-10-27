@@ -1,29 +1,27 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Report;
+using WebPerformanceMeter.Reports;
 using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Tools
 {
-    public class PageTool
+    public class PageTool : Tool
     {
         public readonly IPage Page;
 
         public readonly IBrowserContext BrowserContext;
 
-        public readonly ILogger? Logger;
-
         public readonly string UserName;
 
         public string? Url { get; private set; }
 
-        public PageTool(IBrowserContext browserContext, IPage page, string userName, ILogger? logger = null)
+        public PageTool(IBrowserContext browserContext, IPage page, string userName, Watcher watcher)
+            : base(watcher)
         {
             this.BrowserContext = browserContext;
             this.Page = page;
 
-            this.Logger = logger;
             this.UserName = userName;
         }
 
@@ -36,9 +34,12 @@ namespace WebPerformanceMeter.Tools
 
             this.Url = url;
 
-            if (this.Logger is not null)
+            if (this.Watcher is not null)
             {
-                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
+                this.Watcher.SendMessage(
+                    "UserActionLog.json", 
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    typeof(ChromiumLogMessage));
             }
         }
 
@@ -51,9 +52,12 @@ namespace WebPerformanceMeter.Tools
 
             this.Url = this.Page.Url;
 
-            if (this.Logger is not null)
+            if (this.Watcher is not null)
             {
-                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
+                this.Watcher.SendMessage(
+                    "UserActionLog.json", 
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    typeof(ChromiumLogMessage));
             }
         }
 
@@ -66,9 +70,12 @@ namespace WebPerformanceMeter.Tools
 
             this.Url = this.Page.Url;
 
-            if (this.Logger is not null)
+            if (this.Watcher is not null)
             {
-                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
+                this.Watcher.SendMessage(
+                    "UserActionLog.json", 
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    typeof(ChromiumLogMessage));
             }
         }
 
@@ -81,9 +88,12 @@ namespace WebPerformanceMeter.Tools
 
             this.Url = this.Page.Url;
 
-            if (this.Logger is not null)
+            if (this.Watcher is not null)
             {
-                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
+                this.Watcher.SendMessage(
+                    "UserActionLog.json", 
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    typeof(ChromiumLogMessage));
             }
         }
 

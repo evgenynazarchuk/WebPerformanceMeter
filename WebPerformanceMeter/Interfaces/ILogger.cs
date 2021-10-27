@@ -5,18 +5,10 @@ namespace WebPerformanceMeter.Interfaces
 {
     public interface ILogger
     {
-        void AddLogMessage(string logName, string logMessage, Type logMessageType);
-
         Task StartAsync();
 
-        void ProcessStop();
+        void Stop();
 
-        string Convert(string logMessage, Type logMessageType) => logMessage;
-
-        void Finish();
-
-        void PostProcessing(string logName);
-
-        void PostProcessing();
+        void SendLogMessage(string logName, string logMessage, Type logMessageType);
     }
 }

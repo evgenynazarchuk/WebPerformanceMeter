@@ -7,34 +7,9 @@ using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Logger
 {
-    public class ServerLogger : ILogger
+    public class ServerLogger : Report
     {
-        public void AddLogMessage(string logName, string logMessage, Type logMessageType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Finish()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PostProcessing(string logName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PostProcessing()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ProcessStop()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task StartAsync()
+        protected override Task ProcessAsync()
         {
             throw new NotImplementedException();
         }

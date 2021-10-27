@@ -95,7 +95,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     logName: "HttpClientToolLog.json",
                     logMessage: $"{userName},{httpRequestMessage.Method.Method},{httpRequestMessage.RequestUri},{requestLabel},{(int)httpResponseMessage.StatusCode},{startSendRequest},{startWaitResponse},{startResponse},{endResponse},{requestSize},{responseSize}",
                     logMessageType: typeof(HttpLogMessage)

@@ -53,7 +53,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     "WebSocketLogMessage.json",
                     $"{userName},,connect,{startConnect},{endConnect}",
                     typeof(WebSocketLogMessage));
@@ -77,7 +77,7 @@ namespace WebPerformanceMeter
 
                 if (this.logger is not null)
                 {
-                    this.logger.AddLogMessage(
+                    this.logger.SendLogMessage(
                         "WebSocketLogMessage.json",
                         $"{userName},,disconnect,{startConnect},{endConnect}",
                         typeof(WebSocketLogMessage));
@@ -102,7 +102,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     "WebSocketLogMessage.json",
                     $"{userName},{label},send,{startRequest},{finishRequest}",
                     typeof(WebSocketLogMessage));
@@ -123,7 +123,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     $"WebSocketLogMessage.json",
                     $"{userName},{label},receive,{startReceive},{endReceive}",
                     typeof(WebSocketLogMessage));

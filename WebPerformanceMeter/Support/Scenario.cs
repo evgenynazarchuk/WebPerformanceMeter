@@ -41,6 +41,7 @@ namespace WebPerformanceMeter.Support
         public async Task Start()
         {
             this.StartLoggers();
+
             ScenarioTimer.Time.Start();
 
             foreach (var (launchType, plans) in this._acts)
@@ -76,7 +77,7 @@ namespace WebPerformanceMeter.Support
 
             ScenarioTimer.Time.Stop();
 
-            await this.WaitLoggersAsync();
+            await this.WaitStopLoggersAsync();
         }
 
         private void StartLoggers()
@@ -90,7 +91,7 @@ namespace WebPerformanceMeter.Support
                         continue;
                     }
 
-                    //Console.WriteLine($"Debug: Start Loggers");
+                    Console.WriteLine($"Info: Start Loggers");
 
                     //var task = Task.Run(() => plan.User.Logger.Start());
                     var task = plan.User.Logger.StartAsync();
@@ -99,8 +100,10 @@ namespace WebPerformanceMeter.Support
             }
         }
 
-        private async Task WaitLoggersAsync()
+        private async Task WaitStopLoggersAsync()
         {
+            Console.WriteLine($"Info: Stop Loggers");
+
             foreach (var (_, plans) in this._acts)
             {
                 foreach (var plan in plans)
@@ -110,13 +113,11 @@ namespace WebPerformanceMeter.Support
                         continue;
                     }
 
-                    //Console.WriteLine($"Debug: Stop Logger");
-
-                    plan.User.Logger.ProcessStop();
+                    plan.User.Logger.Stop();
                 }
             }
 
-            //Console.WriteLine($"Debug: Wait Logger");
+            Console.WriteLine($"Info: Wait Loggers");
 
             await Task.WhenAll(_taskLoggers.ToArray());
         }

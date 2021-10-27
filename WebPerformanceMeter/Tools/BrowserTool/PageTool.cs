@@ -38,7 +38,7 @@ namespace WebPerformanceMeter.Tools
 
             if (this.Logger is not null)
             {
-                this.Logger.AddLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
+                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
             }
         }
 
@@ -53,7 +53,7 @@ namespace WebPerformanceMeter.Tools
 
             if (this.Logger is not null)
             {
-                this.Logger.AddLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
+                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
             }
         }
 
@@ -68,7 +68,7 @@ namespace WebPerformanceMeter.Tools
 
             if (this.Logger is not null)
             {
-                this.Logger.AddLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
+                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
             }
         }
 
@@ -83,7 +83,7 @@ namespace WebPerformanceMeter.Tools
 
             if (this.Logger is not null)
             {
-                this.Logger.AddLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumActionLogMessage));
+                this.Logger.SendLogMessage("UserActionLog.json", $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", typeof(ChromiumLogMessage));
             }
         }
 

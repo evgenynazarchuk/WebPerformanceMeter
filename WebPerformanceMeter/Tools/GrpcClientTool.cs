@@ -109,7 +109,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     "GrpcLogMessage.json",
                     $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
@@ -158,7 +158,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     "GrpcLogMessage.json",
                     $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
@@ -207,7 +207,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     "GrpcLogMessage.json",
                     $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));
@@ -270,7 +270,7 @@ namespace WebPerformanceMeter
 
             if (this.logger is not null)
             {
-                this.logger.AddLogMessage(
+                this.logger.SendLogMessage(
                     "GrpcLogMessage.json",
                     $"{userName},{method.Name},{label},{startMethodCall},{endMethodCall}",
                     typeof(GrpcLogMessage));

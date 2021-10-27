@@ -20,7 +20,7 @@ namespace WebPerformanceMeter
             {
                 if (this.logger is not null)
                 {
-                    this.logger.AddLogMessage("PageRequestLog.json",
+                    this.logger.SendLogMessage("PageRequestLog.json",
                         $"{this.UserName}\t" +
                         $"{request.Method}\t" +
                         $"{request.Url}\t" + // how to parse url, error parse csv

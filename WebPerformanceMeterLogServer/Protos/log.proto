@@ -1,0 +1,17 @@
+syntax = "proto3";
+option csharp_namespace = "WebPerformanceMeterLogServer";
+package log;
+import "google/protobuf/empty.proto";
+
+
+service Logger {
+  rpc SendLogMessage (stream LogMessageCreateDto) returns (google.protobuf.Empty);
+}
+
+
+message LogMessageCreateDto {
+  string projectName = 1;
+  string testRunId = 2;
+  string logType = 3;
+  string logMessage = 4;
+}

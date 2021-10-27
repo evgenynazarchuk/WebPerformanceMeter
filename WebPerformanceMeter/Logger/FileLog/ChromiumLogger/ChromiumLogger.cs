@@ -7,7 +7,7 @@ namespace WebPerformanceMeter.Logger
     {
         public ChromiumLogger() { }
 
-        public override object? GetObjectFromRawCsvLogMessage(string logMessage, Type logMessageType)
+        protected override object? FromCsvLineToObject(string logMessage, Type logMessageType)
         {
             var logMessageObject = CsvConverter.GetObjectFromCsvColumns(logMessage.Split('\t'), logMessageType);
             return logMessageObject;

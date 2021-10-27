@@ -5,8 +5,6 @@ namespace WebPerformanceMeter.DataReader.CsvReader
     public sealed class JsonReader<TData> : DataReader<TData>
         where TData : class
     {
-        private readonly JsonSerializerOptions _jsonOptions;
-
         public JsonReader(string filePath, bool cyclicalData = false, JsonSerializerOptions? options = null)
             : base(filePath, cyclicalData)
         {
@@ -25,5 +23,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
                 this.queue.Enqueue(data);
             }
         }
+
+        private readonly JsonSerializerOptions _jsonOptions;
     }
 }

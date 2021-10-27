@@ -11,15 +11,15 @@ namespace PerformanceTests.Tests.JsonPlaceholder
     [PerformanceClass]
     public class Demo9
     {
-        [PerformanceTest(1)]
-        public async Task ReadFromFileAndPostTest(int usersCount)
+        [PerformanceTest(20, "test project", "123456789")]
+        public async Task ReadFromFileAndPostTest(int usersCount, string projectName, string testRunId)
         {
             var address = "https://jsonplaceholder.typicode.com";
             var user = new UserAction(address);
-            var reader = new CsvReader<PostDto>("Tests\\JsonPlaceholder\\Demo9_PostDto.csv", hasHeader: true);
+            var reader = new CsvReader<PostDto>("Tests\\JsonPlaceholder\\Demo9_PostDto.csv", hasHeader: true, cyclicalData: true);
             var plan = new ConstantUsers<PostDto>(user, usersCount, reader);
 
-            await new Scenario()
+            await new Scenario(projectName, testRunId)
                 .AddSequentialPlans(plan)
                 .Start();
         }

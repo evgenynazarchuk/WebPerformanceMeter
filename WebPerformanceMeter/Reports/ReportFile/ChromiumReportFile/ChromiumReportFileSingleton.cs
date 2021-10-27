@@ -2,13 +2,28 @@
 
 namespace WebPerformanceMeter.Reports
 {
-    public static class ChromiumReportFileSingleton
+    public class ChromiumReportFileSingleton
     {
-        private static readonly Lazy<ChromiumReportFile> lazy = new(() => new());
-
-        public static ChromiumReportFile GetInstance()
+        public static ChromiumReportFile GetInstance(string projectName, string testRunId)
         {
-            return lazy.Value;
+            if (_singleton is null)
+            {
+                lock (_lock)
+                {
+                    if (_singleton is null)
+                    {
+                        _singleton = new ChromiumReportFile(projectName, testRunId);
+                    }
+                }
+            }
+
+            return _singleton;
         }
+
+        private ChromiumReportFileSingleton() { }
+
+        private static object _lock = new object();
+
+        private static ChromiumReportFile? _singleton = null;
     }
 }

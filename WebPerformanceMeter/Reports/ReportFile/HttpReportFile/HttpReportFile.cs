@@ -4,7 +4,8 @@ namespace WebPerformanceMeter.Reports
 {
     public class HttpReportFile : ReportFile
     {
-        public HttpReportFile() { }
+        public HttpReportFile(string projectName, string testRunId)
+            : base(projectName, testRunId) { }
 
         protected override Task PostProcessingAsync(string logName)
         {

@@ -11,7 +11,7 @@ namespace WebPerformanceMeter
         where TData : class
     {
         public ChromiumUser(string? userName = null)
-            : base(userName ?? typeof(ChromiumUser<TData>).Name) { }
+            : base(userName ?? typeof(ChromiumUser).Name) { }
 
         public async Task InvokeAsync(
             IDataReader<TData> dataReader,

@@ -8,12 +8,6 @@ namespace WebPerformanceMeter.DataReader
     public abstract class DataReader<TData> : IDataReader<TData>
         where TData : class
     {
-        protected readonly bool cyclicalData;
-
-        protected readonly StreamReader reader;
-
-        protected readonly ConcurrentQueue<TData> queue;
-
         public DataReader(string filePath, bool cyclicalData = false)
         {
             this.reader = new StreamReader(filePath, Encoding.UTF8, true, 65535);
@@ -38,5 +32,11 @@ namespace WebPerformanceMeter.DataReader
 
             return result;
         }
+
+        protected readonly bool cyclicalData;
+
+        protected readonly StreamReader reader;
+
+        protected readonly ConcurrentQueue<TData> queue;
     }
 }

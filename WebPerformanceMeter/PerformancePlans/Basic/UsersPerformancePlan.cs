@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.PerformancePlans;
 using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter
 {
-    public abstract class UsersPerformancePlan : IUsersPerformancePlan
+    public abstract class UsersPerformancePlan
     {
         public UsersPerformancePlan(IBasicUser user)
         {

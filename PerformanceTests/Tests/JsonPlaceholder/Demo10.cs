@@ -13,14 +13,14 @@ namespace PerformanceTests.Tests.JsonPlaceholder
     {
         private readonly string _address = "https://jsonplaceholder.typicode.com";
 
-        [PerformanceTest(3)]
-        public async Task ReadFromFileAndPostTest(int usersCount)
+        [PerformanceTest(3, "test project", "123456789")]
+        public async Task ReadFromFileAndPostTest(int usersCount, string projectName, string testRunId)
         {
             var user = new UserAction(this._address);
             var reader = new JsonReader<PostDto>("Tests\\JsonPlaceholder\\Demo10_PostDto.json", cyclicalData: true);
             var plan = new ConstantUsers<PostDto>(user, usersCount, reader);
 
-            await new Scenario()
+            await new Scenario(projectName, testRunId)
                 .AddSequentialPlans(plan)
                 .Start();
         }

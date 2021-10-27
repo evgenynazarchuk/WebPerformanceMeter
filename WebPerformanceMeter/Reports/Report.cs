@@ -12,8 +12,10 @@ namespace WebPerformanceMeter.Reports
 {
     public abstract class Report : IReport
     {
-        public Report()
+        public Report(string projectName, string testRunId)
         {
+            this.ProjectName = projectName;
+            this.TestRunId = testRunId;
             this.LogQueue = new();
             this.tokenSource = new();
             this.token = this.tokenSource.Token;
@@ -79,6 +81,10 @@ namespace WebPerformanceMeter.Reports
             var jsonString = JsonSerializer.Serialize(logMessageObject, logMessageType);
             return jsonString;
         }
+
+        public readonly string ProjectName;
+
+        public readonly string TestRunId;
 
         protected abstract Task ProcessAsync();
 

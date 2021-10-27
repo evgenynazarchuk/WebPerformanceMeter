@@ -5,8 +5,6 @@ namespace WebPerformanceMeter.DataReader.CsvReader
     public sealed class CsvReader<TData> : DataReader<TData>
         where TData : class, new()
     {
-        private readonly bool _hasHeader = false;
-
         public CsvReader(string filePath, bool hasHeader = false, string separator = ",", bool cyclicalData = false)
             : base(filePath, cyclicalData)
         {
@@ -133,5 +131,7 @@ namespace WebPerformanceMeter.DataReader.CsvReader
 
             return entity;
         }
+
+        private readonly bool _hasHeader = false;
     }
 }

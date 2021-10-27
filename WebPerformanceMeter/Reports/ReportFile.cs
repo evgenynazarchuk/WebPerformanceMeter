@@ -12,7 +12,8 @@ namespace WebPerformanceMeter.Reports
 {
     public abstract class ReportFile : Report
     {
-        public ReportFile()
+        public ReportFile(string projectName, string testRunId)
+            : base(projectName, testRunId)
         {
             this.writers = new();
 

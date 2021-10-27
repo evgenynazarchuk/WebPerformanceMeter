@@ -4,11 +4,26 @@ namespace WebPerformanceMeter.Reports
 {
     public class WebSocketReportFileSingleton
     {
-        private static readonly Lazy<WebSocketReportFile> lazy = new(() => new());
-
-        public static WebSocketReportFile GetInstance()
+        public static WebSocketReportFile GetInstance(string projectName, string testRunId)
         {
-            return lazy.Value;
+            if (_singleton is null)
+            {
+                lock (_lock)
+                {
+                    if (_singleton is null)
+                    {
+                        _singleton = new WebSocketReportFile(projectName, testRunId);
+                    }
+                }
+            }
+
+            return _singleton;
         }
+
+        private WebSocketReportFileSingleton() { }
+
+        private static object _lock = new object();
+
+        private static WebSocketReportFile? _singleton = null;
     }
 }

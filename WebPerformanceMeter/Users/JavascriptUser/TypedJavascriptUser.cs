@@ -8,7 +8,7 @@ namespace WebPerformanceMeter
         where TData : class
     {
         public JavascriptUser(string? userName = null)
-            : base(userName ?? typeof(BasicJavascriptUser).Name) { }
+            : base(userName ?? typeof(JavascriptUser).Name) { }
 
         public async Task InvokeAsync(
             IDataReader<TData> dataReader,

@@ -5,7 +5,8 @@ namespace WebPerformanceMeter.Reports
 {
     public class ChromiumReportFile : ReportFile
     {
-        public ChromiumReportFile() { }
+        public ChromiumReportFile(string projectName, string testRunId)
+        : base(projectName, testRunId) { }
 
         protected override object? FromCsvLineToObject(string logMessage, Type logMessageType)
         {

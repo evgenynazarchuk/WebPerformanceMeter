@@ -11,15 +11,15 @@ namespace PerformanceTests.Tests.JsonPlaceholder
     {
         private readonly string _address = "https://jsonplaceholder.typicode.com";
 
-        [PerformanceTest(10, 10)]
-        [PerformanceTest(20, 10)]
-        [PerformanceTest(30, 10)]
-        public async Task GetAllPostsWithoutResultTest(int activeUsersCount, int seconds)
+        [PerformanceTest(10, 10, "test project", "123456789")]
+        [PerformanceTest(20, 10, "test project", "123456789")]
+        [PerformanceTest(30, 10, "test project", "123456789")]
+        public async Task GetAllPostsWithoutResultTest(int activeUsersCount, int seconds, string projectName, string testRunId)
         {
             var user = new UserAction(this._address);
             var plan = new ActiveUsersOnPeriod(user, activeUsersCount, seconds.Seconds());
 
-            await new Scenario()
+            await new Scenario(projectName, testRunId)
                 .AddSequentialPlans(plan)
                 .Start();
         }

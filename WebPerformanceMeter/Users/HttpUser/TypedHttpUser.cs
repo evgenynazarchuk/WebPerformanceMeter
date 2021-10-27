@@ -11,7 +11,7 @@ namespace WebPerformanceMeter
         where TData : class
     {
         public HttpUser(HttpClient client, string? userName = null)
-            : base(client, userName ?? typeof(HttpUser<TData>).Name) { }
+            : base(client, userName ?? typeof(HttpUser).Name) { }
 
         public HttpUser(
             string address,

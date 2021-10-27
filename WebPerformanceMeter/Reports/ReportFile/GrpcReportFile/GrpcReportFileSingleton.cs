@@ -4,11 +4,26 @@ namespace WebPerformanceMeter.Reports
 {
     public class GrpcReportFileSingleton
     {
-        private static readonly Lazy<GrpcReportFile> lazy = new(() => new());
-
-        public static GrpcReportFile GetInstance()
+        public static GrpcReportFile GetInstance(string projectName, string testRunId)
         {
-            return lazy.Value;
+            if (_singleton is null)
+            {
+                lock (_lock)
+                {
+                    if (_singleton is null)
+                    {
+                        _singleton = new GrpcReportFile(projectName, testRunId);
+                    }
+                }
+            }
+
+            return _singleton;
         }
+
+        private GrpcReportFileSingleton() { }
+
+        private static object _lock = new object();
+
+        private static GrpcReportFile? _singleton = null;
     }
 }

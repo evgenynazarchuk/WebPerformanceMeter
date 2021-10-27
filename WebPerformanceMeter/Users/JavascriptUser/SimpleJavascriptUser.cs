@@ -7,7 +7,7 @@ namespace WebPerformanceMeter
     public abstract partial class JavascriptUser : BasicJavascriptUser, ISimpleUser
     {
         public JavascriptUser(string? userName = null)
-            : base(userName ?? typeof(BasicJavascriptUser).Name) { }
+            : base(userName ?? typeof(JavascriptUser).Name) { }
 
         public async Task InvokeAsync(int loopCount = 1)
         {

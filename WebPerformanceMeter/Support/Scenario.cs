@@ -9,8 +9,10 @@ namespace WebPerformanceMeter.Support
 {
     public sealed class Scenario
     {
-        public Scenario()
+        public Scenario(string projectName = "", string testRunId = "")
         {
+            this.ProjectName = projectName;
+            this.TestRunId = testRunId;
             this._acts = new();
             this._reports = new();
         }
@@ -84,25 +86,17 @@ namespace WebPerformanceMeter.Support
             {
                 foreach (var plan in plans)
                 {
-                    if (plan.User is HttpUser)
-                    {
-                        plan.User.Watcher.AddReport(HttpReportFileSingleton.GetInstance());
-                    }
+                    if (plan.User is BasicHttpUser)
+                        plan.User.Watcher.AddReport(HttpReportFileSingleton.GetInstance(this.ProjectName, this.TestRunId));
 
-                    if (plan.User is GrpcUser)
-                    {
-                        plan.User.Watcher.AddReport(GrpcReportFileSingleton.GetInstance());
-                    }
+                    if (plan.User is BasicGrpcUser)
+                        plan.User.Watcher.AddReport(GrpcReportFileSingleton.GetInstance(this.ProjectName, this.TestRunId));
 
-                    if (plan.User is WebSocketUser)
-                    {
-                        plan.User.Watcher.AddReport(WebSocketReportFileSingleton.GetInstance());
-                    }
+                    if (plan.User is BasicWebSocketUser)
+                        plan.User.Watcher.AddReport(WebSocketReportFileSingleton.GetInstance(this.ProjectName, this.TestRunId));
 
-                    if (plan.User is ChromiumUser)
-                    {
-                        plan.User.Watcher.AddReport(ChromiumReportFileSingleton.GetInstance());
-                    }
+                    if (plan.User is BasicChromiumUser)
+                        plan.User.Watcher.AddReport(ChromiumReportFileSingleton.GetInstance(this.ProjectName, this.TestRunId));
                 }
             }
         }
@@ -122,6 +116,10 @@ namespace WebPerformanceMeter.Support
                 }
             }
         }
+
+        public readonly string ProjectName;
+
+        public readonly string TestRunId;
 
         private async Task StopAndWaitWatcher()
         {

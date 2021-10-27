@@ -9,7 +9,7 @@ namespace WebPerformanceMeter
         where TData : class
     {
         public GrpcUser(string address, string? userName = null)
-            : base(address, userName ?? typeof(GrpcUser<TData>).Name) { }
+            : base(address, userName ?? typeof(GrpcUser).Name) { }
 
         public async Task InvokeAsync(
             IDataReader<TData> dataReader,

@@ -1,0 +1,263 @@
+﻿
+<html>
+<head>
+<script src='https://cdn.plot.ly/plotly-2.3.0.min.js'></script>
+
+<style>
+body {
+    background-color: #1A1A1A;
+}
+</style>
+
+</head>
+<body>
+<div id='StartedRequestsChart' style='width:99%;height:400px;'></div>
+<div id='CompletedRequestsChart' style='width:99%;height:400px;'></div>
+
+
+<script>
+const startedRequestRawLog = [{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":0,"Count":68},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":1,"Count":106},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":2,"Count":115},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":3,"Count":117},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":4,"Count":111},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":5,"Count":117},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":6,"Count":118},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":7,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":8,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":9,"Count":127},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":10,"Count":120},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":11,"Count":121},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":12,"Count":119},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":13,"Count":122},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":14,"Count":122},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":15,"Count":119},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":16,"Count":117},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":17,"Count":119},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":18,"Count":120},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":19,"Count":124},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":20,"Count":122},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":21,"Count":118},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":22,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":23,"Count":118},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":24,"Count":113},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":25,"Count":121},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":26,"Count":110},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":27,"Count":113},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":28,"Count":114},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":29,"Count":115},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":30,"Count":94},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":31,"Count":94},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":32,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":33,"Count":93},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":34,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":35,"Count":96},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":36,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":37,"Count":92},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":38,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":39,"Count":99},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":40,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":41,"Count":94},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":42,"Count":102},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":43,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":44,"Count":103},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":45,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":46,"Count":97},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":47,"Count":97},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":48,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":49,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":50,"Count":96},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":51,"Count":97},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":52,"Count":101},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":53,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":54,"Count":102},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":55,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":56,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":57,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":58,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":59,"Count":95},
+]
+const completedRequestRawLog = [{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":0,"Count":68},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":1,"Count":106},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":2,"Count":115},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":3,"Count":116},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":4,"Count":112},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":5,"Count":117},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":6,"Count":118},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":7,"Count":122},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":8,"Count":124},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":9,"Count":127},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":10,"Count":120},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":11,"Count":120},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":12,"Count":119},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":13,"Count":122},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":14,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":15,"Count":119},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":16,"Count":116},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":17,"Count":119},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":18,"Count":121},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":19,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":20,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":21,"Count":118},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":22,"Count":123},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":23,"Count":118},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":24,"Count":113},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":25,"Count":120},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":26,"Count":111},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":27,"Count":113},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":28,"Count":114},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":29,"Count":115},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":30,"Count":94},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":31,"Count":94},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":32,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":33,"Count":93},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":34,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":35,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":36,"Count":99},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":37,"Count":91},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":38,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":39,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":40,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":41,"Count":94},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":42,"Count":101},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":43,"Count":101},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":44,"Count":102},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":45,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":46,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":47,"Count":97},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":48,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":49,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":50,"Count":96},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":51,"Count":97},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":52,"Count":101},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":53,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":54,"Count":102},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":55,"Count":100},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":56,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":57,"Count":98},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":58,"Count":95},
+{"UserName":"GrpcUser","Method":"SendMessages","Label":"","Time":59,"Count":95},
+]
+</script>
+
+
+<script>
+function PlotlyJsLineDraw(chartName, yaxisLabel, plotlyIdent, plotlyData, rawData=true) {
+    let chartPlotData = []
+	if(rawData)
+	{
+		for(let key in plotlyData) {
+		chartPlotData.push({
+			x: plotlyData[key].map(item => item.x),
+			y: plotlyData[key].map(item => item.y),
+			type: 'scatter',
+			name: key,
+			})
+		}
+	}
+	else {
+		chartPlotData = plotlyData
+	}
+	
+
+	let chartLayout ={
+		showlegend: true,
+		legend: {
+			bgcolor: '#1A1A1A',
+			font: {
+				color: '#7C7C7C',
+				family: 'Open Sans',
+				size: 14
+			},
+			orientation: 'h',
+			y: -0.4
+		},
+		title: {
+			text: chartName,
+			font: {
+				color: '#828282',
+				family: 'Open Sans',
+				size: 21
+			},
+		},
+		xaxis: {
+			title: {
+				text: '',
+			},
+			gridcolor: '#3C3C3C',
+			gridwidth: 1,
+			tickfont : {
+				size : 11,
+				color : '#7C7C7C'
+			}
+		},
+		
+		yaxis: {
+			title: {
+				text: yaxisLabel,
+				font: {
+					color: '#7C7C7C',
+					family: 'Open Sans',
+					size: 14
+				},
+			},
+			gridcolor: '#3C3C3C',
+			gridwidth: 1,
+		},
+		plot_bgcolor:'#1A1A1A',
+		paper_bgcolor:'#1A1A1A',
+	}
+	
+	
+	Plotly.newPlot(plotlyIdent, chartPlotData, chartLayout);
+}
+</script>
+
+
+<script>
+
+/*
+**
+*/
+let startedRequestData = { };
+for (let item of startedRequestRawLog)
+{
+    if (startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] == undefined)
+    {
+        startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] = []
+    }
+
+	let date = new Date(0);
+	date.setSeconds(item.Time);
+	let timeString = date.toISOString().substr(11, 8);
+
+    startedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label].push({ x: timeString, y: item.Count })
+}
+
+PlotlyJsLineDraw('Started Requests', 'Count', 'StartedRequestsChart', startedRequestData)
+
+/*
+**
+*/
+let completedRequestData = { };
+for (let item of startedRequestRawLog)
+{
+    if (completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] == undefined)
+    {
+        completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label] = []
+    }
+
+	let date = new Date(0);
+	date.setSeconds(item.Time);
+	let timeString = date.toISOString().substr(11, 8);
+
+    completedRequestData[item.UserName + ' ' + item.Method + ' ' + item.Label].push({ x: timeString, y: item.Count })
+}
+
+PlotlyJsLineDraw('Completed Requests', 'Count', 'CompletedRequestsChart', completedRequestData)
+
+</script>
+
+</body>
+</html>
+

@@ -17,7 +17,7 @@ namespace WebPerformanceMeter
                 throw new ApplicationException("Grpc Client Type is not set. Try UseGrpcClient()");
             }
 
-            using var client = new GrpcClientTool(this.address, this.grpcClientType.GetType(), this.Watcher);
+            using var client = new GrpcClientTool(this.address, this.grpcClientType, this.Watcher);
 
             for (int i = 0; i < loopCount; i++)
             {

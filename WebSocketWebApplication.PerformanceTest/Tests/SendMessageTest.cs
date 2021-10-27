@@ -2,14 +2,14 @@
 using WebPerformanceMeter;
 using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
-using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Support;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {
+    [PerformanceClass]
     public class SendMessageTest
     {
-        [PerformanceTest(5, 50)]
+        [PerformanceTest(60, 5000)]
         public async Task SendMessageHelloWorldTest(int seconds, int usersCount)
         {
             var user = new WebSocketUserTest("localhost", 5000, "ws");

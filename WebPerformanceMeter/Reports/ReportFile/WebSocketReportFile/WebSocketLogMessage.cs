@@ -2,6 +2,8 @@
 {
     public class WebSocketLogMessage
     {
+        public WebSocketLogMessage() { }
+
         public WebSocketLogMessage(
             string? userName,
             string? label,

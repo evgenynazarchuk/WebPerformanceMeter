@@ -53,11 +53,16 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 4);
 
-            // TODO logging
-            var response = await (AsyncUnaryCall<TResponse>)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
-            //
+            var result = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, default!, default!, default! });
 
-            return response;
+            if (result is not null)
+            {
+                return await result;
+            }
+            else
+            {
+                return await result!;
+            }
         }
 
         public async ValueTask<TResponse> ClientStreamAsync<TResponse, TRequest>(string methodCall, ICollection<TRequest> requestBodyList)
@@ -70,7 +75,12 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 3);
 
-            using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { default!, default!, default! });
+
+            if (grpcConnect is null)
+            {
+                throw new ApplicationException($"grpc connnect is null");
+            }
 
             // TODO logging
             foreach (var requestBody in requestBodyList)
@@ -93,10 +103,14 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 4);
 
-            using var grpcConnect = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, null, null, null });
-            var messages = new List<TResponse>();
+            using var grpcConnect = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, default!, default!, default! });
+            if (grpcConnect is null)
+            {
+                throw new ApplicationException($"grpc connect error");
+            }
 
-            // TODO logging
+            var messages = new List<TResponse>();
+            
             while (await grpcConnect.ResponseStream.MoveNext())
             {
                 messages.Add(grpcConnect.ResponseStream.Current);
@@ -115,7 +129,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Count() == 3);
 
-            using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { null, null, null });
+            using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { default!, default!, default! });
             if (grpcConnect is null)
             {
                 throw new ApplicationException("grpc connect error");

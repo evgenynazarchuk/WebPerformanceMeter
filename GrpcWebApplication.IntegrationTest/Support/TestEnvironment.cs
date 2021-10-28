@@ -25,6 +25,11 @@ namespace GrpcWebApplication.IntegrationTest.Support
             this.App = new();
 
             this.HttpClient = this.App.CreateDefaultClient();
+            if (this.HttpClient.BaseAddress is null)
+            {
+                throw new ApplicationException("address is not set");
+            }
+
             this.GrpcChannel = GrpcChannel.ForAddress(this.HttpClient.BaseAddress, new GrpcChannelOptions { HttpClient = this.HttpClient });
             this.UserMessagerClient = new UserMessagerService.UserMessagerServiceClient(this.GrpcChannel);
             this.GrpcClient = new GrpcClientTool(this.HttpClient, typeof(UserMessagerService.UserMessagerServiceClient));

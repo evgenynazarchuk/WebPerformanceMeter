@@ -130,8 +130,9 @@ namespace GrpcWebApplication.IntegrationTest
             {
                 var requestCallTask = Task.Factory.StartNew((i) =>
                 {
+                    var index = Convert.ToInt32(i);
                     t3 = watcher.Elapsed;
-                    var task = clients[(int)i].UnaryCallAsync<MessageIdentityDto, MessageCreateDto>("SendMessageAsync", new MessageCreateDto { Text = "test" });
+                    var task = clients[index].UnaryCallAsync<MessageIdentityDto, MessageCreateDto>("SendMessageAsync", new MessageCreateDto { Text = "test" });
                     t4 = watcher.Elapsed;
 
                     requestTasks.Add(task);

@@ -2,10 +2,17 @@ using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using GrpcWebApplication.IntegrationTest.Support;
 using GrpcWebApplication.Models;
+using System.Collections.Concurrent;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
+using GrpcWebApplication.IntegrationTest.Support.Tool;
+using GrpcWebApplication.Services;
+using System;
+using System.Net.Http;
+using System.Diagnostics;
 
 namespace GrpcWebApplication.IntegrationTest
 {
@@ -87,6 +94,79 @@ namespace GrpcWebApplication.IntegrationTest
 
             // Arrange
             result.Select(x => x.Text).Should().BeEquivalentTo("test 1", "test 2", "test 3");
+        }
+
+        [Test]
+        public async Task ManyUnaryCallTest()
+        {
+            // Arrange
+            int clientCount = 100;
+            var watcher = new Stopwatch();
+            var requestTasks = new ConcurrentBag<ValueTask<MessageIdentityDto>>();
+            var clients = new List<GrpcClientTool>();
+
+            TimeSpan t1 = default,
+                t2 = default,
+                t3 = default,
+                t4 = default;
+                //t5 = default,
+                //t6 = default;
+
+            // Act
+            watcher.Start();
+
+            t1 = watcher.Elapsed;
+            for (int i = 0; i < clientCount; i++)
+            {
+                var grpcClient = new GrpcClientTool("https://localhost:5001", typeof(UserMessagerService.UserMessagerServiceClient));
+                clients.Add(grpcClient);
+            }
+            t2 = watcher.Elapsed;
+            Console.WriteLine($"client create time: {t1} {t2} {t2 - t1}");
+
+            var requestCalltTasks = new List<Task>();
+            var requestsTime = new List<string>();
+            for (int i = 0; i < clientCount; i++)
+            {
+                var requestCallTask = Task.Factory.StartNew((i) =>
+                {
+                    t3 = watcher.Elapsed;
+                    var task = clients[(int)i].UnaryCallAsync<MessageIdentityDto, MessageCreateDto>("SendMessageAsync", new MessageCreateDto { Text = "test" });
+                    t4 = watcher.Elapsed;
+
+                    requestTasks.Add(task);
+                    //requestsTime.Add($"request call time: {t3} {t4} {t4 - t3}");
+                    Console.WriteLine($"request call time: {t3} {t4} {t4 - t3}");
+                }, i);
+
+                requestCalltTasks.Add(requestCallTask);
+            }
+            await Task.WhenAll(requestCalltTasks);
+            //Console.WriteLine(String.Join("\n", requestsTime));
+
+
+            var waitTasks = new List<Task>();
+            var requestsWaitTime = new ConcurrentBag<string>();
+            foreach (var task in requestTasks)
+            {
+                var waitTask = Task.Run(async () =>
+                {
+                    var t5 = watcher.Elapsed;
+                    await task;
+                    var t6 = watcher.Elapsed;
+
+                    //requestsWaitTime.Add($"request wait time: {t5} {t6} {t6 - t5}");
+                    Console.WriteLine($"request wait time: {t5} {t6} {t6 - t5}");
+                });
+
+                waitTasks.Add(waitTask);
+            }
+            await Task.WhenAll(waitTasks);
+            //Console.WriteLine(String.Join("\n", waitTasks));
+            watcher.Stop();
+
+            // Arrange
+            Console.WriteLine($"result: {watcher.Elapsed}");
         }
     }
 }

@@ -17,7 +17,7 @@
             db.Database.EnsureCreated();
 
             services.AddGrpc();
-            services.AddGrpcReflection();
+            //services.AddGrpcReflection();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -29,16 +29,16 @@
 
             app.UseRouting();
 
-            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
+            //app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<UserMessagerHandler>();
 
-                if (env.IsDevelopment())
-                {
-                    endpoints.MapGrpcReflectionService();
-                }
+                //if (env.IsDevelopment())
+                //{
+                //    endpoints.MapGrpcReflectionService();
+                //}
 
                 endpoints.MapGet("/", async context =>
                 {

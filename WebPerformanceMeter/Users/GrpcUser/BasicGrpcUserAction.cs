@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
+using WebPerformanceMeter.Support;
 
 namespace WebPerformanceMeter.Users
 {
     public abstract partial class BasicGrpcUser : BasicUser
     {
-        public ValueTask<TResponse> UnaryCall<TResponse, TRequest>(
+        public ValueTask<ActionResult<TResponse>> UnaryCall<TResponse, TRequest>(
             GrpcClientTool client,
             string methodCall,
             TRequest requestBody,

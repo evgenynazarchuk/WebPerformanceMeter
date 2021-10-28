@@ -26,11 +26,14 @@ namespace GrpcWebApplication
             MessageCreateDto request,
             ServerCallContext context)
         {
-            var message = await this.dataContext.Set<Message>().AddAsync(new Message { Text = request.Text });
-            await this.dataContext.SaveChangesAsync();
-            var messageIdentityDto = new MessageIdentityDto { Id = message.Entity.Id };
+            //var message = await this.dataContext.Set<Message>().AddAsync(new Message { Text = request.Text });
+            //await this.dataContext.SaveChangesAsync();
+            //var messageIdentityDto = new MessageIdentityDto { Id = message.Entity.Id };
+            //
+            //return messageIdentityDto;
+            await Task.Delay(200);
 
-            return messageIdentityDto;
+            return await Task.FromResult(new MessageIdentityDto { Id = 1 });
         }
 
         public override async Task<Empty> SendMessages(

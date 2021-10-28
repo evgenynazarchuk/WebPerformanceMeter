@@ -16,11 +16,22 @@ namespace GrpcWebApplication.PerformanceTests.Tests
     {
         private const string ADDRESS = "https://localhost:5001";
 
-        [PerformanceTest(1000, 60 * 5)]
-        public async Task UnaryCallTest(int users, int seconds)
+        [PerformanceTest(10, 120)]
+        public async Task UnaryCallByActiveUsersTest(int activeUsers, int seconds)
         {
             var user = new UnaryGrpcUser(ADDRESS);
-            var plan = new ActiveUsersOnPeriod(user, users, seconds.Seconds());
+            var plan = new ActiveUsersOnPeriod(user, activeUsers, seconds.Seconds());
+
+            await new Scenario()
+                .AddSequentialPlans(plan)
+                .Start();
+        }
+
+        [PerformanceTest(500, 20 * 60)]
+        public async Task UnaryCallByUsersPerPeriodTest(int users, int seconds)
+        {
+            var user = new UnaryGrpcUser(ADDRESS);
+            var plan = new UsersPerPeriod(user, users, seconds.Seconds());
 
             await new Scenario()
                 .AddSequentialPlans(plan)

@@ -12,7 +12,7 @@ namespace GrpcWebApplication.PerformanceTests.Users
     public class ClientStreamUser : GrpcUser
     {
         public ClientStreamUser(string address, string? userName = null)
-            : base(address, userName) 
+            : base(address, typeof(UserMessagerService.UserMessagerServiceClient), userName) 
         {
             UseGrpcClient(typeof(UserMessagerService.UserMessagerServiceClient));
         }

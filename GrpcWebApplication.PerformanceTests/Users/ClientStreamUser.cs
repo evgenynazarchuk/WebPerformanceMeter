@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebPerformanceMeter;
-using Grpc.Core;
-using Google.Protobuf.WellKnownTypes;
 
 namespace GrpcWebApplication.PerformanceTests.Users
 {
     public class ClientStreamUser : GrpcUser
     {
         public ClientStreamUser(string address, string? userName = null)
-            : base(address, typeof(UserMessagerService.UserMessagerServiceClient), userName) 
+            : base(address, typeof(UserMessagerService.UserMessagerServiceClient), userName)
         {
             UseGrpcClient(typeof(UserMessagerService.UserMessagerServiceClient));
         }

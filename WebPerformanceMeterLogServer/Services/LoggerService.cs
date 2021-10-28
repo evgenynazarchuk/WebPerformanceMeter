@@ -1,9 +1,5 @@
-using Grpc.Core;
 using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Grpc.Core;
 using System.Threading.Tasks;
 
 namespace WebPerformanceMeterLogServer

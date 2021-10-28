@@ -54,8 +54,8 @@
 
         public double ReceivedTime { get; set; }
 
-        public long SentBytes {  get; set; }
+        public long SentBytes { get; set; }
 
-        public long ReceivedBytes {  get; set; }
+        public long ReceivedBytes { get; set; }
     }
 }

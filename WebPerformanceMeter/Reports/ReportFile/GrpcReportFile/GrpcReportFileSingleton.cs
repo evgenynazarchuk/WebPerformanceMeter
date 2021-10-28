@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebPerformanceMeter.Reports
+﻿namespace WebPerformanceMeter.Reports
 {
     public class GrpcReportFileSingleton
     {

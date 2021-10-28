@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Threading.Tasks;
 using WebPerformanceMeter;
 
 namespace PerformanceTests

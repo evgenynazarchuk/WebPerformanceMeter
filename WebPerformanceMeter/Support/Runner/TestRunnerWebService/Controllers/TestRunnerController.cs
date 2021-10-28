@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
 
 namespace WebPerformanceMeter.Runner
 {
@@ -46,11 +46,11 @@ namespace WebPerformanceMeter.Runner
             {
                 await this._testRunner.StartTestAsync(startTestDto);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            
+
             return Ok();
         }
 

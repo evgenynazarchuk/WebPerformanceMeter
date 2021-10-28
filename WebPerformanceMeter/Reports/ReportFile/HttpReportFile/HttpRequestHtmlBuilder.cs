@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -77,10 +74,11 @@ namespace WebPerformanceMeter.Reports
                 .ToList();
 
             var userTraffic = this.logs
-                .GroupBy(x => new 
-                { 
-                    x.UserName, 
-                    EndResponseTime = x.EndResponseTime / 10000000 }
+                .GroupBy(x => new
+                {
+                    x.UserName,
+                    EndResponseTime = x.EndResponseTime / 10000000
+                }
                 ).Select(x => new HttpLogMessageUserTraffic(
                     x.Key.UserName,
                     x.Key.EndResponseTime,
@@ -92,7 +90,7 @@ namespace WebPerformanceMeter.Reports
             var completedRequestTimeJsonString = new StringBuilder();
             var totalTrafficJsonStringLog = new StringBuilder();
             var userTrafficJsonStringLog = new StringBuilder();
-            
+
             foreach (var item in completedRequest)
             {
                 completedRequestTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");

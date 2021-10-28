@@ -15,7 +15,7 @@
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { 
+        {
             modelBuilder.Entity<Message>().HasKey(e => e.Id);
             modelBuilder.Entity<Message>().Property(e => e.Id).ValueGeneratedOnAdd();
         }

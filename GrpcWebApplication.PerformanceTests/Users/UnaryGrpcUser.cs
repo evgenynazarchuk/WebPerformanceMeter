@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebPerformanceMeter;
 
 namespace GrpcWebApplication.PerformanceTests.Users
@@ -10,7 +6,7 @@ namespace GrpcWebApplication.PerformanceTests.Users
     public class UnaryGrpcUser : GrpcUser
     {
         public UnaryGrpcUser(string address, string? userName = null)
-            : base(address, typeof(UserMessagerService.UserMessagerServiceClient), userName) 
+            : base(address, typeof(UserMessagerService.UserMessagerServiceClient), userName)
         {
             //UseGrpcClient(typeof(UserMessagerService.UserMessagerServiceClient));
         }

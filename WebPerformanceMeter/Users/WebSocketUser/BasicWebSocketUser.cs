@@ -1,7 +1,4 @@
-﻿using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Reports;
-
-namespace WebPerformanceMeter.Users
+﻿namespace WebPerformanceMeter.Users
 {
     public abstract partial class BasicWebSocketUser : BasicUser
     {

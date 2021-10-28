@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Reports;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Tools;
@@ -42,8 +41,8 @@ namespace WebPerformanceMeter
         {
             if (httpClient.BaseAddress is not null)
             {
-                this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions 
-                { 
+                this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions
+                {
                     HttpClient = httpClient,
                     DisposeHttpClient = true
                 });
@@ -115,12 +114,12 @@ namespace WebPerformanceMeter
             {
                 grpcCall = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, default!, default!, default! });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("error invoke grpcCall: " + e.Message);
                 return new ActionResult<TResponse>(e.Message);
             }
-            
+
             if (grpcCall is null)
             {
                 return new ActionResult<TResponse>("gRPC is not created");

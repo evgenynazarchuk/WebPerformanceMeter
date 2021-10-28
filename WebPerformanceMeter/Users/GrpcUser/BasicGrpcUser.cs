@@ -1,6 +1,4 @@
 ﻿using System;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Reports;
 
 namespace WebPerformanceMeter.Users
 {

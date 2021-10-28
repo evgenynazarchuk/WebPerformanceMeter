@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Reports;
 
 namespace WebPerformanceMeter.Users
 {

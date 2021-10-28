@@ -1,18 +1,15 @@
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using GrpcWebApplication.IntegrationTest.Support;
+using GrpcWebApplication.IntegrationTest.Support.Tool;
 using GrpcWebApplication.Models;
-using System.Collections.Concurrent;
 using NUnit.Framework;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Grpc.Net.Client;
-using GrpcWebApplication.IntegrationTest.Support.Tool;
-using GrpcWebApplication.Services;
-using System;
-using System.Net.Http;
-using System.Diagnostics;
 
 namespace GrpcWebApplication.IntegrationTest
 {
@@ -109,8 +106,8 @@ namespace GrpcWebApplication.IntegrationTest
                 t2 = default,
                 t3 = default,
                 t4 = default;
-                //t5 = default,
-                //t6 = default;
+            //t5 = default,
+            //t6 = default;
 
             // Act
             watcher.Start();

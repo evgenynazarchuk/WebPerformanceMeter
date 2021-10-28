@@ -1,5 +1,4 @@
-﻿using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Reports;
+﻿using WebPerformanceMeter.Reports;
 
 namespace WebPerformanceMeter.Tools
 {

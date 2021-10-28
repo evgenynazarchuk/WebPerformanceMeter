@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebPerformanceMeter.Interfaces;
 
@@ -12,12 +10,12 @@ namespace WebPerformanceMeter.Reports
         protected readonly List<IReport> reports;
 
         public Watcher()
-        { 
+        {
             this.reports = new List<IReport>();
         }
 
         public void AddReport(IReport report)
-        { 
+        {
             this.reports.Add(report);
         }
 

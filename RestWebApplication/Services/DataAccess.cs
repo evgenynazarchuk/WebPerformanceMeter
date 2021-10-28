@@ -5,9 +5,9 @@
 
     public class DataAccess : DbContext
     {
-        public DbSet<Product> Products {  get; set; }
+        public DbSet<Product> Products { get; set; }
 
-        public DbSet<FileStorage> FileStorage {  get; set; }
+        public DbSet<FileStorage> FileStorage { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

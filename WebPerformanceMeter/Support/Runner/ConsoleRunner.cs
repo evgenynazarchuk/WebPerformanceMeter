@@ -15,7 +15,7 @@ namespace WebPerformanceMeter.Runner
         private readonly Dictionary<int, (Type, MethodInfo, object[]?)> _testsCollection = new();
 
         public ConsoleRunner(Assembly assembly)
-        { 
+        {
             this._assembly = assembly;
 
             var assemblyTypes = assembly.GetTypes()

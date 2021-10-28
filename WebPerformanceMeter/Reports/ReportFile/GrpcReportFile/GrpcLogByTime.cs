@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebPerformanceMeter.Reports
+﻿namespace WebPerformanceMeter.Reports
 {
     public class GrpcLogByTime
     {
@@ -14,7 +8,7 @@ namespace WebPerformanceMeter.Reports
             string? label,
             long time,
             long count)
-        { 
+        {
             this.UserName = userName;
             this.Method = method;
             this.Label = label;

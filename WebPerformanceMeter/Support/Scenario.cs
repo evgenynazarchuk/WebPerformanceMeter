@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebPerformanceMeter.PerformancePlans;
-using WebPerformanceMeter.Users;
 using WebPerformanceMeter.Reports;
+using WebPerformanceMeter.Users;
 
 namespace WebPerformanceMeter.Support
 {

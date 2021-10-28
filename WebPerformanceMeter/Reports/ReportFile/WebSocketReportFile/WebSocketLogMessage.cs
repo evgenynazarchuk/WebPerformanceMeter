@@ -10,7 +10,7 @@
             string? actionType,
             long startTime,
             long endTime)
-        { 
+        {
             this.UserName = userName;
             this.Label = label;
             this.ActionType = actionType;

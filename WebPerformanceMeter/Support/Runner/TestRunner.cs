@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using WebPerformanceMeter.Runner;
 
 namespace WebPerformanceMeter

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
-using WebPerformanceMeter.Interfaces;
 
 namespace WebPerformanceMeter.Users
 {

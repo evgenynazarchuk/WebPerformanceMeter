@@ -110,7 +110,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
             }
 
             var messages = new List<TResponse>();
-            
+
             while (await grpcConnect.ResponseStream.MoveNext())
             {
                 messages.Add(grpcConnect.ResponseStream.Current);

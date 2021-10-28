@@ -1,10 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using WebPerformanceMeter.Interfaces;
-using WebPerformanceMeter.Extensions;
-using System.Timers;
 
 namespace WebPerformanceMeter.Users
 {

@@ -3,7 +3,6 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Reports;
 using WebPerformanceMeter.Support;
 using WebPerformanceMeter.Tools;

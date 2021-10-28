@@ -1,6 +1,5 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
-using WebPerformanceMeter.Interfaces;
 using WebPerformanceMeter.Reports;
 using WebPerformanceMeter.Support;
 
@@ -37,8 +36,8 @@ namespace WebPerformanceMeter.Tools
             if (this.Watcher is not null)
             {
                 this.Watcher.SendMessage(
-                    "UserActionLog.json", 
-                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    "UserActionLog.json",
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}",
                     typeof(ChromiumLogMessage));
             }
         }
@@ -55,8 +54,8 @@ namespace WebPerformanceMeter.Tools
             if (this.Watcher is not null)
             {
                 this.Watcher.SendMessage(
-                    "UserActionLog.json", 
-                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    "UserActionLog.json",
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}",
                     typeof(ChromiumLogMessage));
             }
         }
@@ -73,8 +72,8 @@ namespace WebPerformanceMeter.Tools
             if (this.Watcher is not null)
             {
                 this.Watcher.SendMessage(
-                    "UserActionLog.json", 
-                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    "UserActionLog.json",
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}",
                     typeof(ChromiumLogMessage));
             }
         }
@@ -91,8 +90,8 @@ namespace WebPerformanceMeter.Tools
             if (this.Watcher is not null)
             {
                 this.Watcher.SendMessage(
-                    "UserActionLog.json", 
-                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}", 
+                    "UserActionLog.json",
+                    $"{this.UserName}\t{this.Url}\t{label}\t{start}\t{end}",
                     typeof(ChromiumLogMessage));
             }
         }

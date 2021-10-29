@@ -5,7 +5,6 @@ using WebPerformanceMeter.Attributes;
 using WebPerformanceMeter.Extensions;
 using WebPerformanceMeter.Support;
 
-
 namespace PerformanceTests.Tests.HttpClientTests
 {
     [PerformanceClass]

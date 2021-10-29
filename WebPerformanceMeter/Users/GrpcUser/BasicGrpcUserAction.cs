@@ -7,14 +7,13 @@ namespace WebPerformanceMeter.Users
     public abstract partial class BasicGrpcUser : BasicUser
     {
         public ValueTask<ActionResult<TResponse>> UnaryCall<TResponse, TRequest>(
-            GrpcClientTool client,
             string methodCall,
             TRequest requestBody,
             string label = "")
             where TRequest : class, new()
             where TResponse : class, new()
         {
-            return client.UnaryCallAsync<TResponse, TRequest>(
+            return this.GrpcClientTool.UnaryCallAsync<TResponse, TRequest>(
                 methodCall,
                 requestBody,
                 this.UserName,
@@ -22,7 +21,6 @@ namespace WebPerformanceMeter.Users
         }
 
         public ValueTask<TResponse> ClientStream<TResponse, TRequest>(
-            GrpcClientTool client,
             string methodCall,
             ICollection<TRequest> requestBodyList,
             int millisecondsDelay = 0,
@@ -30,7 +28,7 @@ namespace WebPerformanceMeter.Users
             where TRequest : class, new()
             where TResponse : class, new()
         {
-            return client.ClientStreamAsync<TResponse, TRequest>(
+            return this.GrpcClientTool.ClientStreamAsync<TResponse, TRequest>(
                 methodCall,
                 requestBodyList,
                 millisecondsDelay,
@@ -39,7 +37,6 @@ namespace WebPerformanceMeter.Users
         }
 
         public ValueTask<IReadOnlyCollection<TResponse>> ServerStream<TResponse, TRequest>(
-            GrpcClientTool client,
             string methodCall,
             TRequest requestBody,
             int millisecondsDelay = 0,
@@ -47,7 +44,7 @@ namespace WebPerformanceMeter.Users
             where TRequest : class, new()
             where TResponse : class, new()
         {
-            return client.ServerStreamAsync<TResponse, TRequest>(
+            return this.GrpcClientTool.ServerStreamAsync<TResponse, TRequest>(
                 methodCall,
                 requestBody,
                 millisecondsDelay,
@@ -56,7 +53,6 @@ namespace WebPerformanceMeter.Users
         }
 
         public ValueTask<IReadOnlyCollection<TResponse>> BidirectionalStream<TResponse, TRequest>(
-            GrpcClientTool client,
             string methodCall,
             ICollection<TRequest> requestBodyList,
             int sendMillisecondsDelay = 0,
@@ -65,7 +61,7 @@ namespace WebPerformanceMeter.Users
             where TRequest : class, new()
             where TResponse : class, new()
         {
-            return client.BidirectionalStreamAsync<TResponse, TRequest>(
+            return this.GrpcClientTool.BidirectionalStreamAsync<TResponse, TRequest>(
                 methodCall,
                 requestBodyList,
                 sendMillisecondsDelay,

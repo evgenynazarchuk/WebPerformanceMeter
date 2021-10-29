@@ -20,7 +20,7 @@
 
         private WebSocketReportFileSingleton() { }
 
-        private static object _lock = new object();
+        private readonly static object _lock = new();
 
         private static WebSocketReportFile? _singleton = null;
     }

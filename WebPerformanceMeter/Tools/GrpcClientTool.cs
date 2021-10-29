@@ -15,22 +15,40 @@ namespace WebPerformanceMeter
     {
         public GrpcClientTool(string address, Type serviceClientType, Watcher watcher)
             : base(watcher)
-
         {
             this._grpcChannel = GrpcChannel.ForAddress(address);
 
             var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
 
-            if (ctor is not null)
+            if (ctor is null)
             {
-                this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
-
-                if (this._grpcClient is null)
-                {
-                    throw new ApplicationException("gRpc client is not create");
-                }
+                throw new ApplicationException("gRpc client is not found");
             }
-            else
+
+            this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+
+            if (this._grpcClient is null)
+            {
+                throw new ApplicationException("gRpc client is not create");
+            }
+        }
+
+        public GrpcClientTool(GrpcChannel channel, Type serviceClientType, Watcher watcher)
+            : base(watcher)
+
+        {
+            this._grpcChannel = channel;
+
+            var ctor = serviceClientType.GetConstructor(new[] { typeof(GrpcChannel) });
+
+            if (ctor is null)
+            {
+                throw new ApplicationException("gRpc client is not found");
+            }
+
+            this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+
+            if (this._grpcClient is null)
             {
                 throw new ApplicationException("gRpc client is not create");
             }
@@ -39,55 +57,31 @@ namespace WebPerformanceMeter
         public GrpcClientTool(HttpClient httpClient, Type grpcClientType, Watcher watcher)
             : base(watcher)
         {
-            if (httpClient.BaseAddress is not null)
+            if (httpClient.BaseAddress is null)
             {
-                this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions
-                {
-                    HttpClient = httpClient,
-                    DisposeHttpClient = true
-                });
+                throw new ApplicationException("Http Client Base address must be set");
             }
-            else
+
+            this._grpcChannel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions
             {
-                throw new ApplicationException("Base address is not set");
-            }
+                HttpClient = httpClient,
+                DisposeHttpClient = true
+            });
 
             var ctor = grpcClientType.GetConstructor(new[] { typeof(GrpcChannel) });
 
-            if (ctor is not null)
+            if (ctor is null)
             {
-                this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
-
-                if (this._grpcClient is null)
-                {
-                    throw new ApplicationException("gRpc client is not create");
-                }
+                throw new ApplicationException("gRpc client is not found");
             }
-            else
+
+            this._grpcClient = ctor.Invoke(new[] { this._grpcChannel });
+
+            if (this._grpcClient is null)
             {
                 throw new ApplicationException("gRpc client is not create");
             }
         }
-
-        //public GrpcClientTool(GrpcChannel channel, Type grpcClientType, Watcher watcher)
-        //    : base(watcher)
-        //{
-        //    var ctor = grpcClientType.GetConstructor(new[] { typeof(GrpcChannel) });
-        //
-        //    if (ctor is not null)
-        //    {
-        //        this._grpcClient = ctor.Invoke(new[] { channel });
-        //
-        //        if (this._grpcClient is null)
-        //        {
-        //            throw new ApplicationException("gRpc client is not create");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new ApplicationException("gRpc client is not create");
-        //    }
-        //}
 
         public async ValueTask<ActionResult<TResponse>> UnaryCallAsync<TResponse, TRequest>(
             string methodCall,
@@ -101,7 +95,7 @@ namespace WebPerformanceMeter
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 4);
+                .Single(x => x.GetParameters().Length == 4);
 
             long startMethodCall;
             long endMethodCall;
@@ -165,7 +159,7 @@ namespace WebPerformanceMeter
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 3);
+                .Single(x => x.GetParameters().Length == 3);
 
             long startMethodCall;
             long endMethodCall;
@@ -214,7 +208,7 @@ namespace WebPerformanceMeter
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 4);
+                .Single(x => x.GetParameters().Length == 4);
 
             long startMethodCall;
             long endMethodCall;
@@ -264,7 +258,7 @@ namespace WebPerformanceMeter
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 3);
+                .Single(x => x.GetParameters().Length == 3);
 
             long startMethodCall;
             long endMethodCall;

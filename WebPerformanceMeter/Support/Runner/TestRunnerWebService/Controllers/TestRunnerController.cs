@@ -8,7 +8,7 @@ namespace WebPerformanceMeter.Runner
     [Route("[controller]/[action]")]
     public class TestRunnerController : ControllerBase
     {
-        private TestRunnerService _testRunner;
+        private readonly TestRunnerService _testRunner;
 
         public TestRunnerController(TestRunnerService testRunner)
         {

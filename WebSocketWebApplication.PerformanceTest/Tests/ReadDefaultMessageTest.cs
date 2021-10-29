@@ -6,6 +6,7 @@ using WebPerformanceMeter.Support;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {
+    //[PerformanceClass]
     public class ReadDefaultMessageTest
     {
         [PerformanceTest(5, 50)]

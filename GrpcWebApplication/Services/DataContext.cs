@@ -1,12 +1,10 @@
-﻿namespace GrpcWebApplication.Services
-{
-    using GrpcWebApplication.Models;
-    using Microsoft.EntityFrameworkCore;
+﻿using GrpcWebApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
+namespace GrpcWebApplication.Services
+{
     public class DataContext : DbContext
     {
-        public DbSet<Message> Messages { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseInMemoryDatabase("inMemoryDatabase");
@@ -19,5 +17,7 @@
             modelBuilder.Entity<Message>().HasKey(e => e.Id);
             modelBuilder.Entity<Message>().Property(e => e.Id).ValueGeneratedOnAdd();
         }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }

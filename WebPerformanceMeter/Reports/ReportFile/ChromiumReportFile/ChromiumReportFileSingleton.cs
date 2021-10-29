@@ -20,7 +20,7 @@
 
         private ChromiumReportFileSingleton() { }
 
-        private static object _lock = new object();
+        private readonly static object _lock = new ();
 
         private static ChromiumReportFile? _singleton = null;
     }

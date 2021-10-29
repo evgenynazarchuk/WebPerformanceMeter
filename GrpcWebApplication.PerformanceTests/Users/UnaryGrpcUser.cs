@@ -11,9 +11,9 @@ namespace GrpcWebApplication.PerformanceTests.Users
             //UseGrpcClient(typeof(UserMessagerService.UserMessagerServiceClient));
         }
 
-        protected override async Task PerformanceAsync(GrpcClientTool client)
+        protected override async Task PerformanceAsync()
         {
-            await UnaryCall<MessageIdentityDto, MessageCreateDto>(client, "SendMessageAsync", new MessageCreateDto { Text = "Hello world" });
+            await UnaryCall<MessageIdentityDto, MessageCreateDto>("SendMessageAsync", new MessageCreateDto { Text = "Hello world" });
         }
     }
 }

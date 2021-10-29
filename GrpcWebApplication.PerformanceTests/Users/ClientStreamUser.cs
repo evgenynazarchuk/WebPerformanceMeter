@@ -13,7 +13,7 @@ namespace GrpcWebApplication.PerformanceTests.Users
             UseGrpcClient(typeof(UserMessagerService.UserMessagerServiceClient));
         }
 
-        protected override async Task PerformanceAsync(GrpcClientTool client)
+        protected override async Task PerformanceAsync()
         {
             var messages = new List<MessageCreateDto>
             {
@@ -28,7 +28,7 @@ namespace GrpcWebApplication.PerformanceTests.Users
                 new MessageCreateDto { Text = "test 9" },
             };
 
-            await ClientStream<Empty, MessageCreateDto>(client, "SendMessages", messages);
+            await ClientStream<Empty, MessageCreateDto>("SendMessages", messages);
         }
     }
 }

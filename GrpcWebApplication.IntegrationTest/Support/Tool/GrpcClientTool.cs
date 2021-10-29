@@ -51,7 +51,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 4);
+                .Single(x => x.GetParameters().Length == 4);
 
             var result = (AsyncUnaryCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, default!, default!, default! });
 
@@ -73,7 +73,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 3);
+                .Single(x => x.GetParameters().Length == 3);
 
             using var grpcConnect = (AsyncClientStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { default!, default!, default! });
 
@@ -101,7 +101,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 4);
+                .Single(x => x.GetParameters().Length == 4);
 
             using var grpcConnect = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, default!, default!, default! });
             if (grpcConnect is null)
@@ -127,7 +127,7 @@ namespace GrpcWebApplication.IntegrationTest.Support.Tool
                 .GetType()
                 .GetMethods()
                 .Where(x => x.Name == methodCall)
-                .Single(x => x.GetParameters().Count() == 3);
+                .Single(x => x.GetParameters().Length == 3);
 
             using var grpcConnect = (AsyncDuplexStreamingCall<TRequest, TResponse>?)method.Invoke(this._grpcClient, new object[] { default!, default!, default! });
             if (grpcConnect is null)

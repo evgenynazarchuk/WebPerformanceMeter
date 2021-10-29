@@ -6,7 +6,5 @@ namespace WebPerformanceMeter.Interfaces
         where TEntity : class
     {
         Task InvokeAsync(IDataReader<TEntity> dataReader, bool reuseDataInLoop = false, int userLoopCount = 1);
-
-        //Task PerformanceAsync(TEntity data);
     }
 }

@@ -13,7 +13,7 @@ namespace PerformanceTests.Tests.HttpClientTests
     {
         public const string ADDRESS = "https://localhost:5001";
 
-        [PerformanceTest(5000, 30 * 60)]
+        [PerformanceTest(2000, 60)]
         public async Task CreateEntityTest(int usersCountPerSecond, int seconds)
         {
             var user = new CreateEntityUser(ADDRESS);

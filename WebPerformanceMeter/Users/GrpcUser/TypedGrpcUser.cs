@@ -8,8 +8,8 @@ namespace WebPerformanceMeter
     public abstract partial class GrpcUser<TData> : BasicGrpcUser, ITypedUser<TData>
         where TData : class
     {
-        public GrpcUser(string address, string? userName = null)
-            : base(address, userName ?? typeof(GrpcUser).Name) { }
+        public GrpcUser(string address, Type grpcClientType, string? userName = null)
+            : base(address, grpcClientType, userName ?? typeof(GrpcUser).Name) { }
 
         public async Task InvokeAsync(
             IDataReader<TData> dataReader,
@@ -33,7 +33,7 @@ namespace WebPerformanceMeter
                     continue;
                 }
 
-                await PerformanceAsync(client, data);
+                await PerformanceAsync(data);
 
                 if (!reuseDataInLoop)
                 {
@@ -42,6 +42,6 @@ namespace WebPerformanceMeter
             }
         }
 
-        protected abstract Task PerformanceAsync(GrpcClientTool client, TData entity);
+        protected abstract Task PerformanceAsync(TData entity);
     }
 }

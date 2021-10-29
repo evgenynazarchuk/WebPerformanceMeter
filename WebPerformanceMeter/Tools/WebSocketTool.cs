@@ -176,7 +176,7 @@ namespace WebPerformanceMeter
             var buffer = WebSocket.CreateClientBuffer(this.ReceiveBufferSize, this.SendBufferSize);
             var result = await this.ReceiveAsync(buffer, userName, label);
 
-            return (buffer: buffer, bufferInfo: result);
+            return (buffer, result);
         }
 
         // dispose

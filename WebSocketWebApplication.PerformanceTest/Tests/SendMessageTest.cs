@@ -6,7 +6,7 @@ using WebPerformanceMeter.Support;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {
-    [PerformanceClass]
+    //[PerformanceClass]
     public class SendMessageTest
     {
         [PerformanceTest(60, 5000)]

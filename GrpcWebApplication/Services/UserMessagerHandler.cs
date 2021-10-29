@@ -10,16 +10,12 @@ namespace GrpcWebApplication
 {
     public class UserMessagerHandler : UserMessagerService.UserMessagerServiceBase
     {
-        protected readonly ILogger<UserMessagerHandler> logger;
-
-        protected readonly DataContext dataContext;
-
         public UserMessagerHandler(
             ILogger<UserMessagerHandler> logger,
             DataContext dataContext)
         {
-            this.logger = logger;
-            this.dataContext = dataContext;
+            this._logger = logger;
+            this._dataContext = dataContext;
         }
 
         public override async Task<MessageIdentityDto> SendMessage(
@@ -43,14 +39,14 @@ namespace GrpcWebApplication
             // read stream
             while (await requestStream.MoveNext())
             {
-                await this.dataContext.Set<Message>().AddAsync(new Message
+                await this._dataContext.Set<Message>().AddAsync(new Message
                 {
                     Text = requestStream.Current.Text
                 });
             }
 
             // save
-            await this.dataContext.SaveChangesAsync();
+            await this._dataContext.SaveChangesAsync();
 
             return new Empty();
         }
@@ -59,7 +55,7 @@ namespace GrpcWebApplication
             MessageIdentityDto request,
             ServerCallContext context)
         {
-            var message = await this.dataContext.Set<Message>().FindAsync(request.Id);
+            var message = await this._dataContext.Set<Message>().FindAsync(request.Id);
             var simpleDto = new MessageSimpleDto
             {
                 Id = message.Id,
@@ -74,7 +70,7 @@ namespace GrpcWebApplication
             IServerStreamWriter<MessageSimpleDto> responseStream,
             ServerCallContext context)
         {
-            var messages = await this.dataContext.Set<Message>().ToListAsync();
+            var messages = await this._dataContext.Set<Message>().ToListAsync();
 
             foreach (var message in messages)
             {
@@ -93,16 +89,16 @@ namespace GrpcWebApplication
         {
             while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)
             {
-                await this.dataContext.Set<Message>().AddAsync(new Message
+                await this._dataContext.Set<Message>().AddAsync(new Message
                 {
                     Text = requestStream.Current.Text
                 });
             }
-            await this.dataContext.SaveChangesAsync();
+            await this._dataContext.SaveChangesAsync();
 
             if (!context.CancellationToken.IsCancellationRequested)
             {
-                var messagesTask = await this.dataContext.Set<Message>().ToListAsync();
+                var messagesTask = await this._dataContext.Set<Message>().ToListAsync();
 
                 foreach (var message in messagesTask)
                 {
@@ -114,5 +110,9 @@ namespace GrpcWebApplication
                 }
             }
         }
+
+        private readonly ILogger<UserMessagerHandler> _logger;
+
+        private readonly DataContext _dataContext;
     }
 }

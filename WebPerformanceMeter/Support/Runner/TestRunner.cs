@@ -7,9 +7,9 @@ namespace WebPerformanceMeter
 {
     public class TestRunner
     {
-        private string[] _args;
+        private readonly string[] _args;
 
-        private Assembly _assembly;
+        private readonly Assembly _assembly;
 
         public TestRunner(string[] args, Assembly assembly)
         {
@@ -19,7 +19,7 @@ namespace WebPerformanceMeter
 
         public async Task StartAsync()
         {
-            if (this._args.Count() == 0)
+            if (this._args.Length == 0)
             {
                 var runner = new ConsoleRunner(this._assembly);
                 await runner.StartAsync();
@@ -29,7 +29,7 @@ namespace WebPerformanceMeter
                 int port = 0;
                 string? loggerAddress = null;
 
-                for (int i = 0; i < this._args.Count(); i++)
+                for (int i = 0; i < this._args.Length; i++)
                 {
                     if (this._args[i] == "-p")
                     {
@@ -38,7 +38,7 @@ namespace WebPerformanceMeter
                     }
                 }
 
-                for (int i = 0; i < this._args.Count(); i++)
+                for (int i = 0; i < this._args.Length; i++)
                 {
                     if (this._args[i] == "-l")
                     {

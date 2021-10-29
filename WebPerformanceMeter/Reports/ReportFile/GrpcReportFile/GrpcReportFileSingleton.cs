@@ -20,7 +20,7 @@
 
         private GrpcReportFileSingleton() { }
 
-        private static object _lock = new object();
+        private readonly static object _lock = new ();
 
         private static GrpcReportFile? _singleton = null;
     }

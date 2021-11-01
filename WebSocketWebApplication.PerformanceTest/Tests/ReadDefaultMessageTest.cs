@@ -6,14 +6,14 @@ using WebPerformanceMeter.Support;
 
 namespace WebSocketWebApplication.PerformanceTest.Tests
 {
-    //[PerformanceClass]
+    [PerformanceClass]
     public class ReadDefaultMessageTest
     {
-        [PerformanceTest(5, 50)]
+        [PerformanceTest(10, 200)]
         public async Task WebSocketBaseTest(int seconds, int usersCount)
         {
             var user = new WebSocketUserTest("localhost", 5000, "ws");
-            var plan = new ActiveUsersOnPeriod(user, usersCount, seconds.Seconds());
+            var plan = new UsersPerPeriod(user, usersCount, seconds.Seconds());
 
             await new Scenario()
                 .AddSequentialPlans(plan)

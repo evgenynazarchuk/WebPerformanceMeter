@@ -9,7 +9,7 @@ namespace WebSocketWebApplication.PerformanceTest.Tests
     [PerformanceClass]
     public class DelaySendMessageTests
     {
-        [PerformanceTest(120, 500)]
+        [PerformanceTest(10, 200)]
         public async Task SendMessageHelloWorldTest(int seconds, int usersCountPerPeriod)
         {
             var user = new WebSocketUserTest("localhost", 5000, "ws");
@@ -20,7 +20,7 @@ namespace WebSocketWebApplication.PerformanceTest.Tests
                 .Start();
         }
 
-        [PerformanceTest(120, 500)]
+        [PerformanceTest(10, 200)]
         public async Task ActiveUsersSendMessageHelloWorldTest(int seconds, int activeUsersCount)
         {
             var user = new WebSocketUserTest("localhost", 5000, "ws");

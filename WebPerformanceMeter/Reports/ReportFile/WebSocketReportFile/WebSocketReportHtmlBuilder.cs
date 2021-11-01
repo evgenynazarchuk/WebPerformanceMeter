@@ -290,11 +290,11 @@ namespace WebPerformanceMeter.Reports
             {
                 disconnectionStartTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }
-            foreach (var item in connectionEndTime)
+            foreach (var item in disconnectionEndTime)
             {
                 disconnectionEndTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }
-            foreach (var item in connectionResponseTime)
+            foreach (var item in disconnectionResponseTime)
             {
                 disconnectionResponseTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }

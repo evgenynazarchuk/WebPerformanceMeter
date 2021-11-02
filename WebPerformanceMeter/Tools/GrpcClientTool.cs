@@ -161,6 +161,8 @@ namespace WebPerformanceMeter
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Length == 3);
 
+            long startSendMessage;
+            long endSendMessage;
             long startMethodCall;
             long endMethodCall;
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
@@ -175,12 +177,22 @@ namespace WebPerformanceMeter
 
             foreach (var requestBody in requestObjects)
             {
+                startSendMessage = ScenarioTimer.Time.Elapsed.Ticks;
                 await grpcCall.RequestStream.WriteAsync(requestBody);
+                endSendMessage = ScenarioTimer.Time.Elapsed.Ticks;
+
+                if (this.Watcher is not null)
+                {
+                    this.Watcher.SendMessage(
+                        "GrpcLogMessage.json",
+                        $"{userName},send,{label},{startSendMessage},{endSendMessage}",
+                        typeof(GrpcLogMessage));
+                }
+
                 await Task.Delay(millisecondsDelay);
             }
 
             await grpcCall.RequestStream.CompleteAsync();
-            //
 
             endMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
@@ -210,12 +222,12 @@ namespace WebPerformanceMeter
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Length == 4);
 
+            long startReadMessage;
+            long endReadMessage;
             long startMethodCall;
             long endMethodCall;
             startMethodCall = ScenarioTimer.Time.Elapsed.Ticks;
 
-            //
-            // TODO add using
             using var grpcCall = (AsyncServerStreamingCall<TResponse>?)method.Invoke(this._grpcClient, new object[] { requestBody, default!, default!, default! });
             if (grpcCall is null)
             {
@@ -224,8 +236,23 @@ namespace WebPerformanceMeter
 
             var messages = new List<TResponse>();
 
-            while (await grpcCall.ResponseStream.MoveNext())
+            while (true)
             {
+                startReadMessage = ScenarioTimer.Time.Elapsed.Ticks;
+                if (!await grpcCall.ResponseStream.MoveNext())
+                {
+                    break;
+                }
+                endReadMessage = ScenarioTimer.Time.Elapsed.Ticks;
+
+                if (this.Watcher is not null)
+                {
+                    this.Watcher.SendMessage(
+                        "GrpcLogMessage.json",
+                        $"{userName},receive,{label},{startReadMessage},{endReadMessage}",
+                        typeof(GrpcLogSendMessage));
+                }
+
                 messages.Add(grpcCall.ResponseStream.Current);
                 await Task.Delay(millisecondsDelay);
             }
@@ -260,6 +287,10 @@ namespace WebPerformanceMeter
                 .Where(x => x.Name == methodCall)
                 .Single(x => x.GetParameters().Length == 3);
 
+            long startReadMessage;
+            long endReadMessage;
+            long startSendMessage;
+            long endSendMessage;
             long startMethodCall;
             long endMethodCall;
 
@@ -276,17 +307,41 @@ namespace WebPerformanceMeter
 
             var readMessageTask = Task.Run(async () =>
             {
+                startReadMessage = ScenarioTimer.Time.Elapsed.Ticks;
                 await foreach (var responseMessage in grpcCall.ResponseStream.ReadAllAsync())
                 {
+                    endReadMessage = ScenarioTimer.Time.Elapsed.Ticks;
+
+                    if (this.Watcher is not null)
+                    {
+                        this.Watcher.SendMessage(
+                            "GrpcLogMessage.json",
+                            $"{userName},receive,{label},{startReadMessage},{endReadMessage}",
+                            typeof(GrpcLogMessage));
+                    }
+
                     responseMessages.Add(responseMessage);
                     await Task.Delay(readMillisecondsDelay);
+
+                    startReadMessage = ScenarioTimer.Time.Elapsed.Ticks;
                 }
             });
 
 
             foreach (var requestBody in requestObjects)
             {
+                startSendMessage = ScenarioTimer.Time.Elapsed.Ticks;
                 await grpcCall.RequestStream.WriteAsync(requestBody);
+                endSendMessage = ScenarioTimer.Time.Elapsed.Ticks;
+
+                if (this.Watcher is not null)
+                {
+                    this.Watcher.SendMessage(
+                        "GrpcLogMessage.json",
+                        $"{userName},send,{label},{startSendMessage},{endSendMessage}",
+                        typeof(GrpcLogMessage));
+                }
+
                 await Task.Delay(sendMillisecondsDelay);
             }
 

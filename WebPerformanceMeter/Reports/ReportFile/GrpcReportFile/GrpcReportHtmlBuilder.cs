@@ -16,7 +16,8 @@ namespace WebPerformanceMeter.Reports
                 return "";
             }
 
-            var startedRequest = this.logs
+            var runningCallGrpcMethod = this.logs
+                .Where(x => x.Method != "receive" && x.Method != "send")
                 .GroupBy(x => new
                 {
                     x.UserName,
@@ -32,7 +33,8 @@ namespace WebPerformanceMeter.Reports
                     x.LongCount()))
                 .ToList();
 
-            var completedRequest = this.logs
+            var completedCallGrpcMethod = this.logs
+                .Where(x => x.Method != "receive" && x.Method != "send")
                 .GroupBy(x => new
                 {
                     x.UserName,
@@ -51,12 +53,12 @@ namespace WebPerformanceMeter.Reports
             var startedRequestTimeJsonString = new StringBuilder();
             var completedRequestTimeJsonString = new StringBuilder();
 
-            foreach (var item in startedRequest)
+            foreach (var item in runningCallGrpcMethod)
             {
                 startedRequestTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }
 
-            foreach (var item in completedRequest)
+            foreach (var item in completedCallGrpcMethod)
             {
                 completedRequestTimeJsonString.Append(JsonSerializer.Serialize(item) + ",\n");
             }

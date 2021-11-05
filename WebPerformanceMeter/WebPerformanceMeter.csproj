@@ -7,20 +7,11 @@
 	<Version>0.0.0.1</Version>
 	<Authors>Evgeny Nazarchuk</Authors>
 	<PackageProjectUrl>https://github.com/evgenynazarchuk/WebPerformanceMeter/wiki</PackageProjectUrl>
-	<PackageLicenseFile></PackageLicenseFile>
 	<RepositoryUrl>https://github.com/evgenynazarchuk/WebPerformanceMeter</RepositoryUrl>
 	<Copyright>Copyright © 2021 Evgeny Nazarchuk</Copyright>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="LICENSE" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Interfaces\Users\BrowserUser\" />

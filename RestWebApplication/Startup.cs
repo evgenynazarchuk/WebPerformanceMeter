@@ -19,8 +19,11 @@ namespace RestWebApplication
 
         public void ConfigureServices(IServiceCollection services)
         {
+            using var db = new DataAccess();
+            db.Database.EnsureCreated();
+
             services.AddScoped<DataAccess>();
-            services.AddControllers();
+            services.AddControllers().AddXmlSerializerFormatters();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestWebApplication", Version = "v1" });
